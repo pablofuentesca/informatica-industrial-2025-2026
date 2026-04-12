@@ -1,0 +1,13 @@
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+rmdir /s /q .vs        # Windows CMD (desde la raíz del repo)
+# o
+rm -rf .vs             # bash / PowerShell (con cuidado)
+
+git config core.longpaths true
+# o, si puedes y necesitas a nivel sistema (requiere permisos admin):
+git config --system core.longpaths true
