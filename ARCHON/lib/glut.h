@@ -37,11 +37,8 @@
 #    define WINGDIAPI __declspec(dllimport)
 #   endif
 #  endif
-/* Definir wchar_t sólo si realmente no existe (evita redefiniciones en MSVC/otros) */
 #  ifndef _WCHAR_T_DEFINED
-#   if !defined(__WCHAR_TYPE__) && !defined(_NATIVE_WCHAR_T_DEFINED)
 typedef unsigned short wchar_t;
-#   endif
 #   define _WCHAR_T_DEFINED
 #  endif
 # endif
@@ -104,17 +101,29 @@ typedef unsigned short wchar_t;
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <stdlib.h> /* Usar la declaración estándar de exit() para evitar conflictos */
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#if defined(_WIN32)
+# ifndef GLUT_BUILDING_LIB
+extern _CRTIMP void __cdecl exit(int);
+# endif
+#else
+# define APIENTRY
+# define GLUT_APIENTRY_DEFINED
+# define CALLBACK
+# define GLUTAPI extern
+# define GLUTCALLBACK
+extern void exit(int);
 #endif
 
 /* Resto del header GLUT: prototipos, defines y APIs estándar (no modificado). */
 
 #ifdef __cplusplus
 }
-#endif
+#endif												
 
 #ifdef GLUT_APIENTRY_DEFINED
 # undef GLUT_APIENTRY_DEFINED

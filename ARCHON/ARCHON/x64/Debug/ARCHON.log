@@ -2,7 +2,7 @@
 VSLANG = 3082
 MSBuildLoadMicrosoftTargetsReadOnly = true
 VisualStudioEdition = Microsoft Visual Studio Community 2026
-Path = C:\Program Files\Google\Chrome\Application;C:\Program Files (x86)\Common Files\Siemens\ACE\Bin;C:\Program Files\Common Files\Siemens\Automation\Simatic OAM\bin;C:\Program Files (x86)\Common Files\Siemens\Sqlany;C:\Program Files (x86)\Siemens\Step7\S7bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\PKWARE\pkzipc;C:\Program Files\MATLAB\R2024b\runtime\win64;C:\Program Files\MATLAB\R2024b\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files (x86)\Common Files\Siemens\;C:\Program Files (x86)\Common Files\Siemens\Interfaces;C:\Program Files (x86)\Common Files\Siemens\ACE\Interfaces;C:\Program Files\dotnet\;C:\Program Files (x86)\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Users\Marco\AppData\Local\Microsoft\WindowsApps;C:\Users\Marco\.dotnet\tools;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\PrivateAssemblies\runtimes\win-x64\native
+Path = C:\Program Files (x86)\Common Files\Siemens\ACE\Bin;C:\Program Files\Common Files\Siemens\Automation\Simatic OAM\bin;C:\Program Files (x86)\Common Files\Siemens\Sqlany;C:\Program Files (x86)\Siemens\Step7\S7bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\PKWARE\pkzipc;C:\Program Files\MATLAB\R2024b\runtime\win64;C:\Program Files\MATLAB\R2024b\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files (x86)\Common Files\Siemens\;C:\Program Files (x86)\Common Files\Siemens\Interfaces;C:\Program Files (x86)\Common Files\Siemens\ACE\Interfaces;C:\Program Files\dotnet\;C:\Program Files (x86)\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Users\Marco\AppData\Local\Microsoft\WindowsApps;C:\Users\Marco\.dotnet\tools;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\PrivateAssemblies\runtimes\win-x64\native
 CommonProgramFiles(x86) = C:\Program Files (x86)\Common Files
 VSSKUEDITION = Community
 PROCESSOR_REVISION = 9a03
@@ -12,8 +12,8 @@ FPS_BROWSER_USER_PROFILE_STRING = Default
 SignInWithHomeTenantOnly = False
 COMPUTERNAME = DESKTOP-F84E4AL
 LOCALAPPDATA = C:\Users\Marco\AppData\Local
+VsPerMonitorDpiAwarenessEnabled.11416 = TRUE
 PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_10980_UFJMKCFWYDOVHCQU
 ALLUSERSPROFILE = C:\ProgramData
 USERPROFILE = C:\Users\Marco
 ProgramW6432 = C:\Program Files
@@ -31,6 +31,7 @@ Simatic_OAM = C:\Program Files\Common Files\Siemens\Automation\Simatic OAM
 TEMP = C:\Users\Marco\AppData\Local\Temp
 SystemDrive = C:
 SystemRoot = C:\WINDOWS
+EFC_11376_1592913036 = 1
 Simatic_OAM_DATA = C:\ProgramData\Siemens\Automation\Simatic OAM
 S7TMP = C:\Program Files (x86)\Siemens\Step7\S7Tmp
 VSAPPIDDIR = C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\
@@ -47,14 +48,12 @@ LOGONSERVER = \\DESKTOP-F84E4AL
 HOMEDRIVE = C:
 NUMBER_OF_PROCESSORS = 12
 ProgramFiles = C:\Program Files
-EFC_2904_1592913036 = 1
-ServiceHubLogSessionKey = DEF135C3
-VsPerMonitorDpiAwarenessEnabled.9032 = TRUE
+ServiceHubLogSessionKey = 25D143C1
 SESSIONNAME = Console
 USERNAME = Marco
 PSModulePath = C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\PowerShell\Modules\
 ProgramData = C:\ProgramData
-ServiceHubHostServiceBrokerPipeName = \\.\pipe\70AE3A6D-2EA4-4832-8B2A-7859EA5068D2
+ServiceHubHostServiceBrokerPipeName = \\.\pipe\1BC6DAFD-5D47-44A0-A231-523EB1701054
 OS = Windows_NT
 VSAPPIDNAME = devenv.exe
 USERDOMAIN = DESKTOP-F84E4AL
@@ -66,48 +65,57 @@ APPDATA = C:\Users\Marco\AppData\Roaming
 __PSLockDownPolicy = 0
 DriverData = C:\Windows\System32\Drivers\DriverData
 
+  ARCHON.cpp
+  boardgl.cpp
+  Autolink de glut32.lib omitido para x64. AÃ±ade freeglut.lib (x64) en Linker â†’ Additional Dependencies o define GLUT_NO_LIB_PRAGMA.
   game.cpp
-C:\Users\Marco\source\repos\ARCHON\boardgl.h(21,11): warning C4305: '=': truncamiento de 'double' a 'float'
-  (compilando archivo de origen "game.cpp")
-  
-LINK : fatal error LNK1104: no se puede abrir el archivo 'glut32.lib'
+  Autolink de glut32.lib omitido para x64. AÃ±ade freeglut.lib (x64) en Linker â†’ Additional Dependencies o define GLUT_NO_LIB_PRAGMA.
+  gltools.cpp
+  Autolink de glut32.lib omitido para x64. AÃ±ade freeglut.lib (x64) en Linker â†’ Additional Dependencies o define GLUT_NO_LIB_PRAGMA.
+  Generando código...
+LINK : fatal error LNK1104: no se puede abrir el archivo '•C:\Users\Marco\source\repos\ARCHON\include.obj'
 
 Resumen del rendimiento del proyecto:
-     1681 ms C:\Users\Marco\source\repos\ARCHON\ARCHON.vcxproj   1 llamadas
-               1681 ms Build                                      1 llamadas
+     4333 ms C:\Users\Marco\source\repos\ARCHON\ARCHON.vcxproj   1 llamadas
+               4333 ms Build                                      1 llamadas
 
 Resumen del rendimiento de destino:
         0 ms BuildGenerateSources                       1 llamadas
-        0 ms ComputeCLOutputs                           1 llamadas
-        0 ms ComputeManifestGeneratedLinkerInputs       1 llamadas
-        0 ms _Xsd                                       1 llamadas
-        0 ms ComputeRCGeneratedLinkInputs               1 llamadas
+        0 ms MakeDirsForMidl                            1 llamadas
         0 ms ComputeMIDLGeneratedCompileInputs          1 llamadas
         0 ms AfterMidl                                  1 llamadas
         0 ms _Midl                                      1 llamadas
         0 ms AfterBuildGenerateSources                  1 llamadas
         0 ms AfterBuildGenerateSourcesEvent             1 llamadas
-        0 ms ComputeRCOutputs                           1 llamadas
+        0 ms _BuildGenerateSourcesAction                1 llamadas
+        0 ms ComputeManifestInputsTargets               1 llamadas
         0 ms BuildCompileTraverse                       1 llamadas
         0 ms BeforeClCompile                            1 llamadas
-        0 ms ComputeCLGeneratedLinkInputs               1 llamadas
         0 ms ComputeCLInputPDBName                      1 llamadas
+        0 ms FindReferenceAssembliesForReferences       1 llamadas
         0 ms GetReferencedVCProjectsInfo                1 llamadas
-        0 ms ComputeReferenceCLInput                    1 llamadas
-        0 ms ComputeLegacyManifestEmbedding             1 llamadas
-        0 ms BuildLinkTraverse                          1 llamadas
-        0 ms BuildCompile                               1 llamadas
-        0 ms _BuildCompileAction                        1 llamadas
+        0 ms ComputeCLGeneratedLinkInputs               1 llamadas
+        0 ms _Xsd                                       1 llamadas
+        0 ms WarnCompileDuplicatedFilename              1 llamadas
+        0 ms ComputeManifestGeneratedLinkerInputs       1 llamadas
+        0 ms ComputeRCGeneratedLinkInputs               1 llamadas
         0 ms MakeDirsForCl                              1 llamadas
-        0 ms AfterBuildCompileEvent                     1 llamadas
-        0 ms _ResourceCompile                           1 llamadas
+        0 ms ComputeRCOutputs                           1 llamadas
+        0 ms SelectClCompile                            1 llamadas
+        0 ms BeforeLink                                 1 llamadas
         0 ms AfterClCompile                             1 llamadas
         0 ms _ClCompile                                 1 llamadas
         0 ms BeforeResourceCompile                      1 llamadas
-        0 ms BeforeLink                                 1 llamadas
-        0 ms MakeDirsForResourceCompile                 1 llamadas
-        0 ms SelectCustomBuild                          1 llamadas
-        0 ms PreBuildEvent                              1 llamadas
+        0 ms ComputeLegacyManifestEmbedding             1 llamadas
+        0 ms AfterResourceCompile                       1 llamadas
+        0 ms _ResourceCompile                           1 llamadas
+        0 ms AfterBuildCompileEvent                     1 llamadas
+        0 ms _BuildCompileAction                        1 llamadas
+        0 ms SetCppLanguageStandardCapabilities         1 llamadas
+        0 ms BuildCompile                               1 llamadas
+        0 ms CopyFileToFolders                          1 llamadas
+        0 ms ComputeCustomBuildOutput                   1 llamadas
+        0 ms SetTelemetryEnvironmentVariables           1 llamadas
         0 ms _PrepareForBuild                           1 llamadas
         0 ms _PrepareForReferenceResolution             1 llamadas
         0 ms BeforeResolveReferences                    1 llamadas
@@ -115,70 +123,66 @@ Resumen del rendimiento de destino:
         0 ms PreLinkEvent                               1 llamadas
         0 ms _SplitProjectReferencesByFileExistence     1 llamadas
         0 ms _AddOutputPathToGlobalPropertiesToRemove   1 llamadas
-        0 ms DoLinkOutputFilesMatch                     1 llamadas
+        0 ms _GetProjectReferenceTargetFrameworkProperties   1 llamadas
         0 ms PrepareProjectReferences                   1 llamadas
         0 ms ResolveProjectReferences                   1 llamadas
         0 ms GetFrameworkPaths                          1 llamadas
-        0 ms ComputeLinkInputsFromProject               1 llamadas
-        0 ms PrepareResourceNames                       1 llamadas
-        0 ms AfterResourceCompile                       1 llamadas
-        0 ms AfterResolveReferences                     1 llamadas
-        0 ms CreateCustomManifestResourceNames          1 llamadas
-        0 ms ResolveSDKReferences                       1 llamadas
-        0 ms ExpandSDKReferences                        1 llamadas
-        0 ms SplitResourcesByCulture                    1 llamadas
-        0 ms GetResolvedWinMD                           1 llamadas
+        0 ms GetReferenceAssemblyPaths                  1 llamadas
+        0 ms AddExternalIncludDirectoriesToPaths        1 llamadas
+        0 ms SetBuildDefaultEnvironmentVariables        1 llamadas
         0 ms ResolveReferences                          1 llamadas
-        0 ms ComputeManifestInputsTargets               1 llamadas
-        0 ms BuildGenerateSourcesTraverse               1 llamadas
+        0 ms SelectCustomBuild                          1 llamadas
+        0 ms _SelectedFiles                             1 llamadas
+        0 ms PreBuildEvent                              1 llamadas
         0 ms BeforeBuildGenerateSources                 1 llamadas
-        1 ms GetReferenceAssemblyPaths                  1 llamadas
-        1 ms SetCABuildNativeEnvironmentVariables       1 llamadas
-        1 ms SelectClCompile                            1 llamadas
-        1 ms _CheckWindowsSDKInstalled                  1 llamadas
-        1 ms SetTelemetryEnvironmentVariables           1 llamadas
-        1 ms AddExternalIncludDirectoriesToPaths        1 llamadas
-        1 ms ComputeLinkSwitches                        1 llamadas
+        0 ms BuildGenerateSourcesTraverse               1 llamadas
+        0 ms CreateCustomManifestResourceNames          1 llamadas
+        0 ms GetResolvedWinMD                           1 llamadas
+        0 ms BuildLinkTraverse                          1 llamadas
+        0 ms ResolveAssemblyReferences                  1 llamadas
+        0 ms ExpandSDKReferences                        1 llamadas
+        0 ms ResolveSDKReferences                       1 llamadas
+        0 ms PrepareResourceNames                       1 llamadas
+        0 ms SetCABuildNativeEnvironmentVariables       1 llamadas
+        0 ms _CheckWindowsSDKInstalled                  1 llamadas
+        0 ms AfterResolveReferences                     1 llamadas
+        1 ms CustomBuild                                1 llamadas
         1 ms _CheckForInvalidConfigurationAndPlatform   1 llamadas
-        1 ms AssignTargetPaths                          1 llamadas
-        1 ms MakeDirsForMidl                            1 llamadas
-        1 ms WarnCompileDuplicatedFilename              1 llamadas
-        1 ms _BuildGenerateSourcesAction                1 llamadas
-        1 ms CopyFileToFolders                          1 llamadas
-        1 ms FindReferenceAssembliesForReferences       1 llamadas
-        1 ms SetCppLanguageStandardCapabilities         1 llamadas
-        1 ms MakeDirsForLink                            1 llamadas
-        1 ms _SelectedFiles                             1 llamadas
-        1 ms ResolveAssemblyReferences                  1 llamadas
-        2 ms SetBuildDefaultEnvironmentVariables        1 llamadas
-        2 ms ComputeCustomBuildOutput                   1 llamadas
-        2 ms _GetProjectReferenceTargetFrameworkProperties   1 llamadas
-        2 ms AssignProjectConfiguration                 1 llamadas
-        3 ms FixupCLCompileOptions                      1 llamadas
-        3 ms CustomBuild                                1 llamadas
-        4 ms ComputeStdModulesCompileInputs             1 llamadas
-        6 ms SetModuleDependencies                      1 llamadas
-       13 ms PrepareForBuild                            1 llamadas
-       23 ms InitializeBuildStatus                      1 llamadas
-      270 ms Link                                       1 llamadas
-     1319 ms ClCompile                                  1 llamadas
+        1 ms MakeDirsForResourceCompile                 1 llamadas
+        1 ms ComputeLinkInputsFromProject               1 llamadas
+        1 ms ComputeLinkSwitches                        1 llamadas
+        1 ms ComputeStdModulesCompileInputs             1 llamadas
+        1 ms FixupCLCompileOptions                      1 llamadas
+        1 ms ComputeReferenceCLInput                    1 llamadas
+        1 ms AssignProjectConfiguration                 1 llamadas
+        1 ms DoLinkOutputFilesMatch                     1 llamadas
+        2 ms ComputeCLOutputs                           1 llamadas
+        2 ms SetModuleDependencies                      1 llamadas
+        3 ms AssignTargetPaths                          1 llamadas
+        3 ms PrepareForBuild                            1 llamadas
+        3 ms SplitResourcesByCulture                    1 llamadas
+        4 ms MakeDirsForLink                            1 llamadas
+        6 ms InitializeBuildStatus                      1 llamadas
+      212 ms Link                                       1 llamadas
+     4085 ms ClCompile                                  1 llamadas
 
 Resumen del rendimiento de la tarea:
         0 ms Message                                    2 llamadas
-        0 ms AssignProjectConfiguration                 1 llamadas
-        0 ms AssignCulture                              1 llamadas
+        0 ms SetEnv                                    11 llamadas
+        0 ms MSBuild                                    1 llamadas
         0 ms SetRidAgnosticValueForProjects             1 llamadas
+        0 ms Delete                                     1 llamadas
         0 ms CheckVCToolsetVersion                      1 llamadas
-        1 ms AssignTargetPath                           4 llamadas
-        1 ms ReadLinesFromFile                          1 llamadas
-        1 ms MSBuild                                    1 llamadas
-        2 ms SetEnv                                    11 llamadas
-        2 ms GetLibraryModuleSources                    1 llamadas
-        3 ms VCMessage                                  1 llamadas
-        3 ms GetOutOfDateItems                          3 llamadas
-        4 ms SetModuleDependencies                      1 llamadas
-        4 ms MakeDir                                    8 llamadas
-        4 ms Touch                                      1 llamadas
-       13 ms WriteLinesToFile                           1 llamadas
-      269 ms Link                                       1 llamadas
-     1316 ms CL                                         1 llamadas
+        0 ms ReadLinesFromFile                          1 llamadas
+        0 ms AssignCulture                              1 llamadas
+        0 ms SetModuleDependencies                      1 llamadas
+        1 ms GetOutOfDateItems                          3 llamadas
+        1 ms Touch                                      1 llamadas
+        1 ms GetLibraryModuleSources                    1 llamadas
+        1 ms VCMessage                                  1 llamadas
+        1 ms AssignProjectConfiguration                 1 llamadas
+        2 ms WriteLinesToFile                           1 llamadas
+        2 ms AssignTargetPath                           4 llamadas
+        2 ms MakeDir                                    8 llamadas
+      205 ms Link                                       1 llamadas
+     4084 ms CL                                         1 llamadas

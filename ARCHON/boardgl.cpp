@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iostream>
 #include "include/glut.h"
+#include "freeglut.h"
 
 #define DEG2RAD M_PI/180.0			//not used
 

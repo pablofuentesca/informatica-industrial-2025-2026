@@ -1,6 +1,6 @@
 /* gltools.cpp - implementación de utilidades OpenGL */
 #include "gltools.h"
-
+#include "freeglut.h"
 #include <iostream>
 
 using namespace std;

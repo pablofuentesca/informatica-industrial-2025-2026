@@ -3,6 +3,7 @@
 #include <iostream>
 #include "boardgl.h"
 #include "include/glut.h"
+#include "freeglut.h"
 
 #define GRID_SIZE	5		//NxN grid
 
