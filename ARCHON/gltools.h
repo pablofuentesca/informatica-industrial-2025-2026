@@ -7,7 +7,8 @@
 
 // Usamos la cabecera GLUT que existe en el repo: include/glut.h
 #include "include/glut.h"
-
+#include "freeglut.h"
+#include <stdlib.h>
 #include <math.h>
 #include <string>
 #include <vector>

@@ -5,7 +5,11 @@
 
 #include <string>
 #include <vector>
+#include "freeglut.h"
 #include "board.h"
+#include "gltools.h"
+
+
 
 
 //enums to eliminate dependency of glut
