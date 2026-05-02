@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|solutionrelative:ARCHON_console.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,12 +23,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ARCHON_console.cpp",
-              "DocumentMoniker": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp",
-              "RelativeDocumentMoniker": "ARCHON_console.cpp",
-              "ToolTip": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp",
-              "RelativeToolTip": "ARCHON_console.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-05-02T18:37:53.004Z",
               "EditorCaption": ""
