@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{55D69520-5B30-4DD2-AEBA-7843FFDFE600}|ARCHON_console.vcxproj|solutionrelative:ARCHON_console.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ARCHON_console.cpp",
+              "DocumentMoniker": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp",
+              "RelativeDocumentMoniker": "ARCHON_console.cpp",
+              "ToolTip": "C:\\Users\\Marco\\source\\repos\\pablofuentesca\\informatica-industrial-2025-2026\\ARCHON_console\\ARCHON_console.cpp",
+              "RelativeToolTip": "ARCHON_console.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-05-02T18:37:53.004Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
