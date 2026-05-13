@@ -1,7 +1,0 @@
-.vs/
-tmp/
-x64/
-Debug/
-Release/
-*.ipch
-*.aps
