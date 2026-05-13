@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\informatica-industrial-2025-2026-main\src\posicion.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\posicion.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\informatica-industrial-2025-2026-main\src\posicion.h" />
+    <ClInclude Include="src\posicion.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
