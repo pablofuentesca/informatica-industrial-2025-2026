@@ -1,4 +1,4 @@
-#include "Posicion.h"
+#include "posicion.h"
 
 // Constructor por defecto (si no le decimos nada, va al centro 0,0)
 Posicion::Posicion() {

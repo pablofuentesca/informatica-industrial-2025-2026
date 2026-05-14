@@ -1,5 +1,5 @@
 #pragma once
-#include "Posicion.h"
+#include "posicion.h"
 
 class Casilla {
 public:

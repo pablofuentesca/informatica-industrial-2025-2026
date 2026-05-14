@@ -1,4 +1,4 @@
-#include "Casilla.h"
+#include "casilla.h"
 
 // Constructor: por defecto la hacemos blanca (1, 1, 1 en OpenGL)
 Casilla::Casilla() {
