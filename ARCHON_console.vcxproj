@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ente.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\posicion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ente.h" />
     <ClInclude Include="src\posicion.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
