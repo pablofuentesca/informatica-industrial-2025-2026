@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\casilla.cpp" />
     <ClCompile Include="src\ente.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\posicion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\casilla.h" />
     <ClInclude Include="src\ente.h" />
     <ClInclude Include="src\posicion.h" />
   </ItemGroup>
