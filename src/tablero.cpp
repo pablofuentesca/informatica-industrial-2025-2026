@@ -1,5 +1,5 @@
 #include "tablero.h"
-
+//sergio mamahuevo
 Tablero::Tablero() {}
 
 Tablero::~Tablero() {}
