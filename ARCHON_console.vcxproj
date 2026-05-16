@@ -22,12 +22,14 @@
     <ClCompile Include="src\casilla.cpp" />
     <ClCompile Include="src\ente.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pelota.cpp" />
     <ClCompile Include="src\posicion.cpp" />
     <ClCompile Include="src\tablero.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\casilla.h" />
     <ClInclude Include="src\ente.h" />
+    <ClInclude Include="src\pelota.h" />
     <ClInclude Include="src\posicion.h" />
     <ClInclude Include="src\tablero.h" />
   </ItemGroup>

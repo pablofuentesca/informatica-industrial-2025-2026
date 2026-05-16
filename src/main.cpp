@@ -2,7 +2,17 @@
 #include <iostream>
 #include "freeglut.h"
 #include"tablero.h"
+#include "pelota.h"
+
 Tablero miTablero;
+Pelota balones[5] = {
+	Pelota(4, 4), // Balón del centro
+	Pelota(0, 4), // Balón extremo izquierdo
+	Pelota(8, 4), // Balón extremo derecho
+	Pelota(4, 0), // Balón extremo inferior
+	Pelota(4, 8)  // Balón extremo superior
+};
+
 void OnDraw(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
@@ -11,6 +21,10 @@ void OnDraw(void) {
 	glMatrixMode(GL_MODELVIEW);
 	//Aqui ira el codigo para dibujar todo lo que se necesite para el partido entre el Real Madrid y el Atleti
 	miTablero.dibuja();
+
+	for (int i = 0; i < 5; i++) {
+		balones[i].dibuja();
+	}
 
     glutSwapBuffers();
 
