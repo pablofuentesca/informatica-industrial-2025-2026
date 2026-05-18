@@ -3,6 +3,12 @@
 #include "freeglut.h"
 #include"tablero.h"
 #include "pelota.h"
+#include "centrocampista.h"
+
+// Creamos un jugador de cada equipo. 
+// Parámetros: (Posición X, Posición Y, Equipo)
+Centrocampista jugadorMadrid(1, 4, 1); // Equipo 1 (Luz/Madrid)
+Centrocampista jugadorAtleti(7, 4, 2); // Equipo 2 (Oscuridad/Atleti)
 
 Tablero miTablero;
 Pelota balones[5] = {
@@ -21,6 +27,10 @@ void OnDraw(void) {
 	glMatrixMode(GL_MODELVIEW);
 	//Aqui ira el codigo para dibujar todo lo que se necesite para el partido entre el Real Madrid y el Atleti
 	miTablero.dibuja();
+
+	// Dibujamos a los centrocampistas
+	jugadorMadrid.dibuja();
+	jugadorAtleti.dibuja();
 
 	for (int i = 0; i < 5; i++) {
 		balones[i].dibuja();
