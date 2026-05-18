@@ -1,4 +1,4 @@
-#include "Pelota.h"
+#include "pelota.h"
 #include "ETSIDI.h" // Incluimos la librería de la asignatura
 
 Pelota::Pelota(float x, float y) {
