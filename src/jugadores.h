@@ -1,12 +1,12 @@
 #pragma once
 #include "posicion.h"
 
-class Ente {
+class Jugadores {
 public:
     Posicion pos;
 
-    Ente();
-    ~Ente();
+    Jugadores();
+    ~Jugadores();
 
     void dibuja();
     void mueve(float t);

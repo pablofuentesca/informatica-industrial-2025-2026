@@ -21,7 +21,7 @@
     <ClCompile Include="src\posicion.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\ente.cpp">
+    <ClCompile Include="src\jugadores.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\casilla.cpp">
@@ -33,12 +33,15 @@
     <ClCompile Include="src\pelota.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\centrocampista.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\posicion.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="src\ente.h">
+    <ClInclude Include="src\jugadores.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\casilla.h">
@@ -48,6 +51,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\pelota.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\centrocampista.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
