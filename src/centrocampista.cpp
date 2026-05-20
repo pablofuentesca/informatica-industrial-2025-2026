@@ -26,6 +26,10 @@ void Centrocampista::dibuja() {
     sprite->draw();
 }
 
-void Centrocampista::mueve(float t) {
+void Centrocampista::mover(float dirX, float dirY) {
+    pos.x += dirX;
+    pos.y += dirY;
+
+    // Le decimos a ETSIDI que actualice la foto a la nueva coordenada
     sprite->setPos(pos.x, pos.y);
 }

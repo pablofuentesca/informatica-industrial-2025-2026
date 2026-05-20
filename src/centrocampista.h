@@ -15,5 +15,6 @@ public:
     ~Centrocampista();
 
     void dibuja();
-    void mueve(float t);
+    //función para saltar de casilla en casilla
+    void mover(float dirX, float dirY);
 };
