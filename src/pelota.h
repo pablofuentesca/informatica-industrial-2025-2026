@@ -1,17 +1,14 @@
 #pragma once
-#include "jugadores.h"
+#include "posicion.h"
 
-// Le decimos al compilador que existe una clase Sprite en ETSIDI
 namespace ETSIDI { class Sprite; }
 
-class Pelota : public Jugadores {
-
+class Pelota {
     float radio;
-
-    // Nuestro sprite que dibujará la imagen
     ETSIDI::Sprite* sprite;
 
 public:
+    Posicion pos; // Le damos su propia posición
     Pelota(float x, float y);
     ~Pelota();
 

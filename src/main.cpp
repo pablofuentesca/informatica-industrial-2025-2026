@@ -3,12 +3,12 @@
 #include "freeglut.h"
 #include"tablero.h"
 #include "pelota.h"
-#include "centrocampista.h"
+#include "jugador.h"
 
 // Creamos un jugador de cada equipo. 
-// Parámetros: (Posición X, Posición Y, Equipo)
-Centrocampista jugadorMadrid(1, 4, 1); // Equipo 1 (Luz/Madrid)
-Centrocampista jugadorAtleti(7, 4, 2); // Equipo 2 (Oscuridad/Atleti)
+// Parámetros: (Posición X, Posición Y, Equipo, Rol)
+Jugador jugadorMadrid(1, 4, 1, CENTROCAMPISTA); // Equipo 1 (Madrid)
+Jugador jugadorAtleti(7, 4, 2, CENTRAL);        // Equipo 2 (Atleti)
 
 Tablero miTablero;
 Pelota balones[5] = {

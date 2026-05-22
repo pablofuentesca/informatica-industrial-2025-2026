@@ -20,8 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\casilla.cpp" />
-    <ClCompile Include="src\centrocampista.cpp" />
-    <ClCompile Include="src\jugadores.cpp" />
+    <ClCompile Include="src\jugador.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pelota.cpp" />
     <ClCompile Include="src\posicion.cpp" />
@@ -29,8 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\casilla.h" />
-    <ClInclude Include="src\centrocampista.h" />
-    <ClInclude Include="src\jugadores.h" />
+    <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\pelota.h" />
     <ClInclude Include="src\posicion.h" />
     <ClInclude Include="src\tablero.h" />
