@@ -27,9 +27,19 @@ void Centrocampista::dibuja() {
 }
 
 void Centrocampista::mover(float dirX, float dirY) {
-    pos.x += dirX;
-    pos.y += dirY;
+    //Calculamos dónde caería si da el paso
+    float nuevaX = pos.x + dirX;
+    float nuevaY = pos.y + dirY;
 
-    // Le decimos a ETSIDI que actualice la foto a la nueva coordenada
-    sprite->setPos(pos.x, pos.y);
+    //Comprobamos si esa nueva posición está dentro del césped
+    // Como los centros de las casillas van de 0.5 a 8.5, comprobamos que no baje de 0 ni pase de 9
+    if (nuevaX > 0.0f && nuevaX < 9.0f && nuevaY > 0.0f && nuevaY < 9.0f) {
+
+        // Si es legal, actualizamos su posición de verdad
+        pos.x = nuevaX;
+        pos.y = nuevaY;
+
+        // Y actualizamos el dibujo
+        sprite->setPos(pos.x, pos.y);
+    }
 }
