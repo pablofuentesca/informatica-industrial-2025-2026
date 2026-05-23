@@ -1,6 +1,6 @@
 #include "mundo.h"
 #include "freeglut.h"
-
+//Prueba github 
 // En el constructor inicializamos las posiciones de los 5 balones y vaciamos las listas
 Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) } {
     for (int i = 0; i < 18; i++) {
