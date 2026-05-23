@@ -1,6 +1,8 @@
 #include "Tablero.h"
 
-Tablero::Tablero() {}
+Tablero::Tablero() {
+    inicializa(); // ¡La llamada mágica que nos faltaba!
+}
 
 Tablero::~Tablero() {}
 
@@ -20,18 +22,14 @@ void Tablero::inicializa() {
         {'G', 'B', 'W', 'G', 'W', 'B', 'W', 'G', 'B'}, // Fila 7
         {'B', 'G', 'B', 'W', 'W', 'W', 'G', 'B', 'G'}  // Fila 8 (Arriba)
     };
-
     // Recorremos la matriz para crear las casillas
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
-
             // Posición matemática: i (columnas/X), j (filas/Y)
             casillas[i][j].pos.x = (float)i;
             casillas[i][j].pos.y = (float)j;
-
             // Leemos el color de nuestro mapa (j es la fila, i es la columna)
             char color = mapa[j][i];
-
             if (color == 'W') {
                 // BLANCO
                 casillas[i][j].setColor(1.0f, 1.0f, 1.0f);
@@ -47,7 +45,6 @@ void Tablero::inicializa() {
         }
     }
 }
-
 void Tablero::dibuja() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {

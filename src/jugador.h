@@ -13,15 +13,15 @@ class Jugador {
     int equipo;
     RolFutbol rol;
 
-    // Estadísticas oficiales de Archon
+    // Estadísticas de Archon
     int rangoMovimiento;
     bool esVolador;
 
 public:
-    Posicion pos; // Tu propia clase para guardar la X y la Y
-
     Jugador(float x, float y, int _equipo, RolFutbol _rol);
     ~Jugador();
+
+    Posicion pos; 
 
     void dibuja();
     void mover(float dirX, float dirY);
