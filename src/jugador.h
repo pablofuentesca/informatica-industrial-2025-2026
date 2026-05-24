@@ -23,6 +23,6 @@ public:
 
     Posicion pos; 
 
-    void dibuja();
+    void dibuja() const;
     void mover(float dirX, float dirY);
 };

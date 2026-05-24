@@ -45,7 +45,7 @@ void Tablero::inicializa() {
         }
     }
 }
-void Tablero::dibuja() {
+void Tablero::dibuja() const {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             casillas[i][j].dibuja();

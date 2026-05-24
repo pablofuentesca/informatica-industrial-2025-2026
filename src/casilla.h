@@ -14,5 +14,5 @@ public:
 
     // Métodos para configurar y dibujar la casilla
     void setColor(float r, float g, float b);
-    void dibuja();
+    void dibuja() const;
 }; 

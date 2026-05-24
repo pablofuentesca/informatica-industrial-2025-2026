@@ -18,7 +18,7 @@ Pelota::~Pelota() {
     delete sprite;
 }
 
-void Pelota::dibuja() {
+void Pelota::dibuja() const {
     // ETSIDI dibuja la imagen con una sola línea de código
     sprite->draw();
 }

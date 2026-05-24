@@ -12,6 +12,6 @@ public:
     Pelota(float x, float y);
     ~Pelota();
 
-    void dibuja();
+    void dibuja() const;
     void mueve(float t);
 };

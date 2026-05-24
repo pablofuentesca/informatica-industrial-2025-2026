@@ -11,5 +11,5 @@ public:
     ~Tablero();
 
     void inicializa();
-    void dibuja();
+    void dibuja() const;
 };

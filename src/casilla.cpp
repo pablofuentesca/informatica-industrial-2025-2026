@@ -15,7 +15,7 @@ void Casilla::setColor(float r, float g, float b) {
     azul = b;
 }
 
-void Casilla::dibuja() {
+void Casilla::dibuja() const {
     // Definimos el tamaño de la casilla (un cuadrado de lado 1)
     float lado = 1.0f;
 

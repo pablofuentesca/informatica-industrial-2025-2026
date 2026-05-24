@@ -15,7 +15,7 @@ public:
     ~Mundo();
 
     void inicializa();
-    void dibuja();
+    void dibuja() const;
     void mueve();
     void tecla(unsigned char key);
     void teclaEspecial(int key);

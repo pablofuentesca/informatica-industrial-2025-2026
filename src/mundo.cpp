@@ -59,7 +59,7 @@ void Mundo::inicializa() {
     equipoAtleti[17] = new Jugador(8, 8, 2, CENTROCAMPISTA); // Banshee
 }
 
-void Mundo::dibuja() {
+void Mundo::dibuja() const {
     //RESETEO TOTAL DE OPENGL 
     glDisable(GL_TEXTURE_2D); // Apagamos texturas
     glDisable(GL_LIGHTING);   // Apagamos luces raras

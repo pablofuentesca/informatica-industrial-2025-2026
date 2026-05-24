@@ -65,7 +65,7 @@ Jugador::~Jugador() {
     if (sprite != nullptr) delete sprite;
 }
 
-void Jugador::dibuja() {
+void Jugador::dibuja() const {
     
     if (sprite != nullptr) {
         // Encendemos texturas solo para la imagen

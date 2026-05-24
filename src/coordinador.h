@@ -1,19 +1,14 @@
 #pragma once
 #include "mundo.h"
-
-// Los estados por los que puede pasar nuestra aplicación
-enum Estado { INICIO, JUEGO, PAUSA, FIN };
+#include "Arena.h"
 
 class Coordinador {
-protected:
+    enum Estado { INICIO, JUEGO, COMBATE, PAUSA, FIN } estado{};
     Mundo mundo;
-    Estado estado;
+    Arena arena;
 
 public:
-    Coordinador();
-    ~Coordinador();
-
-    void dibuja();
+    void dibuja() const;
     void tecla(unsigned char key);
     void teclaEspecial(int key);
 };
