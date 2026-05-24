@@ -1,4 +1,5 @@
 #include "Arena.h"
+#include "interaccionArena.h"
 #include "freeglut.h"
 #include <cmath>
 
@@ -131,6 +132,8 @@ void Arena::tecla(unsigned char key)
     if (j1x + tam > xMax) j1x = xMax - tam;
     if (j1y - tam < yMin) j1y = yMin + tam;
     if (j1y + tam > yMax) j1y = yMax - tam;
+
+    interaccionArena::separa(*this);
 }
 
 void Arena::teclaEspecial(int key)
@@ -146,4 +149,6 @@ void Arena::teclaEspecial(int key)
     if (j2x + tam > xMax) j2x = xMax - tam;
     if (j2y - tam < yMin) j2y = yMin + tam;
     if (j2y + tam > yMax) j2y = yMax - tam;
+
+    interaccionArena::separa(*this);
 }

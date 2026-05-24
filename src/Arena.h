@@ -7,6 +7,8 @@ class Arena {
     double j1x{ 200 }, j1y{ 300 };   // Jugador 1 - Madrid (blanco)
     double j2x{ 600 }, j2y{ 300 };   // Jugador 2 - Atleti  (rojo)
 
+    friend class interaccionArena;
+
 public:
     void dibuja() const;
     void tecla(unsigned char key);

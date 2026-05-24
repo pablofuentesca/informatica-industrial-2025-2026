@@ -22,6 +22,7 @@
     <ClCompile Include="src\Arena.cpp" />
     <ClCompile Include="src\casilla.cpp" />
     <ClCompile Include="src\coordinador.cpp" />
+    <ClCompile Include="src\interaccionArena.cpp" />
     <ClCompile Include="src\jugador.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mundo.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="src\Arena.h" />
     <ClInclude Include="src\casilla.h" />
     <ClInclude Include="src\coordinador.h" />
+    <ClInclude Include="src\interaccionArena.h" />
     <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\mundo.h" />
     <ClInclude Include="src\pelota.h" />
