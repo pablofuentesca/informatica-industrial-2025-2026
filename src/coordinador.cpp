@@ -1,10 +1,17 @@
 #include "coordinador.h"
+#include "ETSIDI.h"
 #include "freeglut.h"
 
 void dibujaTexto(float x, float y, const char* texto, float r, float g, float b) {
     glColor3f(r, g, b);
     glRasterPos2f(x, y);
     while (*texto) { glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *texto); texto++; }
+}
+
+void Coordinador::mueve(double dt)
+{
+    if (estado == COMBATE)
+        arena.mueve(dt);
 }
 
 void Coordinador::dibuja() const
@@ -42,11 +49,11 @@ void Coordinador::tecla(unsigned char key)
         if (key == 'e' || key == 'E') { estado = JUEGO; }
         break;
     case JUEGO:
-        if (key == '0') { estado = COMBATE; return; }
+        if (key == '0') { arena.inicializa(); estado = COMBATE; return; }
         mundo.tecla(key);
         break;
     case COMBATE:
-        if (key == 27) { estado = INICIO; return; } // ESC vuelve al menú
+        if (key == 27) { ETSIDI::stopMusica(); estado = JUEGO; return; }  // ESC vuelve al tablero
         arena.tecla(key);
         break;
     }

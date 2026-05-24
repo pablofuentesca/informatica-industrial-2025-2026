@@ -1,17 +1,28 @@
-#include <iostream>
+#include <chrono>
 #include "freeglut.h"
 #include "coordinador.h"
 
-//única variable global de todo el proyectO
+using namespace std::chrono;
+
+
 Coordinador coordinador;
 
 void OnDraw(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // El coordinador decide soberanamente qué dibujar
     coordinador.dibuja();
-
     glutSwapBuffers();
+}
+
+void OnTimer(int valor)
+{
+    static high_resolution_clock::time_point tAnterior = high_resolution_clock::now();
+    high_resolution_clock::time_point tAhora = high_resolution_clock::now();
+    double dt = duration<double>(tAhora - tAnterior).count();
+    tAnterior = tAhora;
+    if (dt > 0.05) dt = 0.05;  // limite por si la ventana se congela
+    coordinador.mueve(dt);
+    glutPostRedisplay();
+    glutTimerFunc(16, OnTimer, 0);
 }
 
 void OnKeyboardDown(unsigned char key, int x_t, int y_t) {
@@ -30,9 +41,8 @@ int main(int argc, char* argv[]) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("Real Madrid vs Atletico de Madrid - ARCHON");
 
-    // Ya NO llamamos a inicializarEquipos ni mundos aquí. El coordinador lo gestionará.
-
     glutDisplayFunc(OnDraw);
+    glutTimerFunc(16, OnTimer, 0);
     glutKeyboardFunc(OnKeyboardDown);
     glutSpecialFunc(OnSpecialKeyboardDown);
 
@@ -40,4 +50,3 @@ int main(int argc, char* argv[]) {
     glutMainLoop();
     return 0;
 }
-

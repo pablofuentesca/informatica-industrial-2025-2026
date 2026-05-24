@@ -10,6 +10,7 @@ class Coordinador {
 public:
     void inicializa() { mundo.inicializa(); }
     void dibuja() const;
+    void mueve(double dt);
     void tecla(unsigned char key);
     void teclaEspecial(int key);
 };
