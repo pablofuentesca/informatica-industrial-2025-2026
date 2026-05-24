@@ -12,5 +12,7 @@ public:
     void dibuja() const;
     void mueve(double dt);
     void tecla(unsigned char key);
+    void teclaJ1(unsigned char key);
     void teclaEspecial(int key);
+    void teclaEspecialArriba(int key);
 };

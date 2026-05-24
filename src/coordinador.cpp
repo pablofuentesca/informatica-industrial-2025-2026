@@ -59,6 +59,11 @@ void Coordinador::tecla(unsigned char key)
     }
 }
 
+void Coordinador::teclaJ1(unsigned char key)
+{
+    if (estado == COMBATE) arena.teclaJ1(key);
+}
+
 void Coordinador::teclaEspecial(int key)
 {
     switch (estado) {
@@ -66,4 +71,9 @@ void Coordinador::teclaEspecial(int key)
     case COMBATE: arena.teclaEspecial(key); break;
     default:      break;
     }
+}
+
+void Coordinador::teclaEspecialArriba(int key)
+{
+    if (estado == COMBATE) arena.teclaEspecialArriba(key);
 }

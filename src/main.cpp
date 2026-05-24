@@ -30,9 +30,17 @@ void OnKeyboardDown(unsigned char key, int x_t, int y_t) {
     glutPostRedisplay();
 }
 
+void OnKeyboardUp(unsigned char key, int x, int y) {
+    coordinador.teclaJ1(key);
+}
+
 void OnSpecialKeyboardDown(int key, int x, int y) {
     coordinador.teclaEspecial(key);
     glutPostRedisplay();
+}
+
+void OnSpecialKeyboardUp(int key, int x, int y) {
+    coordinador.teclaEspecialArriba(key);
 }
 
 int main(int argc, char* argv[]) {
@@ -44,7 +52,9 @@ int main(int argc, char* argv[]) {
     glutDisplayFunc(OnDraw);
     glutTimerFunc(16, OnTimer, 0);
     glutKeyboardFunc(OnKeyboardDown);
+    glutKeyboardUpFunc(OnKeyboardUp);
     glutSpecialFunc(OnSpecialKeyboardDown);
+    glutSpecialUpFunc(OnSpecialKeyboardUp);
 
     coordinador.inicializa();
     glutMainLoop();
