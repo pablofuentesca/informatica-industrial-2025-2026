@@ -3,26 +3,25 @@
 
 namespace ETSIDI { class Sprite; }
 
-// roles
-enum RolFutbol { PORTERO, DELANTERO, CENTRAL, LATERAL, CENTROCAMPISTA, MEDIAPUNTA, EXTREMO, ENTRENADOR };
-
 class Jugador {
+protected:
+    ETSIDI::Sprite* sprite{ nullptr };
+    int   equipo{ 1 };
+    float radio{ 0.4f };
 
-    float radio;
-    ETSIDI::Sprite* sprite;
-    int equipo;
-    RolFutbol rol;
-
-    // Estadísticas de Archon
-    int rangoMovimiento;
-    bool esVolador;
+    Jugador(float x, float y, int _equipo, const char* ruta);
 
 public:
-    Jugador(float x, float y, int _equipo, RolFutbol _rol);
-    ~Jugador();
+    Posicion pos;
 
-    Posicion pos; 
+    virtual ~Jugador();
 
-    void dibuja() const;
-    void mover(float dirX, float dirY);
+    virtual void dibuja() const;
+    virtual void mover(float dirX, float dirY);
+
+    virtual int  getRango()   const = 0;
+    virtual bool esVolador()  const = 0;
+    virtual bool esTeleport() const = 0;
+
+    int getEquipo() const { return equipo; }
 };

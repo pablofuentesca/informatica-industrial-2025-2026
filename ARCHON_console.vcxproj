@@ -33,13 +33,24 @@
   <ItemGroup>
     <ClInclude Include="src\Arena.h" />
     <ClInclude Include="src\casilla.h" />
+    <ClInclude Include="src\central.h" />
+    <ClInclude Include="src\centrocampista.h" />
     <ClInclude Include="src\coordinador.h" />
+    <ClInclude Include="src\delantero.h" />
+    <ClInclude Include="src\entrenador.h" />
+    <ClInclude Include="src\extremo.h" />
     <ClInclude Include="src\interaccionArena.h" />
     <ClInclude Include="src\jugador.h" />
+    <ClInclude Include="src\lateral.h" />
+    <ClInclude Include="src\mediapunta.h" />
     <ClInclude Include="src\mundo.h" />
     <ClInclude Include="src\pelota.h" />
+    <ClInclude Include="src\portero.h" />
     <ClInclude Include="src\posicion.h" />
     <ClInclude Include="src\tablero.h" />
+    <ClInclude Include="src\teletransportador.h" />
+    <ClInclude Include="src\terrestre.h" />
+    <ClInclude Include="src\volador.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
