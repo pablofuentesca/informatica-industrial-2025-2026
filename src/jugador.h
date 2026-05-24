@@ -3,7 +3,7 @@
 
 namespace ETSIDI { class Sprite; }
 
-// Creamos un "diccionario" con los roles del fútbol (equivalentes a Archon)
+// roles
 enum RolFutbol { PORTERO, DELANTERO, CENTRAL, LATERAL, CENTROCAMPISTA, MEDIAPUNTA, EXTREMO, ENTRENADOR };
 
 class Jugador {
