@@ -42,11 +42,12 @@ void Coordinador::tecla(unsigned char key)
         if (key == 'e' || key == 'E') { mundo.inicializa(); estado = JUEGO; }
         break;
     case JUEGO:
-        if (key == 'a' || key == 'A') { estado = COMBATE; return; }
+        if (key == '0') { estado = COMBATE; return; }
         mundo.tecla(key);
         break;
     case COMBATE:
-        if (key == 27) estado = INICIO; // ESC vuelve al menú
+        if (key == 27) { estado = INICIO; return; } // ESC vuelve al menú
+        arena.tecla(key);
         break;
     }
 }
@@ -55,7 +56,7 @@ void Coordinador::teclaEspecial(int key)
 {
     switch (estado) {
     case JUEGO:   mundo.teclaEspecial(key); break;
-    case COMBATE: break;
+    case COMBATE: arena.teclaEspecial(key); break;
     default:      break;
     }
 }

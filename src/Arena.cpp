@@ -100,6 +100,50 @@ void Arena::dibuja() const
         glVertex2d(xMax - 110, cy);
     glEnd();
 
+    // Jugador 1 - Madrid (blanco)
+    glColor3d(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+        glVertex2d(j1x - tam, j1y - tam); glVertex2d(j1x + tam, j1y - tam);
+        glVertex2d(j1x + tam, j1y + tam); glVertex2d(j1x - tam, j1y + tam);
+    glEnd();
+
+    // Jugador 2 - Atleti (rojo)
+    glColor3d(0.9, 0.1, 0.1);
+    glBegin(GL_QUADS);
+        glVertex2d(j2x - tam, j2y - tam); glVertex2d(j2x + tam, j2y - tam);
+        glVertex2d(j2x + tam, j2y + tam); glVertex2d(j2x - tam, j2y + tam);
+    glEnd();
+
     glLineWidth(1.0f);
     glPointSize(1.0f);
+}
+
+void Arena::tecla(unsigned char key)
+{
+    const double paso = 5.0;
+    if (key == 'w' || key == 'W') j1y += paso;
+    if (key == 's' || key == 'S') j1y -= paso;
+    if (key == 'a' || key == 'A') j1x -= paso;
+    if (key == 'd' || key == 'D') j1x += paso;
+
+    // Límites del campo para j1
+    if (j1x - tam < xMin) j1x = xMin + tam;
+    if (j1x + tam > xMax) j1x = xMax - tam;
+    if (j1y - tam < yMin) j1y = yMin + tam;
+    if (j1y + tam > yMax) j1y = yMax - tam;
+}
+
+void Arena::teclaEspecial(int key)
+{
+    const double paso = 5.0;
+    if (key == GLUT_KEY_UP)    j2y += paso;
+    if (key == GLUT_KEY_DOWN)  j2y -= paso;
+    if (key == GLUT_KEY_LEFT)  j2x -= paso;
+    if (key == GLUT_KEY_RIGHT) j2x += paso;
+
+    // Límites del campo para j2
+    if (j2x - tam < xMin) j2x = xMin + tam;
+    if (j2x + tam > xMax) j2x = xMax - tam;
+    if (j2y - tam < yMin) j2y = yMin + tam;
+    if (j2y + tam > yMax) j2y = yMax - tam;
 }
