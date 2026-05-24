@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
     glutKeyboardFunc(OnKeyboardDown);
     glutSpecialFunc(OnSpecialKeyboardDown);
 
+    coordinador.inicializa();
     glutMainLoop();
     return 0;
 }

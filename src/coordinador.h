@@ -8,6 +8,7 @@ class Coordinador {
     Arena arena;
 
 public:
+    void inicializa() { mundo.inicializa(); }
     void dibuja() const;
     void tecla(unsigned char key);
     void teclaEspecial(int key);

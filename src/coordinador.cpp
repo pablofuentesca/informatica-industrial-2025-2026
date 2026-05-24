@@ -39,7 +39,7 @@ void Coordinador::tecla(unsigned char key)
 {
     switch (estado) {
     case INICIO:
-        if (key == 'e' || key == 'E') { mundo.inicializa(); estado = JUEGO; }
+        if (key == 'e' || key == 'E') { estado = JUEGO; }
         break;
     case JUEGO:
         if (key == '0') { estado = COMBATE; return; }
