@@ -15,16 +15,18 @@ Jugador::Jugador(float x, float y, int _equipo, RolFutbol _rol) {
     rangoMovimiento = 0;
     esVolador = false;
 
-    //Configuramos las stats
+    // Stats segun el ARCHON original
+    // Equipo 1 = Madrid (Luz):      Arquera, Caballero, Golem,  Unicornio, Valkiria, Genio(Djinn=4),  Fenix(5),  Mago(teleport)
+    // Equipo 2 = Atleti (Oscuridad): Manticora, Goblin, Troll, Basilisco, Banshee,  Cambiaformas(5), Dragon(4), Hechicera(teleport)
     switch (rol) {
-    case PORTERO:        rangoMovimiento = 3; esVolador = false; break;
-    case DELANTERO:      rangoMovimiento = 3; esVolador = false; break;
-    case CENTRAL:        rangoMovimiento = 3; esVolador = false; break;
-    case LATERAL:        rangoMovimiento = 4; esVolador = false; break;
-    case CENTROCAMPISTA: rangoMovimiento = 3; esVolador = true;  break;
-    case MEDIAPUNTA:     rangoMovimiento = 4; esVolador = true;  break;
-    case EXTREMO:        rangoMovimiento = 5; esVolador = true;  break;
-    case ENTRENADOR:     rangoMovimiento = 3; esVolador = false; break;
+    case PORTERO:        rangoMovimiento = 3; esVolador = false; break; // Arquera(3) / Manticora(3)
+    case DELANTERO:      rangoMovimiento = 3; esVolador = false; break; // Caballero(3) / Goblin(3)
+    case CENTRAL:        rangoMovimiento = 3; esVolador = false; break; // Golem(3) / Troll(3)
+    case LATERAL:        rangoMovimiento = 3; esVolador = false; break; // Unicornio(3) / Basilisco(3)
+    case CENTROCAMPISTA: rangoMovimiento = 3; esVolador = true;  break; // Valkiria(3,vuela) / Banshee(3,vuela)
+    case MEDIAPUNTA:     rangoMovimiento = (equipo == 1) ? 4 : 5; esVolador = true;  break; // Genio/Djinn(4) vs Cambiaformas/Shapeshifter(5)
+    case EXTREMO:        rangoMovimiento = (equipo == 1) ? 5 : 4; esVolador = true;  break; // Fenix(5) vs Dragon(4)
+    case ENTRENADOR:     rangoMovimiento = 3; esVolador = true;  break; // Mago/Wizard(3,teleport) / Hechicera/Sorceress(3,teleport)
     }
 
     //Carga de Imágenes
