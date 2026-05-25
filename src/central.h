@@ -27,6 +27,7 @@ public:
     }
 
     int    getRango()      const override { return 3; }
+    bool   esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
     bool   esRanged()      const override { return false; }
 
     // Hitbox de maza: mayor que la espada del Goblin, similar al Caballero
