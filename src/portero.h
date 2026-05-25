@@ -14,7 +14,7 @@ public:
             hpMax       = 30;
             velArena    = 200.0;
             danio       = 12;
-            cooldownMax = 0.25;   // mayor cadencia que cualquier otra pieza
+            cooldownMax = 0.25;
         } else {
             hpMax       = 70;
             velArena    = 180.0;
@@ -28,12 +28,12 @@ public:
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
 
-    // Movimiento terrestre de largo alcance
     void mover(float dirX, float dirY) override {
         Jugador::mover(dirX, dirY);
     }
 
     // Manticora (equipo 2): dispara 3 proyectiles en abanico simultaneamente
-    // La logica de proyectiles adicionales la gestiona la Arena
     void habilidadEspecial() override {}
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

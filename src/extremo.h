@@ -13,13 +13,11 @@ public:
             : "../bin/imagenes/fotosjugadores/atletiextremo.png")
     {
         if (equipo == 1) {
-            // Fenix: vida media, disparo normal, habilidad de renacer
             hpMax       = 55;
             velArena    = 200.0;
             danio       = 15;
             cooldownMax = 0.80;
         } else {
-            // Dragon: muy resistente, lento, cadencia de fuego casi continua
             hpMax       = 100;
             velArena    = 130.0;
             danio       = 20;
@@ -35,14 +33,11 @@ public:
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
 
-    // Fenix: vuelo ligero y rapido
-    // Dragon: vuelo pesado y amenazante
     void mover(float dirX, float dirY) override {
         Jugador::mover(dirX, dirY);
     }
 
-    // Fenix (equipo 1): la Arena llama a estaVivo(); si cae a 0 HP y
-    // puedeRevivir() devuelve true, la Arena restaura el 50% de vida
+    // Fenix (equipo 1): renace una vez con 50% HP
     bool puedeRevivir() const { return equipo == 1 && !revivioUsado; }
 
     void revive() {
@@ -50,7 +45,8 @@ public:
         revivioUsado = true;
     }
 
-    // Dragon (equipo 2): su habilidad ya esta expresada en cooldownMax=0.05
-    // La Arena detecta equipo==2 en Extremo para dibujar el chorro de fuego
+    // Dragon (equipo 2): habilidad expresada en cooldownMax=0.05
     void habilidadEspecial() override {}
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

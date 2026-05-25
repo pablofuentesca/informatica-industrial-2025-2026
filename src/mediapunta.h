@@ -10,8 +10,6 @@ public:
             ? "../bin/imagenes/fotosjugadores/madridmediapunta.png"
             : "../bin/imagenes/fotosjugadores/atletimediapunta.png")
     {
-        // Genio y Cambiaformas comparten estadisticas base; la diferencia esta
-        // en la habilidad especial del Cambiaformas
         hpMax       = 70;
         velArena    = 200.0;
         danio       = 15;
@@ -26,14 +24,12 @@ public:
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
 
-    // Genio: vuelo omnidireccional sin restriccion de terreno
-    // Cambiaformas: se mueve igual pero estudiando al rival
     void mover(float dirX, float dirY) override {
         Jugador::mover(dirX, dirY);
     }
 
-    // Cambiaformas (equipo 2): al inicio del combate copia el tipo de ataque
-    // y la habilidad especial de la pieza rival que entra en la arena.
-    // La Arena le pasa el danio y el tipo de ataque del rival en ese momento.
+    // Cambiaformas (equipo 2): al inicio del combate copia el ataque del rival
     void habilidadEspecial() override {}
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

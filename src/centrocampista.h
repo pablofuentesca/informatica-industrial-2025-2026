@@ -11,13 +11,11 @@ public:
             : "../bin/imagenes/fotosjugadores/atleticentro.png")
     {
         if (equipo == 1) {
-            // Valkiria: la mas rapida del bando luz, ataca en diagonal mele
             hpMax       = 70;
             velArena    = 240.0;
             danio       = 18;
             cooldownMax = 0.60;
         } else {
-            // Banshee: rapida, su alarido (proyectil) atraviesa barreras y charcos
             hpMax       = 65;
             velArena    = 240.0;
             danio       = 16;
@@ -34,12 +32,12 @@ public:
     double alcanceAtaque() const override { return (equipo == 1) ? 30.0 : 0.0; }
 
     // Ambas son voladoras: en el tablero vuelan sobre otras piezas
-    // En la arena ignoran la colision con barreras y charcos al moverse
     void mover(float dirX, float dirY) override {
         Jugador::mover(dirX, dirY);
     }
 
     // Banshee (equipo 2): su proyectil tiene la marca "atraviesaObstaculos"
-    // que la Arena comprueba al actualizar los proyectiles en vuelo
     void habilidadEspecial() override {}
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };
