@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where cl *)",
+      "Bash(where g++)"
+    ]
+  }
+}

@@ -60,24 +60,25 @@ static void dibujaIris(double prog)
 
 static void dibujaArbitro(double arbY)
 {
+    static ETSIDI::GLTexture tex = ETSIDI::getTexture("imagenes/arbitro.png");
     double cx = 400.0;
-    // cuerpo amarillo
-    glColor3d(1.0, 0.9, 0.0);
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBindTexture(GL_TEXTURE_2D, tex.id);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
     glBegin(GL_QUADS);
-        glVertex2d(cx - 15, arbY - 20);
-        glVertex2d(cx + 15, arbY - 20);
-        glVertex2d(cx + 15, arbY + 20);
-        glVertex2d(cx - 15, arbY + 20);
+        glTexCoord2d(0, 1); glVertex2d(cx - 20, arbY - 25);
+        glTexCoord2d(1, 1); glVertex2d(cx + 20, arbY - 25);
+        glTexCoord2d(1, 0); glVertex2d(cx + 20, arbY + 50);
+        glTexCoord2d(0, 0); glVertex2d(cx - 20, arbY + 50);
     glEnd();
-    // cabeza color piel
-    glColor3d(0.9, 0.7, 0.5);
-    glBegin(GL_TRIANGLE_FAN);
-        glVertex2d(cx, arbY + 30);
-        for (int i = 0; i <= 20; i++) {
-            double a = 2.0 * PI * i / 20;
-            glVertex2d(cx + 10 * cos(a), arbY + 30 + 10 * sin(a));
-        }
-    glEnd();
+
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 // empuja al jugador (px,py) fuera del obstaculo o usando AABB

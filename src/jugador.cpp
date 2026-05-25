@@ -38,3 +38,26 @@ void Jugador::mover(float dirX, float dirY)
         if (sprite != nullptr) sprite->setPos(pos.x, pos.y);
     }
 }
+
+void Jugador::actualiza(double dt)
+{
+    // actualiza cooldown de ataque
+    if (timerAtaque > 0.0) timerAtaque -= dt;
+    if (timerAtaque < 0.0) timerAtaque = 0.0;
+}
+
+void Jugador::recibeGolpe(int dano)
+{
+    hp -= dano;
+    if (hp < 0) hp = 0;
+}
+
+double Jugador::alcanceAtaque() const
+{
+    return 0.0;   // por defecto sin hitbox de contacto (pieza ranged)
+}
+
+void Jugador::habilidadEspecial()
+{
+    // por defecto sin habilidad especial
+}
