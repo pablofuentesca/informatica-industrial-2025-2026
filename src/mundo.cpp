@@ -1,5 +1,5 @@
 #include "mundo.h"
-#include <cmath> 
+#include <cmath>
 #include <algorithm>
 #include "ETSIDI.h"
 #include "portero.h"
@@ -11,10 +11,15 @@
 #include "extremo.h"
 #include "entrenador.h"
 #include "freeglut.h"
+#include <cstdlib>
+#include <ctime>
 
 Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) }
 {
     jugadorSeleccionado = nullptr;
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++)
+            casillasValidas[i][j] = false;
     for (int i = 0; i < 18; i++) {
         equipoMadrid[i] = nullptr;
         equipoAtleti[i] = nullptr;
@@ -68,6 +73,10 @@ void Mundo::inicializa()
     equipoAtleti[15] = new Lateral       (8, 6, 2); // Basilisco
     equipoAtleti[16] = new Central       (8, 7, 2); // Troll
     equipoAtleti[17] = new Centrocampista(8, 8, 2); // Banshee
+
+    // Tirada de moneda: decide qué equipo saca primero
+    srand((unsigned)time(nullptr));
+    turnoEquipo = rand() % 2 + 1;
 }
 
 void Mundo::dibuja() const
@@ -80,17 +89,33 @@ void Mundo::dibuja() const
 
     miTablero.dibuja();
 
+    // Casillas donde puede moverse la pieza seleccionada (amarillo semitransparente)
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(1.0f, 1.0f, 0.0f, 0.45f);
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++)
+            if (casillasValidas[i][j]) {
+                glBegin(GL_QUADS);
+                    glVertex2f((float)i,        (float)j);
+                    glVertex2f((float)i + 1.0f, (float)j);
+                    glVertex2f((float)i + 1.0f, (float)j + 1.0f);
+                    glVertex2f((float)i,        (float)j + 1.0f);
+                glEnd();
+            }
+    glDisable(GL_BLEND);
+
     glEnable(GL_TEXTURE_2D);
     for (int i = 0; i < 5; i++) balones[i].dibuja();
 
     if (jugadorSeleccionado != nullptr) {
-        //Esto es para que no se ponga la casillla del jugador seleccionado en negro
+        //NO TOCAR
         glDisable(GL_TEXTURE_2D);
-        glDisable(GL_LIGHTING); // Apagamos las luces que dejó ETSIDI
-        glDisable(GL_BLEND);    // Apagamos mezclas raras
-        
+        glDisable(GL_LIGHTING);
+        glDisable(GL_BLEND);
 
-        glColor3f(1.0f, 1.0f, 0.0f); //Amarillo fosforescente puro
+        glColor3f(1.0f, 1.0f, 0.0f); // Amarillo fosforescente puro
 
         float radio = 0.5f;
         glBegin(GL_QUADS);
@@ -100,7 +125,7 @@ void Mundo::dibuja() const
         glVertex2f(jugadorSeleccionado->pos.x - radio, jugadorSeleccionado->pos.y + radio);
         glEnd();
 
-        glEnable(GL_TEXTURE_2D); // Volvemos a encender texturas para las fotos de los jugadores
+        glEnable(GL_TEXTURE_2D);
     }
 
     glDisable(GL_TEXTURE_2D);
@@ -108,34 +133,87 @@ void Mundo::dibuja() const
         if (equipoMadrid[i] != nullptr) equipoMadrid[i]->dibuja();
         if (equipoAtleti[i] != nullptr) equipoAtleti[i]->dibuja();
     }
-    if (jugadorSeleccionado != nullptr) {
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glColor3f(1.0f, 0.0f, 0.0f); // Rojo puro
-        glLineWidth(3.0f); // Hacemos la línea más gruesa para que destaque
 
-        int actualX = int(jugadorSeleccionado->getPosX());
-        int actualY = int(jugadorSeleccionado->getPosY());
+    // Mensaje de turno
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_BLEND);
+    glColor3f(1.0f, 1.0f, 1.0f);
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                // Le preguntamos a la pieza: "¿Tus reglas te dejan ir aquí?"
-                if (jugadorSeleccionado->esMovimientoValido(actualX, actualY, i, j)) {
-                    float cx = i + 0.5f;
-                    float cy = j + 0.5f;
-                    float r = 0.48f; // Un pelín más pequeño que la casilla
+    const char* msg;
+    if (primerTurno)
+        msg = (turnoEquipo == 1) ? "SACA EQUIPO BLANCO" : "SACA EQUIPO ROJO";
+    else
+        msg = (turnoEquipo == 1) ? "MUEVE EQUIPO BLANCO" : "MUEVE EQUIPO ROJO";
 
-                    glBegin(GL_LINE_LOOP); // Dibuja solo el marco
-                    glVertex2f(cx - r, cy - r);
-                    glVertex2f(cx + r, cy - r);
-                    glVertex2f(cx + r, cy + r);
-                    glVertex2f(cx - r, cy + r);
-                    glEnd();
-                }
+    glRasterPos2f(2.5f, -0.6f);
+    for (const char* c = msg; *c; c++)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+}
+
+int Mundo::equipoEn(int x, int y) const
+{
+    for (int i = 0; i < 18; i++) {
+        if (equipoMadrid[i] != nullptr)
+            if ((int)equipoMadrid[i]->pos.x == x && (int)equipoMadrid[i]->pos.y == y)
+                return 1;
+        if (equipoAtleti[i] != nullptr)
+            if ((int)equipoAtleti[i]->pos.x == x && (int)equipoAtleti[i]->pos.y == y)
+                return 2;
+    }
+    return 0;
+}
+
+void Mundo::calcularCasillasValidas()
+{
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++)
+            casillasValidas[i][j] = false;
+
+    if (jugadorSeleccionado == nullptr) return;
+
+    int gx       = (int)jugadorSeleccionado->pos.x;
+    int gy       = (int)jugadorSeleccionado->pos.y;
+    int rango    = jugadorSeleccionado->getRango();
+    int miEquipo = jugadorSeleccionado->getEquipo();
+
+    if (jugadorSeleccionado->esTeleport()) {
+        // Puede ir a cualquier casilla que no esté ocupada por un aliado
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                if (equipoEn(i, j) != miEquipo)
+                    casillasValidas[i][j] = true;
+        casillasValidas[gx][gy] = false; // No puede quedarse donde está
+    }
+    else if (jugadorSeleccionado->esVolador()) {
+        // 8 direcciones, pasa sobre piezas, para en aliado o enemigo
+        int dirs[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+        for (auto& d : dirs) {
+            for (int r = 1; r <= rango; r++) {
+                int nx = gx + d[0] * r;
+                int ny = gy + d[1] * r;
+                if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
+                int eq = equipoEn(nx, ny);
+                if (eq == miEquipo) break;          // Bloqueado por aliado
+                casillasValidas[nx][ny] = true;
+                if (eq != 0) break;                 // Para en enemigo (puede aterrizar)
             }
         }
-        glEnable(GL_TEXTURE_2D);
-        glLineWidth(1.0f); // Restauramos el grosor normal de OpenGL
+    }
+    else {
+        // Terrestre: 4 direcciones, bloqueado por cualquier pieza
+        int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+        for (auto& d : dirs) {
+            for (int r = 1; r <= rango; r++) {
+                int nx = gx + d[0] * r;
+                int ny = gy + d[1] * r;
+                if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
+                int eq = equipoEn(nx, ny);
+                if (eq == miEquipo) break;          // Bloqueado por aliado
+                casillasValidas[nx][ny] = true;
+                if (eq != 0) break;                 // Para en enemigo
+            }
+        }
     }
 }
 
@@ -145,52 +223,52 @@ void Mundo::tecla(unsigned char key) {}
 
 void Mundo::teclaEspecial(int key) {}
 
-void Mundo::raton(int boton, int estado, float x, float y) {
-    if (boton == GLUT_LEFT_BUTTON && estado == GLUT_DOWN) {
+void Mundo::raton(int boton, int estado, float x, float y)
+{
+    if (boton != GLUT_LEFT_BUTTON || estado != GLUT_DOWN) return;
 
-        Jugador* tocado = nullptr;
+    int gx = (int)x;
+    int gy = (int)y;
 
-        //Comprobar Madrid usando GETTERS
-        for (int i = 0; i < 18; i++) {
-            if (equipoMadrid[i] != nullptr) {
-                float difX = x - equipoMadrid[i]->getPosX();
-                float difY = y - equipoMadrid[i]->getPosY();
-                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) tocado = equipoMadrid[i];
+    // Click fuera del tablero → deseleccionar
+    if (gx < 0 || gx >= 9 || gy < 0 || gy >= 9) {
+        jugadorSeleccionado = nullptr;
+        calcularCasillasValidas();
+        return;
+    }
+
+    if (jugadorSeleccionado == nullptr) {
+        // Primer click: buscar jugador del equipo en turno
+        if (turnoEquipo == 1) {
+            for (int i = 0; i < 18; i++) {
+                if (equipoMadrid[i] != nullptr) {
+                    float difX = x - equipoMadrid[i]->pos.x;
+                    float difY = y - equipoMadrid[i]->pos.y;
+                    if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
+                        jugadorSeleccionado = equipoMadrid[i];
+                }
             }
-        }
-
-        //Comprobar Atleti usando GETTERS
-        for (int i = 0; i < 18; i++) {
-            if (equipoAtleti[i] != nullptr) {
-                float difX = x - equipoAtleti[i]->getPosX();
-                float difY = y - equipoAtleti[i]->getPosY();
-                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) tocado = equipoAtleti[i];
-            }
-        }
-
-        //Lógica de juego usando GETTERS Y SETTERS
-        if (jugadorSeleccionado == nullptr) {
-            jugadorSeleccionado = tocado;
         }
         else {
-            if (tocado == nullptr) {
-                // SEGUNDO CLIC en vacío
-                int targetX = int(floor(x));
-                int targetY = int(floor(y));
-
-                int actualX = int(jugadorSeleccionado->getPosX());
-                int actualY = int(jugadorSeleccionado->getPosY());
-
-                // Comprobamos si el movimiento cumple las reglas de la pieza
-                if (jugadorSeleccionado->esMovimientoValido(actualX, actualY, targetX, targetY)) {
-                    float centroX = targetX + 0.5f;
-                    float centroY = targetY + 0.5f;
-                    jugadorSeleccionado->setPosicion(centroX, centroY);
-                    jugadorSeleccionado = nullptr; // Soltamos al jugador tras moverlo con éxito
+            for (int i = 0; i < 18; i++) {
+                if (equipoAtleti[i] != nullptr) {
+                    float difX = x - equipoAtleti[i]->pos.x;
+                    float difY = y - equipoAtleti[i]->pos.y;
+                    if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
+                        jugadorSeleccionado = equipoAtleti[i];
                 }
-                // Si la casilla no es válida, la condición no se cumple y el juego 
-                // no hace absolutamente nada. El jugador seguirá seleccionado.
             }
         }
+        calcularCasillasValidas();
+    }
+    else {
+        // Segundo click: mover si la casilla es válida
+        if (casillasValidas[gx][gy]) {
+            jugadorSeleccionado->moverA((float)gx, (float)gy);
+            primerTurno = false;                        // El saque ya se realizó
+            turnoEquipo = (turnoEquipo == 1) ? 2 : 1;  // Cambio de turno
+        }
+        jugadorSeleccionado = nullptr;
+        calcularCasillasValidas();
     }
 }

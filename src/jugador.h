@@ -26,6 +26,7 @@ public:
 
     virtual void dibuja() const;
     virtual void mover(float dirX, float dirY);
+    virtual void moverA(float x, float y);
 
     // actualizacion por frame: cooldown + efectos pasivos (regen, etc.)
     virtual void actualiza(double dt);

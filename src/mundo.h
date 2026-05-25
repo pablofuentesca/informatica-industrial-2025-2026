@@ -10,6 +10,12 @@ class Mundo {
     Jugador* equipoMadrid[18];
     Jugador* equipoAtleti[18];
     Jugador* jugadorSeleccionado;
+    bool casillasValidas[9][9];
+    int  turnoEquipo{ 1 };   // 1 = Madrid/Blanco, 2 = Atleti/Rojo
+    bool primerTurno{ true };   
+
+    int  equipoEn(int x, int y) const;
+    void calcularCasillasValidas();
 
 public:
     Mundo();

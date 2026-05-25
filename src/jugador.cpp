@@ -28,6 +28,13 @@ void Jugador::dibuja() const
     }
 }
 
+void Jugador::moverA(float x, float y)
+{
+    pos.x = x + 0.5f;
+    pos.y = y + 0.5f;
+    if (sprite != nullptr) sprite->setPos(pos.x, pos.y);
+}
+
 void Jugador::mover(float dirX, float dirY)
 {
     float nuevaX = pos.x + dirX;
