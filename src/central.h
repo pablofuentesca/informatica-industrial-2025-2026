@@ -26,7 +26,6 @@ public:
         hp = hpMax;
     }
 
-<<<<<<< HEAD
     int    getRango()      const override { return 3; }
     bool   esRanged()      const override { return false; }
 
@@ -46,8 +45,4 @@ public:
             if (hp > hpMax) hp = hpMax;
         }
     }
-=======
-    int getRango() const override { return 3; }
-    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
->>>>>>> 8290cd1db1e3beb9748852c77ccd05edd4c218f7
 };
