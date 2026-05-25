@@ -25,6 +25,11 @@ void OnTimer(int valor)
     glutTimerFunc(16, OnTimer, 0);
 }
 
+void OnMouseClick(int button, int state, int x, int y) {
+    coordinador.raton(button, state, x, y);
+    glutPostRedisplay(); // Para que dibuje el cambio al instante
+}
+
 void OnKeyboardDown(unsigned char key, int x_t, int y_t) {
     coordinador.tecla(key);
     glutPostRedisplay();
@@ -55,6 +60,7 @@ int main(int argc, char* argv[]) {
     glutKeyboardUpFunc(OnKeyboardUp);
     glutSpecialFunc(OnSpecialKeyboardDown);
     glutSpecialUpFunc(OnSpecialKeyboardUp);
+    glutMouseFunc(OnMouseClick);
 
     coordinador.inicializa();
     glutMainLoop();

@@ -77,3 +77,14 @@ void Coordinador::teclaEspecialArriba(int key)
 {
     if (estado == COMBATE) arena.teclaEspecialArriba(key);
 }
+
+void Coordinador::raton(int boton, int estadoRat, int x, int y) {
+    if (estado == JUEGO) {
+        // Magia matemática: Traducir píxeles a coordenadas del tablero de Archon
+        float x_logico = (x / 800.0f) * 11.0f - 1.0f;
+        float y_logico = ((600.0f - y) / 600.0f) * 11.0f - 1.0f;
+
+        // Le pasamos el clic traducido al mundo
+        mundo.raton(boton, estadoRat, x_logico, y_logico);
+    }
+}

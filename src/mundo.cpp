@@ -11,6 +11,7 @@
 
 Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) }
 {
+    jugadorSeleccionado = nullptr;
     for (int i = 0; i < 18; i++) {
         equipoMadrid[i] = nullptr;
         equipoAtleti[i] = nullptr;
@@ -79,6 +80,26 @@ void Mundo::dibuja() const
     glEnable(GL_TEXTURE_2D);
     for (int i = 0; i < 5; i++) balones[i].dibuja();
 
+    if (jugadorSeleccionado != nullptr) {
+        //Esto es para que no se ponga la casillla del jugador seleccionado en negro
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING); // Apagamos las luces que dejó ETSIDI
+        glDisable(GL_BLEND);    // Apagamos mezclas raras
+        
+
+        glColor3f(1.0f, 1.0f, 0.0f); //Amarillo fosforescente puro
+
+        float radio = 0.5f;
+        glBegin(GL_QUADS);
+        glVertex2f(jugadorSeleccionado->pos.x - radio, jugadorSeleccionado->pos.y - radio);
+        glVertex2f(jugadorSeleccionado->pos.x + radio, jugadorSeleccionado->pos.y - radio);
+        glVertex2f(jugadorSeleccionado->pos.x + radio, jugadorSeleccionado->pos.y + radio);
+        glVertex2f(jugadorSeleccionado->pos.x - radio, jugadorSeleccionado->pos.y + radio);
+        glEnd();
+
+        glEnable(GL_TEXTURE_2D); // Volvemos a encender texturas para las fotos de los jugadores
+    }
+
     glDisable(GL_TEXTURE_2D);
     for (int i = 0; i < 18; i++) {
         if (equipoMadrid[i] != nullptr) equipoMadrid[i]->dibuja();
@@ -91,3 +112,33 @@ void Mundo::mueve() {}
 void Mundo::tecla(unsigned char key) {}
 
 void Mundo::teclaEspecial(int key) {}
+
+void Mundo::raton(int boton, int estado, float x, float y) {
+    if (boton == GLUT_LEFT_BUTTON && estado == GLUT_DOWN) {
+        // Deseleccionamos todo primero
+        jugadorSeleccionado = nullptr;
+
+        // Comprobamos si el clic ha dado en un jugador del Madrid
+        for (int i = 0; i < 18; i++) {
+            if (equipoMadrid[i] != nullptr) {
+                float difX = x - equipoMadrid[i]->pos.x;
+                float difY = y - equipoMadrid[i]->pos.y;
+                // Si la distancia al centro es menor que su radio... ¡Tocado!
+                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) {
+                    jugadorSeleccionado = equipoMadrid[i];
+                }
+            }
+        }
+
+        // Comprobamos si el clic ha dado en un jugador del Atleti
+        for (int i = 0; i < 18; i++) {
+            if (equipoAtleti[i] != nullptr) {
+                float difX = x - equipoAtleti[i]->pos.x;
+                float difY = y - equipoAtleti[i]->pos.y;
+                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) {
+                    jugadorSeleccionado = equipoAtleti[i];
+                }
+            }
+        }
+    }
+}

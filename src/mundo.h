@@ -4,11 +4,12 @@
 #include "jugador.h"
 
 class Mundo {
-private:
+
     Tablero miTablero;
     Pelota balones[5];
     Jugador* equipoMadrid[18];
     Jugador* equipoAtleti[18];
+    Jugador* jugadorSeleccionado;
 
 public:
     Mundo();
@@ -19,4 +20,5 @@ public:
     void mueve();
     void tecla(unsigned char key);
     void teclaEspecial(int key);
+    void raton(int boton, int estado, float x, float y);
 };

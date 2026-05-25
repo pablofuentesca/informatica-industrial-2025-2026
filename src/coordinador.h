@@ -15,4 +15,5 @@ public:
     void teclaJ1(unsigned char key);
     void teclaEspecial(int key);
     void teclaEspecialArriba(int key);
+    void raton(int boton, int estadoRat, int x, int y);
 };
