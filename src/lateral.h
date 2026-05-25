@@ -39,4 +39,6 @@ public:
     // Basilisco (equipo 2): al impactar con su proyectil, la Arena aplica
     // un efecto de paralisis de 1 segundo sobre el rival golpeado
     void habilidadEspecial() override {}
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

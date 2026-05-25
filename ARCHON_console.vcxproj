@@ -21,12 +21,20 @@
   <ItemGroup>
     <ClCompile Include="src\Arena.cpp" />
     <ClCompile Include="src\casilla.cpp" />
+    <ClCompile Include="src\central.cpp" />
+    <ClCompile Include="src\centrocampista.cpp" />
     <ClCompile Include="src\coordinador.cpp" />
+    <ClCompile Include="src\delantero.cpp" />
+    <ClCompile Include="src\entrenador.cpp" />
+    <ClCompile Include="src\extremo.cpp" />
     <ClCompile Include="src\interaccionArena.cpp" />
     <ClCompile Include="src\jugador.cpp" />
+    <ClCompile Include="src\lateral.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mediapunta.cpp" />
     <ClCompile Include="src\mundo.cpp" />
     <ClCompile Include="src\pelota.cpp" />
+    <ClCompile Include="src\portero.cpp" />
     <ClCompile Include="src\posicion.cpp" />
     <ClCompile Include="src\tablero.cpp" />
   </ItemGroup>

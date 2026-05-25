@@ -1,7 +1,7 @@
 #pragma once
 #include "terrestre.h"
 
-// Equipo 1 (Madrid):  Caballero (Mbappe)  — mele, el combatiente mas letal, vida maxima
+// Equipo 1 (Madrid):  Caballero (Mbappe)     — mele, el combatiente mas letal, vida maxima
 // Equipo 2 (Atleti):  Goblin    (infanteria) — mele, debil individualmente, abundante
 class Delantero : public Terrestre {
 public:
@@ -39,4 +39,6 @@ public:
     void mover(float dirX, float dirY) override {
         Jugador::mover(dirX, dirY);
     }
+
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };
