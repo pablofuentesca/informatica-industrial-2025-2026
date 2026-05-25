@@ -10,4 +10,5 @@ public:
 
     // Fenix(Madrid)=5, Dragon(Atleti)=4
     int getRango() const override { return equipo == 1 ? 5 : 4; }
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

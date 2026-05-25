@@ -9,4 +9,5 @@ public:
             : "../bin/imagenes/fotosjugadores/atleticentro.png") {}
 
     int getRango() const override { return 3; }
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

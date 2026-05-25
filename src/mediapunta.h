@@ -10,4 +10,5 @@ public:
 
     // Genio(Madrid)=4, Cambiaformas(Atleti)=5
     int getRango() const override { return equipo == 1 ? 4 : 5; }
+    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };
