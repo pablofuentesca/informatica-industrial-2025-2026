@@ -1,6 +1,7 @@
 #include "jugador.h"
 #include "ETSIDI.h"
 #include "freeglut.h"
+#include <algorithm>
 
 Jugador::Jugador(float x, float y, int _equipo, const char* ruta)
 {
@@ -37,4 +38,29 @@ void Jugador::mover(float dirX, float dirY)
         pos.y = nuevaY;
         if (sprite != nullptr) sprite->setPos(pos.x, pos.y);
     }
+}float Jugador::getPosX() const {
+    return pos.x;
+}
+
+float Jugador::getPosY() const {
+    return pos.y;
+}
+
+void Jugador::setPosicion(float nuevaX, float nuevaY) {
+    pos.x = nuevaX;
+    pos.y = nuevaY;
+    //Movemos el sprite también de forma automática si existe
+    if (sprite != nullptr) {
+        sprite->setPos(pos.x, pos.y);
+    }
+}
+
+bool Jugador::esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const {
+    if (origenX == destinoX && origenY == destinoY) return false; // No saltar donde ya estás
+
+    int difX = std::abs(destinoX - origenX);
+    int difY = std::abs(destinoY - origenY);
+    int distancia = (std::max)(difX, difY);
+
+    return (distancia <= getRango()); // Regla genérica
 }

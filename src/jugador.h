@@ -22,6 +22,10 @@ public:
     virtual int  getRango()   const = 0;
     virtual bool esVolador()  const = 0;
     virtual bool esTeleport() const = 0;
+    virtual bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const;
 
     int getEquipo() const { return equipo; }
+    float getPosX() const;
+    float getPosY() const;
+    void setPosicion(float nuevaX, float nuevaY);
 };

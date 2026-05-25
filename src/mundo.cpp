@@ -1,4 +1,7 @@
 #include "mundo.h"
+#include <cmath> 
+#include <algorithm>
+#include "ETSIDI.h"
 #include "portero.h"
 #include "delantero.h"
 #include "central.h"
@@ -105,6 +108,35 @@ void Mundo::dibuja() const
         if (equipoMadrid[i] != nullptr) equipoMadrid[i]->dibuja();
         if (equipoAtleti[i] != nullptr) equipoAtleti[i]->dibuja();
     }
+    if (jugadorSeleccionado != nullptr) {
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(1.0f, 0.0f, 0.0f); // Rojo puro
+        glLineWidth(3.0f); // Hacemos la línea más gruesa para que destaque
+
+        int actualX = int(jugadorSeleccionado->getPosX());
+        int actualY = int(jugadorSeleccionado->getPosY());
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                // Le preguntamos a la pieza: "¿Tus reglas te dejan ir aquí?"
+                if (jugadorSeleccionado->esMovimientoValido(actualX, actualY, i, j)) {
+                    float cx = i + 0.5f;
+                    float cy = j + 0.5f;
+                    float r = 0.48f; // Un pelín más pequeño que la casilla
+
+                    glBegin(GL_LINE_LOOP); // Dibuja solo el marco
+                    glVertex2f(cx - r, cy - r);
+                    glVertex2f(cx + r, cy - r);
+                    glVertex2f(cx + r, cy + r);
+                    glVertex2f(cx - r, cy + r);
+                    glEnd();
+                }
+            }
+        }
+        glEnable(GL_TEXTURE_2D);
+        glLineWidth(1.0f); // Restauramos el grosor normal de OpenGL
+    }
 }
 
 void Mundo::mueve() {}
@@ -115,29 +147,49 @@ void Mundo::teclaEspecial(int key) {}
 
 void Mundo::raton(int boton, int estado, float x, float y) {
     if (boton == GLUT_LEFT_BUTTON && estado == GLUT_DOWN) {
-        // Deseleccionamos todo primero
-        jugadorSeleccionado = nullptr;
 
-        // Comprobamos si el clic ha dado en un jugador del Madrid
+        Jugador* tocado = nullptr;
+
+        //Comprobar Madrid usando GETTERS
         for (int i = 0; i < 18; i++) {
             if (equipoMadrid[i] != nullptr) {
-                float difX = x - equipoMadrid[i]->pos.x;
-                float difY = y - equipoMadrid[i]->pos.y;
-                // Si la distancia al centro es menor que su radio... ¡Tocado!
-                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) {
-                    jugadorSeleccionado = equipoMadrid[i];
-                }
+                float difX = x - equipoMadrid[i]->getPosX();
+                float difY = y - equipoMadrid[i]->getPosY();
+                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) tocado = equipoMadrid[i];
             }
         }
 
-        // Comprobamos si el clic ha dado en un jugador del Atleti
+        //Comprobar Atleti usando GETTERS
         for (int i = 0; i < 18; i++) {
             if (equipoAtleti[i] != nullptr) {
-                float difX = x - equipoAtleti[i]->pos.x;
-                float difY = y - equipoAtleti[i]->pos.y;
-                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) {
-                    jugadorSeleccionado = equipoAtleti[i];
+                float difX = x - equipoAtleti[i]->getPosX();
+                float difY = y - equipoAtleti[i]->getPosY();
+                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f) tocado = equipoAtleti[i];
+            }
+        }
+
+        //Lógica de juego usando GETTERS Y SETTERS
+        if (jugadorSeleccionado == nullptr) {
+            jugadorSeleccionado = tocado;
+        }
+        else {
+            if (tocado == nullptr) {
+                // SEGUNDO CLIC en vacío
+                int targetX = int(floor(x));
+                int targetY = int(floor(y));
+
+                int actualX = int(jugadorSeleccionado->getPosX());
+                int actualY = int(jugadorSeleccionado->getPosY());
+
+                // Comprobamos si el movimiento cumple las reglas de la pieza
+                if (jugadorSeleccionado->esMovimientoValido(actualX, actualY, targetX, targetY)) {
+                    float centroX = targetX + 0.5f;
+                    float centroY = targetY + 0.5f;
+                    jugadorSeleccionado->setPosicion(centroX, centroY);
+                    jugadorSeleccionado = nullptr; // Soltamos al jugador tras moverlo con éxito
                 }
+                // Si la casilla no es válida, la condición no se cumple y el juego 
+                // no hace absolutamente nada. El jugador seguirá seleccionado.
             }
         }
     }
