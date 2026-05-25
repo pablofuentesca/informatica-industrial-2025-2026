@@ -2,10 +2,55 @@
 #include "ETSIDI.h"
 #include "freeglut.h"
 
-void dibujaTexto(float x, float y, const char* texto, float r, float g, float b) {
+Coordinador::~Coordinador()
+{
+    if (portada != nullptr) delete portada;
+}
+
+void Coordinador::inicializa()
+{
+    portada = new ETSIDI::Sprite("../bin/imagenes/portada.png", 400, 300, 800, 600);
+    mundo.inicializa();
+}
+
+static void dibujaTexto(float x, float y, const char* texto, float r, float g, float b)
+{
     glColor3f(r, g, b);
     glRasterPos2f(x, y);
     while (*texto) { glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *texto); texto++; }
+}
+
+static void dibujaBoton(float x1, float y1, float x2, float y2,
+                         const char* texto, bool activo)
+{
+    // Fondo oscuro semitransparente
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.05f, 0.03f, 0.0f, 0.85f);
+    glBegin(GL_QUADS);
+        glVertex2f(x1, y1); glVertex2f(x2, y1);
+        glVertex2f(x2, y2); glVertex2f(x1, y2);
+    glEnd();
+    glDisable(GL_BLEND);
+
+    // Borde dorado (grisáceo si inactivo)
+    glLineWidth(2.5f);
+    glColor3f(activo ? 0.9f : 0.45f, activo ? 0.7f : 0.4f, activo ? 0.1f : 0.1f);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(x1, y1); glVertex2f(x2, y1);
+        glVertex2f(x2, y2); glVertex2f(x1, y2);
+    glEnd();
+    glLineWidth(1.0f);
+
+    // Texto centrado
+    float textW = (float)glutBitmapLength(GLUT_BITMAP_HELVETICA_18,
+                                          (const unsigned char*)texto);
+    float cx = x1 + (x2 - x1 - textW) / 2.0f;
+    float cy = y1 + (y2 - y1) / 2.0f - 6.0f;
+    glColor3f(activo ? 1.0f : 0.5f, activo ? 0.85f : 0.5f, activo ? 0.4f : 0.4f);
+    glRasterPos2f(cx, cy);
+    for (const char* c = texto; *c; c++)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 }
 
 void Coordinador::mueve(double dt)
@@ -21,13 +66,26 @@ void Coordinador::dibuja() const
         glMatrixMode(GL_PROJECTION); glLoadIdentity(); gluOrtho2D(0, 800, 0, 600);
         glMatrixMode(GL_MODELVIEW);  glLoadIdentity();
         glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glClearColor(0.05f, 0.1f, 0.2f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        dibujaTexto(235, 400, "REAL MADRID VS ATLETICO DE MADRID", 1.0f, 1.0f, 1.0f);
-        dibujaTexto(330, 350, "EDICION ARCHON",                    0.8f, 1.0f, 0.6f);
-        dibujaTexto(190, 200, "Pulsa 'E' para empezar el partido", 0.6f, 0.8f, 1.0f);
+
+        if (portada != nullptr) {
+            glEnable(GL_TEXTURE_2D);
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            portada->draw();
+            glDisable(GL_TEXTURE_2D);
+        }
+
+        // Resetear estados que el sprite puede haber dejado sucios
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+        dibujaBoton(200, 120, 390, 185, "1 vs 1",       true);
+        dibujaBoton(410, 120, 620, 185, "Jugador vs IA", true);
         break;
+
     case JUEGO:
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -35,6 +93,7 @@ void Coordinador::dibuja() const
         glMatrixMode(GL_MODELVIEW);  glLoadIdentity();
         mundo.dibuja();
         break;
+
     case COMBATE:
         glClear(GL_COLOR_BUFFER_BIT);
         arena.dibuja();
@@ -53,7 +112,7 @@ void Coordinador::tecla(unsigned char key)
         mundo.tecla(key);
         break;
     case COMBATE:
-        if (key == 27) { ETSIDI::stopMusica(); estado = JUEGO; return; }  // ESC vuelve al tablero
+        if (key == 27) { ETSIDI::stopMusica(); estado = JUEGO; return; }
         arena.tecla(key);
         break;
     }
@@ -78,13 +137,20 @@ void Coordinador::teclaEspecialArriba(int key)
     if (estado == COMBATE) arena.teclaEspecialArriba(key);
 }
 
-void Coordinador::raton(int boton, int estadoRat, int x, int y) {
+void Coordinador::raton(int boton, int estadoRat, int x, int y)
+{
+    if (estado == INICIO) {
+        if (boton == GLUT_LEFT_BUTTON && estadoRat == GLUT_DOWN) {
+            // Botón "1 vs 1": OpenGL x[200-390] y[120-185] → GLUT y[415-480]
+            if (x >= 200 && x <= 390 && y >= 415 && y <= 480)
+                estado = JUEGO;
+        }
+        return;
+    }
+
     if (estado == JUEGO) {
-        // Magia matemática: Traducir píxeles a coordenadas del tablero de Archon
         float x_logico = (x / 800.0f) * 11.0f - 1.0f;
         float y_logico = ((600.0f - y) / 600.0f) * 11.0f - 1.0f;
-
-        // Le pasamos el clic traducido al mundo
         mundo.raton(boton, estadoRat, x_logico, y_logico);
     }
 }

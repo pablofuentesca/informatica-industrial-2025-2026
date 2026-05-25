@@ -2,13 +2,17 @@
 #include "mundo.h"
 #include "Arena.h"
 
+namespace ETSIDI { class Sprite; }
+
 class Coordinador {
     enum Estado { INICIO, JUEGO, COMBATE, PAUSA, FIN } estado{};
     Mundo mundo;
     Arena arena;
+    ETSIDI::Sprite* portada{ nullptr };
 
 public:
-    void inicializa() { mundo.inicializa(); }
+    ~Coordinador();
+    void inicializa();
     void dibuja() const;
     void mueve(double dt);
     void tecla(unsigned char key);
