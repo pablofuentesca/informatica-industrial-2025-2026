@@ -1,4 +1,5 @@
 #pragma once
+#include "jugador.h"
 
 class Jugador;   // declaracion anticipada: Arena solo guarda punteros
 
@@ -39,6 +40,7 @@ class Arena {
     double xMin, xMax, yMin, yMax;
     double tam;
 
+<<<<<<< HEAD
     double j1x, j1y;   // Jugador 1 - Madrid (blanco)
     double j2x, j2y;   // Jugador 2 - Atleti  (rojo)
     double arbY;
@@ -62,12 +64,26 @@ class Arena {
     double timerMeleeJ2;
 
     int ganador;    // 0=sin resultado, 1=gana Madrid, 2=gana Atleti
+=======
+    double j1x, j1y;   // posicion en arena del combatiente equipo 1 (WASD)
+    double j2x, j2y;   // posicion en arena del combatiente equipo 2 (flechas)
+    double arbY;
 
-    // teclas mantenidas pulsadas
+    double t;
+    bool silbatoSonado;
+    bool usarDiagonal;
+
+    Obstaculo obstaculos[8];
+    double tBatalla;
+>>>>>>> 56e749c94030130fc6d17f06fc42c96e66f5296f
+
     bool j1Arr, j1Aba, j1Izq, j1Der;
     bool j2Arr, j2Aba, j2Izq, j2Der;
     bool j1Ataca;   // ESPACIO mantenido
     bool j2Ataca;   // INTRO mantenido
+
+    Jugador* j1ptr;   // pieza real equipo 1 (Madrid, WASD)
+    Jugador* j2ptr;   // pieza real equipo 2 (Atleti, flechas)
 
     enum EstadoArena {
         TRANSICION,
@@ -78,6 +94,8 @@ class Arena {
         BATALLA,
         FIN
     } estado;
+
+    enum Resultado { EN_CURSO, GANA_J1, GANA_J2 } resultado;
 
     friend class interaccionArena;
 
@@ -101,11 +119,19 @@ public:
               ganador(0),
               j1Arr(false), j1Aba(false), j1Izq(false), j1Der(false),
               j2Arr(false), j2Aba(false), j2Izq(false), j2Der(false),
+<<<<<<< HEAD
               j1Ataca(false), j2Ataca(false),
               estado(TRANSICION) {}
 
     void inicializa();
     void inicializa(Jugador* combatiente1, Jugador* combatiente2);
+=======
+              j1ptr(nullptr), j2ptr(nullptr),
+              estado(TRANSICION), resultado(EN_CURSO) {}
+
+    // atacante: pieza que se movio; defensor: pieza que ocupaba la casilla
+    void inicializa(Jugador* atacante, Jugador* defensor);
+>>>>>>> 56e749c94030130fc6d17f06fc42c96e66f5296f
     void dibuja() const;
     void mueve(double dt);
     void tecla(unsigned char key);
@@ -113,5 +139,11 @@ public:
     void teclaEspecial(int key);
     void teclaEspecialArriba(int key);
 
+<<<<<<< HEAD
     int getGanador() const { return ganador; }
+=======
+    bool     termino()     const { return resultado != EN_CURSO; }
+    Jugador* getPerdedor() const;
+    Jugador* getGanador()  const;
+>>>>>>> 56e749c94030130fc6d17f06fc42c96e66f5296f
 };
