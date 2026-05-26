@@ -16,10 +16,11 @@ public:
             danio       = 12;
             cooldownMax = 0.25;
         } else {
-            hpMax       = 70;
-            velArena    = 180.0;
-            danio       = 18;
-            cooldownMax = 0.80;
+            hpMax        = 70;
+            velArena     = 180.0;
+            danio        = 18;
+            cooldownMax  = 0.80;
+            disparaTriple = true;   // Manticora: abanico de 3 proyectiles
         }
         hp = hpMax;
     }

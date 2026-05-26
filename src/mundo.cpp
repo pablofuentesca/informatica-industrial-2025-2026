@@ -262,13 +262,66 @@ void Mundo::raton(int boton, int estado, float x, float y)
         calcularCasillasValidas();
     }
     else {
-        // Segundo click: mover si la casilla es válida
+        // Segundo click: mover o iniciar combate si la casilla es valida
         if (casillasValidas[gx][gy]) {
-            jugadorSeleccionado->moverA((float)gx, (float)gy);
-            primerTurno = false;                        // El saque ya se realizó
-            turnoEquipo = (turnoEquipo == 1) ? 2 : 1;  // Cambio de turno
+            int equipoDestino = equipoEn(gx, gy);
+            if (equipoDestino != 0 && equipoDestino != turnoEquipo) {
+                // Hay un enemigo en la casilla destino: preparar combate
+                Jugador** enemigoArr = (equipoDestino == 1) ? equipoMadrid : equipoAtleti;
+                for (int i = 0; i < 18; i++) {
+                    if (enemigoArr[i] != nullptr &&
+                        (int)enemigoArr[i]->pos.x == gx &&
+                        (int)enemigoArr[i]->pos.y == gy) {
+                        pendientePj1 = jugadorSeleccionado;
+                        pendientePj2 = enemigoArr[i];
+                        destCombateX = gx;
+                        destCombateY = gy;
+                        break;
+                    }
+                }
+                // No se mueve todavia: el coordinador activara la arena
+            } else {
+                // Casilla libre: mover y cambiar turno
+                jugadorSeleccionado->moverA((float)gx, (float)gy);
+                primerTurno = false;
+                turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+            }
         }
         jugadorSeleccionado = nullptr;
         calcularCasillasValidas();
     }
+}
+
+void Mundo::eliminarPieza(Jugador* pj)
+{
+    for (int i = 0; i < 18; i++) {
+        if (equipoMadrid[i] == pj) { delete equipoMadrid[i]; equipoMadrid[i] = nullptr; return; }
+        if (equipoAtleti[i] == pj) { delete equipoAtleti[i]; equipoAtleti[i] = nullptr; return; }
+    }
+}
+
+void Mundo::resolverCombate(int equipoGanador)
+{
+    if (pendientePj1 == nullptr || pendientePj2 == nullptr) return;
+
+    if (equipoGanador == pendientePj1->getEquipo()) {
+        // Atacante gana: elimina al defensor y ocupa su casilla
+        eliminarPieza(pendientePj2);
+        pendientePj1->moverA((float)destCombateX, (float)destCombateY);
+    } else {
+        // Defensor gana: elimina al atacante
+        eliminarPieza(pendientePj1);
+    }
+
+    primerTurno = false;
+    turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+    limpiarCombatePendiente();
+}
+
+void Mundo::limpiarCombatePendiente()
+{
+    pendientePj1 = nullptr;
+    pendientePj2 = nullptr;
+    destCombateX = -1;
+    destCombateY = -1;
 }

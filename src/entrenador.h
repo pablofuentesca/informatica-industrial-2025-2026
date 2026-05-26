@@ -13,10 +13,11 @@ public:
             ? "../bin/imagenes/fotosjugadores/madridentrenador.png"
             : "../bin/imagenes/fotosjugadores/atletientrenador.png")
     {
-        hpMax       = 40;
-        velArena    = 130.0;
-        danio       = 12;
-        cooldownMax = 1.00;
+        hpMax            = 40;
+        velArena         = 130.0;
+        danio            = 12;
+        cooldownMax      = 1.00;
+        disparaRayoArcano = true;   // Mago/Hechicera: rayo arcano rapido, paraliza y atraviesa
         hp = hpMax;
     }
 

@@ -16,10 +16,11 @@ public:
             danio       = 18;
             cooldownMax = 0.60;
         } else {
-            hpMax       = 65;
-            velArena    = 240.0;
-            danio       = 16;
-            cooldownMax = 0.70;
+            hpMax                = 65;
+            velArena             = 240.0;
+            danio                = 16;
+            cooldownMax          = 0.70;
+            proyectilAtraviesa   = true;  // Banshee: el alarido atraviesa obstaculos
         }
         hp = hpMax;
     }

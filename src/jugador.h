@@ -8,6 +8,7 @@ protected:
     ETSIDI::Sprite* sprite{ nullptr };
     int    equipo{ 1 };
     float  radio{ 0.4f };
+    const char* rutaTextura{ "" };  // ruta de la imagen, para dibujar en la arena
 
     // estadisticas de combate en arena
     int    hpMax{ 50 };
@@ -16,6 +17,13 @@ protected:
     int    danio{ 10 };         // puntos de dano por ataque
     double cooldownMax{ 0.8 };  // segundos entre ataques
     double timerAtaque{ 0.0 };  // tiempo restante hasta poder atacar de nuevo
+
+    // flags de comportamiento especial del proyectil (se fijan en cada subclase)
+    bool disparaTriple{ false };       // Manticora: dispara 3 proyectiles en abanico
+    bool proyectilParaliza{ false };   // Basilisco: inmoviliza al rival al impactar
+    bool proyectilAtraviesa{ false };  // Banshee: el proyectil atraviesa obstaculos
+    bool disparaRayoArcano{ false };   // Entrenador: rayo rapido que atraviesa Y paraliza
+    bool disparaEnjambre{ false };     // Goblin: enjambre de 3 proyectiles en abanico
 
     Jugador(float x, float y, int _equipo, const char* ruta);
 
@@ -42,6 +50,10 @@ public:
     virtual double alcanceAtaque() const;  // radio hitbox mele en px arena; 0 si es ranged
     virtual void   habilidadEspecial();    // efecto especial pasivo o activo de la pieza
 
+    // Fenix: puede revivir una vez; el resto de piezas devuelven false
+    virtual bool puedeRevivir() const { return false; }
+    virtual void revive() {}
+
     void recibeGolpe(int dano);
     void reiniciaCooldown() { timerAtaque = cooldownMax; }
 
@@ -57,4 +69,12 @@ public:
     float getPosX() const;
     float getPosY() const;
     void setPosicion(float nuevaX, float nuevaY);
+
+    bool getDisparaTriple()      const { return disparaTriple; }
+    bool getProyectilParaliza()  const { return proyectilParaliza; }
+    bool getProyectilAtraviesa() const { return proyectilAtraviesa; }
+    bool getDisparaRayoArcano()  const { return disparaRayoArcano; }
+    bool getDisparaEnjambre()    const { return disparaEnjambre; }
+
+    const char* getRutaTextura() const { return rutaTextura; }
 };

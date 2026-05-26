@@ -5,7 +5,7 @@
 namespace ETSIDI { class Sprite; }
 
 class Coordinador {
-    enum Estado { INICIO, JUEGO, COMBATE, PAUSA, FIN } estado{};
+    enum Estado { INICIO, REGLAS, JUEGO, COMBATE, PAUSA, FIN } estado{};
     Mundo mundo;
     Arena arena;
     ETSIDI::Sprite* portada{ nullptr };

@@ -5,10 +5,11 @@
 
 Jugador::Jugador(float x, float y, int _equipo, const char* ruta)
 {
-    pos.x  = x + 0.5f;
-    pos.y  = y + 0.5f;
-    equipo = _equipo;
-    sprite = new ETSIDI::Sprite(ruta, pos.x, pos.y, radio * 2, radio * 2);
+    pos.x       = x + 0.5f;
+    pos.y       = y + 0.5f;
+    equipo      = _equipo;
+    rutaTextura = ruta;
+    sprite      = new ETSIDI::Sprite(ruta, pos.x, pos.y, radio * 2, radio * 2);
 }
 
 Jugador::~Jugador()

@@ -17,11 +17,12 @@ public:
             danio       = 25;
             cooldownMax = 0.70;
         } else {
-            // Goblin: rapido y agresivo pero muy fragil
-            hpMax       = 25;
-            velArena    = 210.0;
-            danio       = 8;
-            cooldownMax = 0.50;
+            // Goblin: rapido y agresivo, lanza un enjambre de proyectiles
+            hpMax           = 25;
+            velArena        = 210.0;
+            danio           = 8;
+            cooldownMax     = 0.50;
+            disparaEnjambre = true;   // Goblin: 3 proyectiles en abanico de 30 grados
         }
         hp = hpMax;
     }
