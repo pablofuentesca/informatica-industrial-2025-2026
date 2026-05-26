@@ -96,14 +96,24 @@ static void separaDeObstaculo(double& px, double& py, double radio, const Obstac
     }
 }
 
-void Arena::inicializa()
+void Arena::inicializa(Jugador* atacante, Jugador* defensor)
 {
+    // j1 (WASD) = equipo 1 (Madrid), j2 (flechas) = equipo 2 (Atleti)
+    if (atacante != nullptr && atacante->getEquipo() == 1) {
+        j1ptr = atacante;
+        j2ptr = defensor;
+    } else {
+        j1ptr = defensor;
+        j2ptr = atacante;
+    }
+
     j1x = -50;  j1y = 300;
     j2x = 850;  j2y = 300;
     arbY = 650;
     t = 0.0;
     tBatalla = 0.0;
     silbatoSonado = false;
+    resultado = EN_CURSO;
     usarDiagonal = ETSIDI::lanzaMoneda();
     estado = TRANSICION;
 
@@ -219,13 +229,14 @@ void Arena::mueve(double dt)
                 obstaculos[i].tVida += dt;
         }
 
-        const double vel = 200.0;   // pixeles por segundo
+        double vel1 = (j1ptr != nullptr) ? j1ptr->getVelArena() : 200.0;
+        double vel2 = (j2ptr != nullptr) ? j2ptr->getVelArena() : 200.0;
 
         // Movimiento jugador 1 (WASD)
-        if (j1Arr) j1y += vel * dt;
-        if (j1Aba) j1y -= vel * dt;
-        if (j1Izq) j1x -= vel * dt;
-        if (j1Der) j1x += vel * dt;
+        if (j1Arr) j1y += vel1 * dt;
+        if (j1Aba) j1y -= vel1 * dt;
+        if (j1Izq) j1x -= vel1 * dt;
+        if (j1Der) j1x += vel1 * dt;
         if (j1x - tam < xMin) j1x = xMin + tam;
         if (j1x + tam > xMax) j1x = xMax - tam;
         if (j1y - tam < yMin) j1y = yMin + tam;
@@ -236,10 +247,10 @@ void Arena::mueve(double dt)
         }
 
         // Movimiento jugador 2 (flechas)
-        if (j2Arr) j2y += vel * dt;
-        if (j2Aba) j2y -= vel * dt;
-        if (j2Izq) j2x -= vel * dt;
-        if (j2Der) j2x += vel * dt;
+        if (j2Arr) j2y += vel2 * dt;
+        if (j2Aba) j2y -= vel2 * dt;
+        if (j2Izq) j2x -= vel2 * dt;
+        if (j2Der) j2x += vel2 * dt;
         if (j2x - tam < xMin) j2x = xMin + tam;
         if (j2x + tam > xMax) j2x = xMax - tam;
         if (j2y - tam < yMin) j2y = yMin + tam;
@@ -250,9 +261,24 @@ void Arena::mueve(double dt)
         }
 
         interaccionArena::separa(*this);
+        interaccionArena::aplicaDanio(*this, dt);
         break;
     }
     }
+}
+
+Jugador* Arena::getPerdedor() const
+{
+    if (resultado == GANA_J1) return j2ptr;
+    if (resultado == GANA_J2) return j1ptr;
+    return nullptr;
+}
+
+Jugador* Arena::getGanador() const
+{
+    if (resultado == GANA_J1) return j1ptr;
+    if (resultado == GANA_J2) return j2ptr;
+    return nullptr;
 }
 
 void Arena::dibuja() const
@@ -400,6 +426,42 @@ void Arena::dibuja() const
     // arbitro visible durante su secuencia de entrada
     if (estado == ARBITRO_ENTRANDO || estado == ARBITRO_ESPERA || estado == ARBITRO_SALIENDO)
         dibujaArbitro(arbY);
+
+    // barras de vida (solo en BATALLA)
+    if (estado == BATALLA && j1ptr != nullptr && j2ptr != nullptr) {
+        const double barW = 200.0, barH = 14.0, barY = yMax + 8.0;
+
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+
+        // j1 (Madrid, verde) — crece de izquierda a derecha
+        double frac1 = (double)j1ptr->getHp() / j1ptr->getHpMax();
+        if (frac1 < 0) frac1 = 0;
+        glColor3d(0.25, 0.25, 0.25);
+        glBegin(GL_QUADS);
+            glVertex2d(xMin, barY);        glVertex2d(xMin + barW, barY);
+            glVertex2d(xMin + barW, barY + barH); glVertex2d(xMin, barY + barH);
+        glEnd();
+        glColor3d(0.2, 0.8, 0.2);
+        glBegin(GL_QUADS);
+            glVertex2d(xMin, barY);               glVertex2d(xMin + barW * frac1, barY);
+            glVertex2d(xMin + barW * frac1, barY + barH); glVertex2d(xMin, barY + barH);
+        glEnd();
+
+        // j2 (Atleti, rojo) — crece de derecha a izquierda
+        double frac2 = (double)j2ptr->getHp() / j2ptr->getHpMax();
+        if (frac2 < 0) frac2 = 0;
+        glColor3d(0.25, 0.25, 0.25);
+        glBegin(GL_QUADS);
+            glVertex2d(xMax - barW, barY); glVertex2d(xMax, barY);
+            glVertex2d(xMax, barY + barH); glVertex2d(xMax - barW, barY + barH);
+        glEnd();
+        glColor3d(0.85, 0.15, 0.15);
+        glBegin(GL_QUADS);
+            glVertex2d(xMax - barW * frac2, barY); glVertex2d(xMax, barY);
+            glVertex2d(xMax, barY + barH); glVertex2d(xMax - barW * frac2, barY + barH);
+        glEnd();
+    }
 
     // overlay de transicion encima de todo (diagonal o iris, elegido al azar)
     if (estado == TRANSICION) {

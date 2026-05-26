@@ -55,8 +55,15 @@ static void dibujaBoton(float x1, float y1, float x2, float y2,
 
 void Coordinador::mueve(double dt)
 {
-    if (estado == COMBATE)
+    if (estado == COMBATE) {
         arena.mueve(dt);
+        if (arena.termino()) {
+            mundo.eliminarPerdedor(arena.getPerdedor());
+            mundo.pasarTurno();
+            ETSIDI::stopMusica();
+            estado = JUEGO;
+        }
+    }
 }
 
 void Coordinador::dibuja() const
@@ -108,7 +115,6 @@ void Coordinador::tecla(unsigned char key)
         if (key == 'e' || key == 'E') { estado = JUEGO; }
         break;
     case JUEGO:
-        if (key == '0') { arena.inicializa(); estado = COMBATE; return; }
         mundo.tecla(key);
         break;
     case COMBATE:
@@ -152,5 +158,11 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
         float x_logico = (x / 800.0f) * 11.0f - 1.0f;
         float y_logico = ((600.0f - y) / 600.0f) * 11.0f - 1.0f;
         mundo.raton(boton, estadoRat, x_logico, y_logico);
+
+        if (mundo.hayCombatePendiente()) {
+            arena.inicializa(mundo.getAtacante(), mundo.getDefensor());
+            mundo.consumirCombate();
+            estado = COMBATE;
+        }
     }
 }

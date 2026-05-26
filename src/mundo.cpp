@@ -164,6 +164,48 @@ int Mundo::equipoEn(int x, int y) const
     return 0;
 }
 
+Jugador* Mundo::buscarJugadorEn(int x, int y) const
+{
+    for (int i = 0; i < 18; i++) {
+        if (equipoMadrid[i] != nullptr &&
+            (int)equipoMadrid[i]->pos.x == x && (int)equipoMadrid[i]->pos.y == y)
+            return equipoMadrid[i];
+        if (equipoAtleti[i] != nullptr &&
+            (int)equipoAtleti[i]->pos.x == x && (int)equipoAtleti[i]->pos.y == y)
+            return equipoAtleti[i];
+    }
+    return nullptr;
+}
+
+void Mundo::consumirCombate()
+{
+    combatePendiente = false;
+    atacante = nullptr;
+    defensor = nullptr;
+}
+
+void Mundo::eliminarPerdedor(Jugador* perdedor)
+{
+    if (perdedor == nullptr) return;
+    for (int i = 0; i < 18; i++) {
+        if (equipoMadrid[i] == perdedor) {
+            delete equipoMadrid[i];
+            equipoMadrid[i] = nullptr;
+            return;
+        }
+        if (equipoAtleti[i] == perdedor) {
+            delete equipoAtleti[i];
+            equipoAtleti[i] = nullptr;
+            return;
+        }
+    }
+}
+
+void Mundo::pasarTurno()
+{
+    turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+}
+
 void Mundo::calcularCasillasValidas()
 {
     for (int i = 0; i < 9; i++)
@@ -264,9 +306,23 @@ void Mundo::raton(int boton, int estado, float x, float y)
     else {
         // Segundo click: mover si la casilla es válida
         if (casillasValidas[gx][gy]) {
+            // Comprobar si hay enemigo en el destino ANTES de mover
+            int eqDestino = equipoEn(gx, gy);
+            Jugador* def = nullptr;
+            if (eqDestino != 0 && eqDestino != jugadorSeleccionado->getEquipo())
+                def = buscarJugadorEn(gx, gy);
+
             jugadorSeleccionado->moverA((float)gx, (float)gy);
-            primerTurno = false;                        // El saque ya se realizó
-            turnoEquipo = (turnoEquipo == 1) ? 2 : 1;  // Cambio de turno
+            primerTurno = false;
+
+            if (def != nullptr) {
+                // Hay combate: no cambiar turno hasta que la arena devuelva resultado
+                combatePendiente = true;
+                atacante = jugadorSeleccionado;
+                defensor = def;
+            } else {
+                turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+            }
         }
         jugadorSeleccionado = nullptr;
         calcularCasillasValidas();
