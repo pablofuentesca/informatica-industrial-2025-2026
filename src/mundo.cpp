@@ -266,6 +266,7 @@ void Mundo::raton(int boton, int estado, float x, float y)
                 jugadorSeleccionado->moverA((float)gx, (float)gy);
                 primerTurno = false;
                 turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+                miTablero.avanzarCiclo();
             }
         }
         jugadorSeleccionado = nullptr;
@@ -296,6 +297,7 @@ void Mundo::resolverCombate(int equipoGanador)
 
     primerTurno = false;
     turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
+    miTablero.avanzarCiclo();
     limpiarCombatePendiente();
 }
 
