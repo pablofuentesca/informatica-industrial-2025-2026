@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "tablero.h"
 #include "pelota.h"
 #include "jugador.h"
@@ -7,8 +8,8 @@ class Mundo {
 
     Tablero miTablero;
     Pelota balones[5];
-    Jugador* equipoMadrid[18];
-    Jugador* equipoAtleti[18];
+    std::vector<Jugador*> equipoMadrid;
+    std::vector<Jugador*> equipoAtleti;
     Jugador* jugadorSeleccionado;
     bool casillasValidas[9][9];
     int  turnoEquipo{ 1 };   // 1 = Madrid/Blanco, 2 = Atleti/Rojo

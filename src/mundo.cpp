@@ -14,24 +14,20 @@
 #include <cstdlib>
 #include <ctime>
 
-Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) }
+Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) },
+                 equipoMadrid(18, nullptr),
+                 equipoAtleti(18, nullptr)
 {
     jugadorSeleccionado = nullptr;
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             casillasValidas[i][j] = false;
-    for (int i = 0; i < 18; i++) {
-        equipoMadrid[i] = nullptr;
-        equipoAtleti[i] = nullptr;
-    }
 }
 
 Mundo::~Mundo()
 {
-    for (int i = 0; i < 18; i++) {
-        if (equipoMadrid[i] != nullptr) delete equipoMadrid[i];
-        if (equipoAtleti[i] != nullptr) delete equipoAtleti[i];
-    }
+    for (Jugador* pj : equipoMadrid) delete pj;
+    for (Jugador* pj : equipoAtleti) delete pj;
 }
 
 void Mundo::inicializa()
@@ -129,10 +125,8 @@ void Mundo::dibuja() const
     }
 
     glDisable(GL_TEXTURE_2D);
-    for (int i = 0; i < 18; i++) {
-        if (equipoMadrid[i] != nullptr) equipoMadrid[i]->dibuja();
-        if (equipoAtleti[i] != nullptr) equipoAtleti[i]->dibuja();
-    }
+    for (Jugador* pj : equipoMadrid) if (pj != nullptr) pj->dibuja();
+    for (Jugador* pj : equipoAtleti) if (pj != nullptr) pj->dibuja();
 
     // Mensaje de turno
     glDisable(GL_TEXTURE_2D);
@@ -153,14 +147,12 @@ void Mundo::dibuja() const
 
 int Mundo::equipoEn(int x, int y) const
 {
-    for (int i = 0; i < 18; i++) {
-        if (equipoMadrid[i] != nullptr)
-            if ((int)equipoMadrid[i]->pos.x == x && (int)equipoMadrid[i]->pos.y == y)
-                return 1;
-        if (equipoAtleti[i] != nullptr)
-            if ((int)equipoAtleti[i]->pos.x == x && (int)equipoAtleti[i]->pos.y == y)
-                return 2;
-    }
+    for (const Jugador* pj : equipoMadrid)
+        if (pj != nullptr && (int)pj->pos.x == x && (int)pj->pos.y == y)
+            return 1;
+    for (const Jugador* pj : equipoAtleti)
+        if (pj != nullptr && (int)pj->pos.x == x && (int)pj->pos.y == y)
+            return 2;
     return 0;
 }
 
@@ -239,24 +231,13 @@ void Mundo::raton(int boton, int estado, float x, float y)
 
     if (jugadorSeleccionado == nullptr) {
         // Primer click: buscar jugador del equipo en turno
-        if (turnoEquipo == 1) {
-            for (int i = 0; i < 18; i++) {
-                if (equipoMadrid[i] != nullptr) {
-                    float difX = x - equipoMadrid[i]->pos.x;
-                    float difY = y - equipoMadrid[i]->pos.y;
-                    if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
-                        jugadorSeleccionado = equipoMadrid[i];
-                }
-            }
-        }
-        else {
-            for (int i = 0; i < 18; i++) {
-                if (equipoAtleti[i] != nullptr) {
-                    float difX = x - equipoAtleti[i]->pos.x;
-                    float difY = y - equipoAtleti[i]->pos.y;
-                    if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
-                        jugadorSeleccionado = equipoAtleti[i];
-                }
+        std::vector<Jugador*>& equipoEnTurno = (turnoEquipo == 1) ? equipoMadrid : equipoAtleti;
+        for (Jugador* pj : equipoEnTurno) {
+            if (pj != nullptr) {
+                float difX = x - pj->pos.x;
+                float difY = y - pj->pos.y;
+                if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
+                    jugadorSeleccionado = pj;
             }
         }
         calcularCasillasValidas();
@@ -267,13 +248,13 @@ void Mundo::raton(int boton, int estado, float x, float y)
             int equipoDestino = equipoEn(gx, gy);
             if (equipoDestino != 0 && equipoDestino != turnoEquipo) {
                 // Hay un enemigo en la casilla destino: preparar combate
-                Jugador** enemigoArr = (equipoDestino == 1) ? equipoMadrid : equipoAtleti;
-                for (int i = 0; i < 18; i++) {
-                    if (enemigoArr[i] != nullptr &&
-                        (int)enemigoArr[i]->pos.x == gx &&
-                        (int)enemigoArr[i]->pos.y == gy) {
+                std::vector<Jugador*>& enemigoArr = (equipoDestino == 1) ? equipoMadrid : equipoAtleti;
+                for (Jugador* pj : enemigoArr) {
+                    if (pj != nullptr &&
+                        (int)pj->pos.x == gx &&
+                        (int)pj->pos.y == gy) {
                         pendientePj1 = jugadorSeleccionado;
-                        pendientePj2 = enemigoArr[i];
+                        pendientePj2 = pj;
                         destCombateX = gx;
                         destCombateY = gy;
                         break;
@@ -294,10 +275,10 @@ void Mundo::raton(int boton, int estado, float x, float y)
 
 void Mundo::eliminarPieza(Jugador* pj)
 {
-    for (int i = 0; i < 18; i++) {
-        if (equipoMadrid[i] == pj) { delete equipoMadrid[i]; equipoMadrid[i] = nullptr; return; }
-        if (equipoAtleti[i] == pj) { delete equipoAtleti[i]; equipoAtleti[i] = nullptr; return; }
-    }
+    for (Jugador*& slot : equipoMadrid)
+        if (slot == pj) { delete slot; slot = nullptr; return; }
+    for (Jugador*& slot : equipoAtleti)
+        if (slot == pj) { delete slot; slot = nullptr; return; }
 }
 
 void Mundo::resolverCombate(int equipoGanador)
