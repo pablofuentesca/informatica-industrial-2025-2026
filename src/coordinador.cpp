@@ -234,18 +234,29 @@ void Coordinador::teclaEspecialArriba(int key)
 
 void Coordinador::raton(int boton, int estadoRat, int x, int y)
 {
+    // Tamano real de la ventana (cambia al maximizar): normaliza el clic
+    // al sistema de coordenadas con el que se dibuja, no a un 800x600 fijo.
+    float anchoVentana = (float)glutGet(GLUT_WINDOW_WIDTH);
+    float altoVentana  = (float)glutGet(GLUT_WINDOW_HEIGHT);
+    if (anchoVentana <= 0.0f) anchoVentana = 800.0f;
+    if (altoVentana  <= 0.0f) altoVentana  = 600.0f;
+
     if (estado == INICIO) {
         if (boton == GLUT_LEFT_BUTTON && estadoRat == GLUT_DOWN) {
-            // Botón "1 vs 1": OpenGL x[200-390] y[120-185] → GLUT y[415-480]
-            if (x >= 200 && x <= 390 && y >= 415 && y <= 480)
+            // El menu se dibuja en gluOrtho2D(0,800, 0,600): reescalamos el clic
+            // a ese espacio. Boton "1 vs 1": x[200-390], GLUT y[415-480].
+            float mx = (x / anchoVentana) * 800.0f;
+            float my = (y / altoVentana)  * 600.0f;
+            if (mx >= 200 && mx <= 390 && my >= 415 && my <= 480)
                 estado = JUEGO;
         }
         return;
     }
 
     if (estado == JUEGO) {
-        float x_logico = (x / 800.0f) * 11.0f - 1.0f;
-        float y_logico = ((600.0f - y) / 600.0f) * 11.0f - 1.0f;
+        // El tablero se dibuja en gluOrtho2D(-1,10, -1,10) → rango logico de 11 unidades.
+        float x_logico = (x / anchoVentana) * 11.0f - 1.0f;
+        float y_logico = ((altoVentana - y) / altoVentana) * 11.0f - 1.0f;
         mundo.raton(boton, estadoRat, x_logico, y_logico);
 
         if (mundo.hayCombatePendiente()) {

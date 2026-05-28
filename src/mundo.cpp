@@ -15,8 +15,8 @@
 #include <ctime>
 
 Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) },
-                 equipoMadrid(18, nullptr),
-                 equipoAtleti(18, nullptr)
+                 madrid(1, "REAL MADRID"),
+                 atleti(2, "ATLETICO")
 {
     jugadorSeleccionado = nullptr;
     for (int i = 0; i < 9; i++)
@@ -26,10 +26,7 @@ Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0)
 
 Mundo::~Mundo()
 {
-    for (Jugador* pj : equipoMadrid)      delete pj;
-    for (Jugador* pj : equipoAtleti)      delete pj;
-    for (Jugador* pj : cementerioMadrid)  delete pj;
-    for (Jugador* pj : cementerioAtleti)  delete pj;
+    // cada Equipo libera sus propias piezas y cementerio en su destructor
 }
 
 void Mundo::inicializa()
@@ -37,44 +34,43 @@ void Mundo::inicializa()
     // --- REAL MADRID (Izquierda) ---
 
     // Línea frontal (Columna 1)
-    equipoMadrid[0] = new Portero      (1, 0, 1); // Arquera abajo
+    madrid.coloca(0, new Portero      (1, 0, 1)); // Arquera abajo
     for (int i = 1; i < 8; i++)
-        equipoMadrid[i] = new Delantero(1, (float)i, 1); // Caballeros
-    equipoMadrid[8] = new Portero      (1, 8, 1); // Arquera arriba
+        madrid.coloca(i, new Delantero(1, (float)i, 1)); // Caballeros
+    madrid.coloca(8, new Portero      (1, 8, 1)); // Arquera arriba
 
     // Línea trasera (Columna 0)
-    equipoMadrid[9]  = new Centrocampista(0, 0, 1); // Valkiria
-    equipoMadrid[10] = new Central       (0, 1, 1); // Golem
-    equipoMadrid[11] = new Lateral       (0, 2, 1); // Unicornio
-    equipoMadrid[12] = new Mediapunta    (0, 3, 1); // Genio
-    equipoMadrid[13] = new Entrenador    (0, 4, 1); // Mago
-    equipoMadrid[14] = new Extremo       (0, 5, 1); // Fénix
-    equipoMadrid[15] = new Lateral       (0, 6, 1); // Unicornio
-    equipoMadrid[16] = new Central       (0, 7, 1); // Golem
-    equipoMadrid[17] = new Centrocampista(0, 8, 1); // Valkiria
+    madrid.coloca(9,  new Centrocampista(0, 0, 1)); // Valkiria
+    madrid.coloca(10, new Central       (0, 1, 1)); // Golem
+    madrid.coloca(11, new Lateral       (0, 2, 1)); // Unicornio
+    madrid.coloca(12, new Mediapunta    (0, 3, 1)); // Genio
+    madrid.coloca(13, new Entrenador    (0, 4, 1)); // Mago
+    madrid.coloca(14, new Extremo       (0, 5, 1)); // Fénix
+    madrid.coloca(15, new Lateral       (0, 6, 1)); // Unicornio
+    madrid.coloca(16, new Central       (0, 7, 1)); // Golem
+    madrid.coloca(17, new Centrocampista(0, 8, 1)); // Valkiria
 
     // --- ATLETI (Derecha) ---
 
     // Línea frontal (Columna 7)
-    equipoAtleti[0] = new Portero      (7, 0, 2); // Mantícora abajo
+    atleti.coloca(0, new Portero      (7, 0, 2)); // Mantícora abajo
     for (int i = 1; i < 8; i++)
-        equipoAtleti[i] = new Delantero(7, (float)i, 2); // Goblins
-    equipoAtleti[8] = new Portero      (7, 8, 2); // Mantícora arriba
+        atleti.coloca(i, new Delantero(7, (float)i, 2)); // Goblins
+    atleti.coloca(8, new Portero      (7, 8, 2)); // Mantícora arriba
 
     // Línea trasera (Columna 8)
-    equipoAtleti[9]  = new Centrocampista(8, 0, 2); // Banshee
-    equipoAtleti[10] = new Central       (8, 1, 2); // Troll
-    equipoAtleti[11] = new Lateral       (8, 2, 2); // Basilisco
-    equipoAtleti[12] = new Mediapunta    (8, 3, 2); // Cambiaformas
-    equipoAtleti[13] = new Entrenador    (8, 4, 2); // Hechicera
-    equipoAtleti[14] = new Extremo       (8, 5, 2); // Dragón
-    equipoAtleti[15] = new Lateral       (8, 6, 2); // Basilisco
-    equipoAtleti[16] = new Central       (8, 7, 2); // Troll
-    equipoAtleti[17] = new Centrocampista(8, 8, 2); // Banshee
+    atleti.coloca(9,  new Centrocampista(8, 0, 2)); // Banshee
+    atleti.coloca(10, new Central       (8, 1, 2)); // Troll
+    atleti.coloca(11, new Lateral       (8, 2, 2)); // Basilisco
+    atleti.coloca(12, new Mediapunta    (8, 3, 2)); // Cambiaformas
+    atleti.coloca(13, new Entrenador    (8, 4, 2)); // Hechicera
+    atleti.coloca(14, new Extremo       (8, 5, 2)); // Dragón
+    atleti.coloca(15, new Lateral       (8, 6, 2)); // Basilisco
+    atleti.coloca(16, new Central       (8, 7, 2)); // Troll
+    atleti.coloca(17, new Centrocampista(8, 8, 2)); // Banshee
 
     // Tirada de moneda: decide qué equipo saca primero
-    srand((unsigned)time(nullptr));
-    turnoEquipo = rand() % 2 + 1;
+    turno.sortea();
 }
 
 void Mundo::dibuja() const
@@ -127,8 +123,8 @@ void Mundo::dibuja() const
     }
 
     glDisable(GL_TEXTURE_2D);
-    for (Jugador* pj : equipoMadrid) if (pj != nullptr) pj->dibuja();
-    for (Jugador* pj : equipoAtleti) if (pj != nullptr) pj->dibuja();
+    for (Jugador* pj : madrid.getPiezas()) if (pj != nullptr) pj->dibuja();
+    for (Jugador* pj : atleti.getPiezas()) if (pj != nullptr) pj->dibuja();
 
     // Mensaje de turno
     glDisable(GL_TEXTURE_2D);
@@ -137,10 +133,10 @@ void Mundo::dibuja() const
     glColor3f(1.0f, 1.0f, 1.0f);
 
     const char* msg;
-    if (primerTurno)
-        msg = (turnoEquipo == 1) ? "SACA REAL MADRID" : "SACA ATLETICO";
+    if (turno.esPrimerTurno())
+        msg = (turno.equipoEnJuego() == 1) ? "SACA REAL MADRID" : "SACA ATLETICO";
     else
-        msg = (turnoEquipo == 1) ? "MUEVE REAL MADRID" : "MUEVE ATLETICO";
+        msg = (turno.equipoEnJuego() == 1) ? "MUEVE REAL MADRID" : "MUEVE ATLETICO";
 
     glRasterPos2f(2.5f, -0.6f);
     for (const char* c = msg; *c; c++)
@@ -150,7 +146,7 @@ void Mundo::dibuja() const
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(1.0f, 0.0f, 0.0f, 0.35f);
-    for (const Jugador* pj : equipoMadrid)
+    for (const Jugador* pj : madrid.getPiezas())
         if (pj != nullptr && pj->estaEncarcelado()) {
             float px = pj->getPosX() - 0.5f;
             float py = pj->getPosY() - 0.5f;
@@ -161,7 +157,7 @@ void Mundo::dibuja() const
                 glVertex2f(px,        py + 1.0f);
             glEnd();
         }
-    for (const Jugador* pj : equipoAtleti)
+    for (const Jugador* pj : atleti.getPiezas())
         if (pj != nullptr && pj->estaEncarcelado()) {
             float px = pj->getPosX() - 0.5f;
             float py = pj->getPosY() - 0.5f;
@@ -200,12 +196,8 @@ void Mundo::dibuja() const
 
 int Mundo::equipoEn(int x, int y) const
 {
-    for (const Jugador* pj : equipoMadrid)
-        if (pj != nullptr && (int)pj->getPosX() == x && (int)pj->getPosY() == y)
-            return 1;
-    for (const Jugador* pj : equipoAtleti)
-        if (pj != nullptr && (int)pj->getPosX() == x && (int)pj->getPosY() == y)
-            return 2;
+    if (madrid.piezaEn(x, y) != nullptr) return 1;
+    if (atleti.piezaEn(x, y) != nullptr) return 2;
     return 0;
 }
 
@@ -275,10 +267,7 @@ void Mundo::tecla(unsigned char key)
         if (ent->lanzarConjuro(idx, *this)) {
             jugadorSeleccionado = nullptr;
             calcularCasillasValidas();
-            primerTurno = false;
-            turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
-            miTablero.avanzarCiclo();
-            actualizarEncarcelados();
+            cierraTurno();
         }
     }
 }
@@ -301,7 +290,7 @@ void Mundo::raton(int boton, int estado, float x, float y)
 
     if (jugadorSeleccionado == nullptr) {
         // Primer click: buscar jugador del equipo en turno
-        std::vector<Jugador*>& equipoEnTurno = (turnoEquipo == 1) ? equipoMadrid : equipoAtleti;
+        const std::vector<Jugador*>& equipoEnTurno = equipoPorId(turno.equipoEnJuego()).getPiezas();
         for (Jugador* pj : equipoEnTurno) {
             if (pj != nullptr && !pj->estaEncarcelado()) {
                 float difX = x - pj->getPosX();
@@ -316,28 +305,20 @@ void Mundo::raton(int boton, int estado, float x, float y)
         // Segundo click: mover o iniciar combate si la casilla es valida
         if (casillasValidas.at(gx, gy)) {
             int equipoDestino = equipoEn(gx, gy);
-            if (equipoDestino != 0 && equipoDestino != turnoEquipo) {
+            if (equipoDestino != 0 && equipoDestino != turno.equipoEnJuego()) {
                 // Hay un enemigo en la casilla destino: preparar combate
-                std::vector<Jugador*>& enemigoArr = (equipoDestino == 1) ? equipoMadrid : equipoAtleti;
-                for (Jugador* pj : enemigoArr) {
-                    if (pj != nullptr &&
-                        (int)pj->getPosX() == gx &&
-                        (int)pj->getPosY() == gy) {
-                        pendientePj1 = jugadorSeleccionado;
-                        pendientePj2 = pj;
-                        destCombateX = gx;
-                        destCombateY = gy;
-                        break;
-                    }
+                Jugador* defensor = equipoPorId(equipoDestino).piezaEn(gx, gy);
+                if (defensor != nullptr) {
+                    pendientePj1 = jugadorSeleccionado;
+                    pendientePj2 = defensor;
+                    destCombateX = gx;
+                    destCombateY = gy;
                 }
                 // No se mueve todavia: el coordinador activara la arena
             } else {
                 // Casilla libre: mover y cambiar turno
                 jugadorSeleccionado->moverA((float)gx, (float)gy);
-                primerTurno = false;
-                turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
-                miTablero.avanzarCiclo();
-                actualizarEncarcelados();
+                cierraTurno();
             }
         }
         jugadorSeleccionado = nullptr;
@@ -347,10 +328,7 @@ void Mundo::raton(int boton, int estado, float x, float y)
 
 void Mundo::eliminarPieza(Jugador* pj)
 {
-    for (Jugador*& slot : equipoMadrid)
-        if (slot == pj) { cementerioMadrid.push_back(slot); slot = nullptr; return; }
-    for (Jugador*& slot : equipoAtleti)
-        if (slot == pj) { cementerioAtleti.push_back(slot); slot = nullptr; return; }
+    if (pj != nullptr) equipoPorId(pj->getEquipo()).elimina(pj);
 }
 
 void Mundo::resolverCombate(int equipoGanador)
@@ -366,10 +344,7 @@ void Mundo::resolverCombate(int equipoGanador)
         eliminarPieza(pendientePj1);
     }
 
-    primerTurno = false;
-    turnoEquipo = (turnoEquipo == 1) ? 2 : 1;
-    miTablero.avanzarCiclo();
-    actualizarEncarcelados();
+    cierraTurno();
     limpiarCombatePendiente();
 }
 
@@ -386,16 +361,24 @@ void Mundo::invertirCiclo()
     miTablero.invierteDireccionCiclo();
 }
 
+// cierra la jugada actual: pasa el turno, avanza el ciclo de luz del tablero
+// y descuenta un ciclo de carcel a las piezas encarceladas de ambos equipos
+void Mundo::cierraTurno()
+{
+    turno.cambia();
+    miTablero.avanzarCiclo();
+    madrid.descuentaEncarcelados();
+    atleti.descuentaEncarcelados();
+}
+
 void Mundo::curarEquipoCompleto(int equipo)
 {
-    std::vector<Jugador*>& equip = (equipo == 1) ? equipoMadrid : equipoAtleti;
-    for (Jugador* pj : equip)
-        if (pj != nullptr) pj->curarCompleto();
+    equipoPorId(equipo).curaTodos();
 }
 
 bool Mundo::teleportarAleatoriamente(int equipo)
 {
-    std::vector<Jugador*>& miEquip = (equipo == 1) ? equipoMadrid : equipoAtleti;
+    const std::vector<Jugador*>& miEquip = equipoPorId(equipo).getPiezas();
     Jugador* objetivo = nullptr;
     for (Jugador* pj : miEquip)
         if (pj != nullptr && !pj->esEntrenador()) { objetivo = pj; break; }
@@ -414,7 +397,7 @@ bool Mundo::teleportarAleatoriamente(int equipo)
 
 bool Mundo::intercambiarPiezas(int equipo)
 {
-    std::vector<Jugador*>& miEquip = (equipo == 1) ? equipoMadrid : equipoAtleti;
+    const std::vector<Jugador*>& miEquip = equipoPorId(equipo).getPiezas();
     Jugador* pA = nullptr;
     Jugador* pB = nullptr;
     for (Jugador* pj : miEquip) {
@@ -431,19 +414,10 @@ bool Mundo::intercambiarPiezas(int equipo)
     return true;
 }
 
-void Mundo::actualizarEncarcelados()
-{
-    for (Jugador* pj : equipoMadrid)
-        if (pj != nullptr) pj->descuentaCicloEncarcelado();
-    for (Jugador* pj : equipoAtleti)
-        if (pj != nullptr) pj->descuentaCicloEncarcelado();
-}
-
 bool Mundo::encarcelarEnemigo(int equipo)
 {
     int rival = (equipo == 1) ? 2 : 1;
-    std::vector<Jugador*>& rivalArr = (rival == 1) ? equipoMadrid : equipoAtleti;
-    for (Jugador* pj : rivalArr)
+    for (Jugador* pj : equipoPorId(rival).getPiezas())
         if (pj != nullptr && !pj->esEntrenador() && !pj->estaEncarcelado()) {
             pj->encarcelar(3);
             return true;
@@ -453,10 +427,8 @@ bool Mundo::encarcelarEnemigo(int equipo)
 
 bool Mundo::invocarElemental(int equipo)
 {
-    std::vector<Jugador*>& miEquip = (equipo == 1) ? equipoMadrid : equipoAtleti;
-    Jugador* entrenador = nullptr;
-    for (Jugador* pj : miEquip)
-        if (pj != nullptr && pj->esEntrenador()) { entrenador = pj; break; }
+    Equipo& miEquip = equipoPorId(equipo);
+    Jugador* entrenador = miEquip.buscaEntrenador();
     if (entrenador == nullptr) return false;
 
     int ex = (int)(entrenador->getPosX() - 0.5f);
@@ -466,10 +438,7 @@ bool Mundo::invocarElemental(int equipo)
         int nx = ex + d[0];
         int ny = ey + d[1];
         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
-            Jugador* elemental = new Delantero((float)nx, (float)ny, equipo);
-            for (Jugador*& slot : miEquip)
-                if (slot == nullptr) { slot = elemental; return true; }
-            miEquip.push_back(elemental);
+            miEquip.anade(new Delantero((float)nx, (float)ny, equipo));
             return true;
         }
     }
@@ -478,19 +447,11 @@ bool Mundo::invocarElemental(int equipo)
 
 bool Mundo::revivirPieza(int equipo)
 {
-    std::vector<Jugador*>& cementerio = (equipo == 1) ? cementerioMadrid : cementerioAtleti;
-    if (cementerio.empty()) return false;
+    Equipo& miEquip = equipoPorId(equipo);
+    Jugador* revivida = miEquip.ultimaEnCementerio();
+    if (revivida == nullptr) return false;
 
-    Jugador* revivida = cementerio.back();
-    cementerio.pop_back();
-    revivida->curarCompleto();
-
-    std::vector<Jugador*>& miEquip = (equipo == 1) ? equipoMadrid : equipoAtleti;
-
-    Jugador* entrenador = nullptr;
-    for (Jugador* pj : miEquip)
-        if (pj != nullptr && pj->esEntrenador()) { entrenador = pj; break; }
-
+    Jugador* entrenador = miEquip.buscaEntrenador();
     if (entrenador != nullptr) {
         int ex = (int)(entrenador->getPosX() - 0.5f);
         int ey = (int)(entrenador->getPosY() - 0.5f);
@@ -499,10 +460,10 @@ bool Mundo::revivirPieza(int equipo)
             int nx = ex + d[0];
             int ny = ey + d[1];
             if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
+                miEquip.sacaDeCementerio();
+                revivida->curarCompleto();
                 revivida->moverA((float)nx, (float)ny);
-                for (Jugador*& slot : miEquip)
-                    if (slot == nullptr) { slot = revivida; return true; }
-                miEquip.push_back(revivida);
+                miEquip.anade(revivida);
                 return true;
             }
         }
@@ -513,14 +474,13 @@ bool Mundo::revivirPieza(int equipo)
         int tx = rand() % 9;
         int ty = rand() % 9;
         if (equipoEn(tx, ty) == 0) {
+            miEquip.sacaDeCementerio();
+            revivida->curarCompleto();
             revivida->moverA((float)tx, (float)ty);
-            for (Jugador*& slot : miEquip)
-                if (slot == nullptr) { slot = revivida; return true; }
-            miEquip.push_back(revivida);
+            miEquip.anade(revivida);
             return true;
         }
     }
 
-    cementerio.push_back(revivida);
     return false;
 }
