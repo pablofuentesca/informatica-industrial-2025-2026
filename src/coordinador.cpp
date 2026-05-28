@@ -234,8 +234,7 @@ void Coordinador::teclaEspecialArriba(int key)
 
 void Coordinador::raton(int boton, int estadoRat, int x, int y)
 {
-    // Tamano real de la ventana (cambia al maximizar): normaliza el clic
-    // al sistema de coordenadas con el que se dibuja, no a un 800x600 fijo.
+	//Aqui esta lasolucion al bug de la ventana maximizada: el clic se normaliza al tamaño real de la ventana, no a un 800x600 fijo.
     float anchoVentana = (float)glutGet(GLUT_WINDOW_WIDTH);
     float altoVentana  = (float)glutGet(GLUT_WINDOW_HEIGHT);
     if (anchoVentana <= 0.0f) anchoVentana = 800.0f;

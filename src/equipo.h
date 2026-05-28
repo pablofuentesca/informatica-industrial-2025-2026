@@ -27,7 +27,7 @@ public:
     void coloca(int slot, Jugador* pj);   // sustituye a  equipoX[slot] = new ...
     void anade(Jugador* pj);              // reutiliza un slot libre o crece (invocar/revivir)
 
-    // consultas
+    
     Jugador* piezaEn(int gx, int gy) const;   // pieza en esa casilla, o nullptr
     Jugador* buscaEntrenador()       const;   // entrenador vivo, o nullptr
     bool     tienePiezasVivas()      const;
@@ -37,10 +37,10 @@ public:
     void curaTodos();
     void descuentaEncarcelados();
 
-    // gestion del cementerio (para el conjuro Revivir)
+    // gestion del cementerio, para el conjuro Revivir
     Jugador* ultimaEnCementerio() const;      // peek; nullptr si esta vacio
     void     sacaDeCementerio();              // pop de la ultima
 
-    // recorrido (para dibujar / buscar)
+    // recorrido, para dibujar / buscar
     const std::vector<Jugador*>& getPiezas() const { return piezas; }
 };
