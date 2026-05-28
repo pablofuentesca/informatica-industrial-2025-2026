@@ -111,12 +111,15 @@ static void dibujaBalon(double px, double py)
     }
 }
 
-// dibuja un jugador en la arena usando su textura; cubo de color si no hay pieza
+// dibuja un jugador en la arena; si rutaAtaque != nullptr la usa en lugar de la del jugador
 static void dibujaJugadorArena(double cx, double cy, double tam,
-                                const Jugador* pj, bool paralizado, int equipo)
+                                const Jugador* pj, bool paralizado, int equipo,
+                                const char* rutaAtaque = nullptr)
 {
-    if (pj != nullptr) {
-        ETSIDI::GLTexture tex = ETSIDI::getTexture(pj->getRutaTextura());
+    const char* ruta = (rutaAtaque && rutaAtaque[0]) ? rutaAtaque
+                       : (pj ? pj->getRutaTextura() : nullptr);
+    if (ruta && ruta[0]) {
+        ETSIDI::GLTexture tex = ETSIDI::getTexture(ruta);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -168,21 +171,6 @@ static void dibujaArbitro(double arbY)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
-// empuja al jugador (px,py) fuera del obstaculo usando AABB
-static void separaDeObstaculo(double& px, double& py, double radio, const Obstaculo& o)
-{
-    double dx = px - o.x;  if (dx < 0) dx = -dx;
-    double dy = py - o.y;  if (dy < 0) dy = -dy;
-    double overlapX = (radio + o.ancho / 2.0) - dx;
-    double overlapY = (radio + o.alto  / 2.0) - dy;
-    if (overlapX > 0 && overlapY > 0) {
-        if (overlapX < overlapY)
-            px += (px > o.x ? overlapX : -overlapX);
-        else
-            py += (py > o.y ? overlapY : -overlapY);
-    }
-}
-
 // ------------------------------------------------------------
 //  Inicializacion
 // ------------------------------------------------------------
@@ -217,27 +205,29 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     timerMeleeJ2 = 0.0;
     j1Ataca = false;
     j2Ataca = false;
+    j1FacingIzq = false;
+    j2FacingIzq = true;
 
     for (int i = 0; i < MAX_PROYECTILES; i++)
         proyectiles[i] = Proyectil();
 
-    // Generar obstaculos: 5 barreras + 3 charcos de barro
-    for (int i = 0; i < 8; i++) {
+    // Generar obstaculos: 6 barreras + 4 charcos de barro
+    for (int i = 0; i < 10; i++) {
         obstaculos[i] = Obstaculo();
         obstaculos[i].tAparecer = i * 0.2;
 
-        if (i < 5) {
-            obstaculos[i].esBanderin  = false;
-            obstaculos[i].ancho       = 35;
-            obstaculos[i].alto        = 45;
-            obstaculos[i].anchoVisual = 69;
-            obstaculos[i].altoVisual  = 59;
+        if (i < 6) {
+            obstaculos[i].charcobool  = false;
+            obstaculos[i].ancho       = 26;
+            obstaculos[i].alto        = 34;
+            obstaculos[i].anchoVisual = 52;
+            obstaculos[i].altoVisual  = 44;
         } else {
-            obstaculos[i].esBanderin  = true;
-            obstaculos[i].ancho       = 50;
-            obstaculos[i].alto        = 40;
-            obstaculos[i].anchoVisual = 50;
-            obstaculos[i].altoVisual  = 40;
+            obstaculos[i].charcobool  = true;
+            obstaculos[i].ancho       = 38;
+            obstaculos[i].alto        = 30;
+            obstaculos[i].anchoVisual = 38;
+            obstaculos[i].altoVisual  = 30;
         }
 
         bool valida = false;
@@ -256,7 +246,7 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
             for (int j = 0; j < i; j++) {
                 double ddx = px - obstaculos[j].x;  if (ddx < 0) ddx = -ddx;
                 double ddy = py - obstaculos[j].y;  if (ddy < 0) ddy = -ddy;
-                if (ddx < 100 && ddy < 100) { solapado = true; break; }
+                if (ddx < 80 && ddy < 80) { solapado = true; break; }
             }
             if (!solapado) {
                 obstaculos[i].x = px;
@@ -265,8 +255,8 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
             }
         }
         if (!valida) {
-            obstaculos[i].x = 130.0 + (i * 95) % 540;
-            obstaculos[i].y = 130.0 + (i * 75) % 340;
+            obstaculos[i].x = 130.0 + (i * 75) % 540;
+            obstaculos[i].y = 130.0 + (i * 60) % 340;
         }
     }
 
@@ -320,9 +310,9 @@ void Arena::lanzaAtaque(int equipo)
 
     // --- habilidades especiales (tienen prioridad sobre el ataque base) ---
 
-    // Mago/Hechicera: rayo arcano — rapido, atraviesa barreras y paraliza
+    // Mago/Hechicera: rayo arcano — rapido y paraliza
     if (pj && pj->getDisparaRayoArcano()) {
-        agregaProyectil(ox, oy, ddx, ddy, 35, equipo, true, true, 750.0);
+        agregaProyectil(ox, oy, ddx, ddy, 35, equipo, false, true, 750.0);
         return;
     }
 
@@ -382,7 +372,7 @@ void Arena::actualizaProyectiles(double dt)
         // colision con obstaculos (solo barreras, no charcos)
         if (!p.atraviesaObstaculos) {
             for (int j = 0; j < 8; j++) {
-                if (!obstaculos[j].activo || obstaculos[j].esBanderin) continue;
+                if (!obstaculos[j].activo || obstaculos[j].charcobool) continue;
                 double ex = p.x - obstaculos[j].x;  if (ex < 0) ex = -ex;
                 double ey = p.y - obstaculos[j].y;  if (ey < 0) ey = -ey;
                 if (ex < obstaculos[j].ancho / 2.0 && ey < obstaculos[j].alto / 2.0) {
@@ -474,49 +464,45 @@ void Arena::mueve(double dt)
         if (pj2) pj2->actualiza(dt);
 
         // spawn y animacion de obstaculos
-        for (int i = 0; i < 8; i++) {
-            if (!obstaculos[i].activo && tBatalla >= obstaculos[i].tAparecer)
-                obstaculos[i].activo = true;
-            if (obstaculos[i].activo)
-                obstaculos[i].tVida += dt;
-        }
+        for (int i = 0; i < 10; i++)
+            obstaculos[i].actualiza(tBatalla, dt);
 
         double vel1 = pj1 ? pj1->getVelArena() : 200.0;
         double vel2 = pj2 ? pj2->getVelArena() : 200.0;
 
         // el campo solo esta listo cuando todos los obstaculos han aparecido
-        bool campoListo = obstaculos[7].activo;
+        bool campoListo = obstaculos[9].activo;
 
         // movimiento jugador 1 (WASD) — bloqueado si el campo no esta listo o esta paralizado
         if (campoListo && timerParalizadoJ1 <= 0.0) {
             if (j1Arr) j1y += vel1 * dt;
             if (j1Aba) j1y -= vel1 * dt;
-            if (j1Izq) j1x -= vel1 * dt;
-            if (j1Der) j1x += vel1 * dt;
+            if (j1Izq) { j1x -= vel1 * dt; j1FacingIzq = true;  }
+            if (j1Der) { j1x += vel1 * dt; j1FacingIzq = false; }
         }
         if (j1x - tam < xMin) j1x = xMin + tam;
         if (j1x + tam > xMax) j1x = xMax - tam;
         if (j1y - tam < yMin) j1y = yMin + tam;
         if (j1y + tam > yMax) j1y = yMax - tam;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             if (!obstaculos[i].activo) continue;
-            separaDeObstaculo(j1x, j1y, tam, obstaculos[i]);
+            obstaculos[i].separaJugador(j1x, j1y, tam);
         }
 
         // movimiento jugador 2 (flechas) — bloqueado si el campo no esta listo o esta paralizado
         if (campoListo && timerParalizadoJ2 <= 0.0) {
             if (j2Arr) j2y += vel2 * dt;
             if (j2Aba) j2y -= vel2 * dt;
-            if (j2Izq) j2x -= vel2 * dt;
-            if (j2Der) j2x += vel2 * dt;
+            if (j2Izq) { j2x -= vel2 * dt; j2FacingIzq = true;  }
+            if (j2Der) { j2x += vel2 * dt; j2FacingIzq = false; }
         }
         if (j2x - tam < xMin) j2x = xMin + tam;
         if (j2x + tam > xMax) j2x = xMax - tam;
         if (j2y - tam < yMin) j2y = yMin + tam;
         if (j2y + tam > yMax) j2y = yMax - tam;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             if (!obstaculos[i].activo) continue;
-            separaDeObstaculo(j2x, j2y, tam, obstaculos[i]);
+            obstaculos[i].separaJugador(j2x, j2y, tam);
         }
 
         // ataques: se disparan mientras se mantiene la tecla y hay cooldown disponible
@@ -683,76 +669,20 @@ void Arena::dibuja() const
     glEnd();
 
     // obstaculos con texturas
-    {
-        static ETSIDI::GLTexture texBarrera = ETSIDI::getTexture("imagenes/barrera.png");
-        static ETSIDI::GLTexture texBarro   = ETSIDI::getTexture("imagenes/barro.png");
+    for (int i = 0; i < 10; i++)
+        obstaculos[i].dibuja();
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        for (int i = 0; i < 8; i++) {
-            if (!obstaculos[i].activo) continue;
-            double escala = limitacionRangoX(obstaculos[i].tVida / 0.3);
-            double a2 = obstaculos[i].anchoVisual * escala / 2.0;
-            double b2 = obstaculos[i].altoVisual  * escala / 2.0;
-            double ox = obstaculos[i].x;
-            double oy = obstaculos[i].y;
-
-            if (obstaculos[i].esBanderin) {
-                glBindTexture(GL_TEXTURE_2D, texBarro.id);
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                glColor3d(1.0, 1.0, 1.0);
-                glBegin(GL_QUADS);
-                    glTexCoord2d(0, 0); glVertex2d(ox - a2, oy - b2);
-                    glTexCoord2d(1, 0); glVertex2d(ox + a2, oy - b2);
-                    glTexCoord2d(1, 1); glVertex2d(ox + a2, oy + b2);
-                    glTexCoord2d(0, 1); glVertex2d(ox - a2, oy + b2);
-                glEnd();
-            } else {
-                glBindTexture(GL_TEXTURE_2D, texBarrera.id);
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-                glBegin(GL_QUADS);
-                    glTexCoord2d(0, 1); glVertex2d(ox - a2, oy - b2);
-                    glTexCoord2d(1, 1); glVertex2d(ox + a2, oy - b2);
-                    glTexCoord2d(1, 0); glVertex2d(ox + a2, oy + b2);
-                    glTexCoord2d(0, 0); glVertex2d(ox - a2, oy + b2);
-                glEnd();
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            }
-        }
-
-        glDisable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-    }
-
-    // jugadores con su foto de personaje (morado si estan paralizados)
-    dibujaJugadorArena(j1x, j1y, tam, pj1, timerParalizadoJ1 > 0.0, 1);
-    dibujaJugadorArena(j2x, j2y, tam, pj2, timerParalizadoJ2 > 0.0, 2);
-
-    // destellos del golpe mele (linea desde el atacante hacia el rival)
-    if (timerMeleeJ1 > 0.0) {
-        double alcance1 = pj1 ? pj1->alcanceAtaque() : 30.0;
-        double ang1 = atan2(j2y - j1y, j2x - j1x);
-        glColor3d(1.0, 0.9, 0.1);
-        glLineWidth(4.0f);
-        glBegin(GL_LINES);
-            glVertex2d(j1x, j1y);
-            glVertex2d(j1x + cos(ang1) * (tam + alcance1), j1y + sin(ang1) * (tam + alcance1));
-        glEnd();
-        glLineWidth(1.0f);
-    }
-    if (timerMeleeJ2 > 0.0) {
-        double alcance2 = pj2 ? pj2->alcanceAtaque() : 30.0;
-        double ang2 = atan2(j1y - j2y, j1x - j2x);
-        glColor3d(1.0, 0.35, 0.0);
-        glLineWidth(4.0f);
-        glBegin(GL_LINES);
-            glVertex2d(j2x, j2y);
-            glVertex2d(j2x + cos(ang2) * (tam + alcance2), j2y + sin(ang2) * (tam + alcance2));
-        glEnd();
-        glLineWidth(1.0f);
-    }
+    // jugadores con su foto de personaje (morado si paralizados; sprite de ataque si estan golpeando)
+    const char* ataqueJ1 = (timerMeleeJ1 > 0.0)
+        ? (j1FacingIzq ? "../bin/imagenes/entrada_madrid_izquierda.png"
+                        : "../bin/imagenes/entrada_madrid_derecha.png")
+        : nullptr;
+    const char* ataqueJ2 = (timerMeleeJ2 > 0.0)
+        ? (j2FacingIzq ? "../bin/imagenes/entrada_atleti_izquierda.png"
+                        : "../bin/imagenes/entrada_atleti_derecha.png")
+        : nullptr;
+    dibujaJugadorArena(j1x, j1y, tam, pj1, timerParalizadoJ1 > 0.0, 1, ataqueJ1);
+    dibujaJugadorArena(j2x, j2y, tam, pj2, timerParalizadoJ2 > 0.0, 2, ataqueJ2);
 
     // proyectiles como balones de futbol (patron de cuadraditos)
     glDisable(GL_TEXTURE_2D);
@@ -764,34 +694,20 @@ void Arena::dibuja() const
     // barras de vida y nombre de pieza
     dibujaBarrasVida();
 
-    // nombre del jugador real y su posicion de futbol encima de cada barra de vida
+    // posicion de futbol encima de cada barra de vida
     glDisable(GL_TEXTURE_2D);
     if (pj1 != nullptr) {
-        const char* jug1  = nombreJugador(pj1->getRutaTextura());
         const char* pos1  = posicionFutbol(pj1->getRutaTextura());
         const char* tipo1 = pj1->esRanged() ? " [ranged]" : " [mele]";
-        // fondo claro detras del nombre (encima de la barra) para que el negro se lea
-        glColor3d(0.85, 0.85, 0.85);
-        glBegin(GL_QUADS);
-            glVertex2d(58, 576); glVertex2d(265, 576);
-            glVertex2d(265, 590); glVertex2d(58, 590);
-        glEnd();
-        glColor3d(0.0, 0.0, 0.0);
-        glRasterPos2d(60, 578);
-        for (const char* c = jug1;  *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
         glColor3d(0.0, 0.0, 0.0);
         glRasterPos2d(60, 566);
         for (const char* c = pos1;  *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
         for (const char* c = tipo1; *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
     }
     if (pj2 != nullptr) {
-        const char* jug2  = nombreJugador(pj2->getRutaTextura());
         const char* pos2  = posicionFutbol(pj2->getRutaTextura());
         const char* tipo2 = pj2->esRanged() ? " [ranged]" : " [mele]";
         glColor3d(1.0, 1.0, 1.0);
-        glRasterPos2d(540, 578);
-        for (const char* c = jug2;  *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
-        glColor3d(0.7, 0.7, 0.7);
         glRasterPos2d(540, 566);
         for (const char* c = pos2;  *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
         for (const char* c = tipo2; *c; c++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
@@ -845,6 +761,11 @@ void Arena::dibuja() const
 
 void Arena::tecla(unsigned char key)
 {
+    // registrar teclas de ataque siempre para que mueve() las detecte
+    // en el primer frame de BATALLA aunque el jugador las tuviera ya pulsadas
+    if (key == ' ') j1Ataca = true;
+    if (key == 13)  j2Ataca = true;
+
     if (estado == FIN) return;
     if (estado != BATALLA) return;
 
@@ -853,16 +774,14 @@ void Arena::tecla(unsigned char key)
     if (key == 'a' || key == 'A') j1Izq = true;
     if (key == 'd' || key == 'D') j1Der = true;
 
-    // dispara inmediatamente al pulsar y activa el flag para mantener pulsado
+    // dispara inmediatamente al pulsar
     if (key == ' ') {
-        j1Ataca = true;
         if (pj1 == nullptr || pj1->puedeAtacar()) {
             lanzaAtaque(1);
             if (pj1) pj1->reiniciaCooldown();
         }
     }
     if (key == 13) {
-        j2Ataca = true;
         if (pj2 == nullptr || pj2->puedeAtacar()) {
             lanzaAtaque(2);
             if (pj2) pj2->reiniciaCooldown();

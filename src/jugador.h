@@ -25,6 +25,9 @@ protected:
     bool disparaRayoArcano{ false };   // Entrenador: rayo rapido que atraviesa Y paraliza
     bool disparaEnjambre{ false };     // Goblin: enjambre de 3 proyectiles en abanico
 
+    bool encarcelado{ false };
+    int  ciclosEncarcelado{ 0 };
+
     Jugador(float x, float y, int _equipo, const char* ruta);
 
     Posicion pos;
@@ -55,7 +58,15 @@ public:
     virtual void revive() {}
 
     void recibeGolpe(int dano);
-    void reiniciaCooldown() { timerAtaque = cooldownMax; }
+    void cura(int cantidad)      { hp += cantidad; if (hp > hpMax) hp = hpMax; }
+    void curarCompleto()         { hp = hpMax; }
+    void reiniciaCooldown()      { timerAtaque = cooldownMax; }
+
+    bool estaEncarcelado()       const { return encarcelado; }
+    void encarcelar(int ciclos)        { encarcelado = true; ciclosEncarcelado = ciclos; }
+    void descuentaCicloEncarcelado()   { if (encarcelado && --ciclosEncarcelado <= 0) encarcelado = false; }
+
+    virtual bool esEntrenador() const { return false; }
 
     int    getHp()          const { return hp; }
     int    getHpMax()       const { return hpMax; }

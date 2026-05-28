@@ -1,38 +1,9 @@
 #pragma once
 #include "jugador.h"
+#include "Obstaculo.h"
+#include "Proyectil.h"
 
 class Jugador;   // declaracion anticipada: Arena solo guarda punteros
-
-// Obstaculo del campo de combate
-struct Obstaculo {
-    double x, y;
-    double ancho, alto;
-    bool esBanderin;    // false=barrera, true=charco de barro
-    bool activo;
-    double anchoVisual, altoVisual;
-    double tAparecer;
-    double tVida;
-
-    Obstaculo() : x(0), y(0), ancho(40), alto(30), esBanderin(false),
-                  activo(false), anchoVisual(40), altoVisual(30),
-                  tAparecer(0), tVida(0) {}
-};
-
-// Proyectil disparado en la arena
-struct Proyectil {
-    double x, y;
-    double dx, dy;              // direccion normalizada
-    double vel;                 // pixeles por segundo
-    int    danio;
-    int    equipo;              // 1 o 2: quien lo disparo
-    bool   activo;
-    bool   atraviesaObstaculos; // Banshee: ignora barreras y charcos
-    bool   paraliza;            // Basilisco: inmoviliza al rival 1 s
-
-    Proyectil() : x(0), y(0), dx(1), dy(0), vel(350.0), danio(10),
-                  equipo(1), activo(false),
-                  atraviesaObstaculos(false), paraliza(false) {}
-};
 
 class Arena {
     static const int MAX_PROYECTILES = 32;
@@ -48,7 +19,7 @@ class Arena {
     bool   silbatoSonado;
     bool   usarDiagonal;
 
-    Obstaculo obstaculos[8];
+    Obstaculo obstaculos[10];
     double    tBatalla;
 
     Proyectil proyectiles[MAX_PROYECTILES];
@@ -69,6 +40,9 @@ class Arena {
     bool j2Arr, j2Aba, j2Izq, j2Der;
     bool j1Ataca;   // ESPACIO mantenido
     bool j2Ataca;   // INTRO mantenido
+
+    bool j1FacingIzq{ false };   // ultima direccion horizontal de j1
+    bool j2FacingIzq{ true  };   // ultima direccion horizontal de j2
 
     enum EstadoArena {
         TRANSICION,
@@ -92,7 +66,7 @@ class Arena {
 
 public:
     Arena() : xMin(50), xMax(750), yMin(50), yMax(550),
-              tam(25),
+              tam(18),
               j1x(-50), j1y(300), j2x(850), j2y(300),
               arbY(650), t(0.0), silbatoSonado(false), usarDiagonal(true),
               tBatalla(0.0),
@@ -103,6 +77,7 @@ public:
               j1Arr(false), j1Aba(false), j1Izq(false), j1Der(false),
               j2Arr(false), j2Aba(false), j2Izq(false), j2Der(false),
               j1Ataca(false), j2Ataca(false),
+              j1FacingIzq(false), j2FacingIzq(true),
               estado(TRANSICION) {}
 
     void inicializa();
