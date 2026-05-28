@@ -3,6 +3,7 @@
 #include "tablero.h"
 #include "pelota.h"
 #include "jugador.h"
+#include "grid.h"
 
 class Mundo {
 
@@ -11,7 +12,7 @@ class Mundo {
     std::vector<Jugador*> equipoMadrid;
     std::vector<Jugador*> equipoAtleti;
     Jugador* jugadorSeleccionado;
-    bool casillasValidas[9][9];
+    Grid<bool, 9> casillasValidas;
     int  turnoEquipo{ 1 };   // 1 = Madrid/Blanco, 2 = Atleti/Rojo
     bool primerTurno{ true };
 

@@ -21,7 +21,7 @@ Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0)
     jugadorSeleccionado = nullptr;
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
-            casillasValidas[i][j] = false;
+            casillasValidas.at(i, j) = false;
 }
 
 Mundo::~Mundo()
@@ -37,7 +37,7 @@ void Mundo::inicializa()
     // Línea frontal (Columna 1)
     equipoMadrid[0] = new Portero      (1, 0, 1); // Arquera abajo
     for (int i = 1; i < 8; i++)
-        equipoMadrid[i] = new Delantero(1, i, 1); // Caballeros
+        equipoMadrid[i] = new Delantero(1, (float)i, 1); // Caballeros
     equipoMadrid[8] = new Portero      (1, 8, 1); // Arquera arriba
 
     // Línea trasera (Columna 0)
@@ -56,7 +56,7 @@ void Mundo::inicializa()
     // Línea frontal (Columna 7)
     equipoAtleti[0] = new Portero      (7, 0, 2); // Mantícora abajo
     for (int i = 1; i < 8; i++)
-        equipoAtleti[i] = new Delantero(7, i, 2); // Goblins
+        equipoAtleti[i] = new Delantero(7, (float)i, 2); // Goblins
     equipoAtleti[8] = new Portero      (7, 8, 2); // Mantícora arriba
 
     // Línea trasera (Columna 8)
@@ -92,7 +92,7 @@ void Mundo::dibuja() const
     glColor4f(1.0f, 1.0f, 0.0f, 0.45f);
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
-            if (casillasValidas[i][j]) {
+            if (casillasValidas.at(i, j)) {
                 glBegin(GL_QUADS);
                     glVertex2f((float)i,        (float)j);
                     glVertex2f((float)i + 1.0f, (float)j);
@@ -115,10 +115,10 @@ void Mundo::dibuja() const
 
         float radio = 0.5f;
         glBegin(GL_QUADS);
-        glVertex2f(jugadorSeleccionado->pos.x - radio, jugadorSeleccionado->pos.y - radio);
-        glVertex2f(jugadorSeleccionado->pos.x + radio, jugadorSeleccionado->pos.y - radio);
-        glVertex2f(jugadorSeleccionado->pos.x + radio, jugadorSeleccionado->pos.y + radio);
-        glVertex2f(jugadorSeleccionado->pos.x - radio, jugadorSeleccionado->pos.y + radio);
+        glVertex2f(jugadorSeleccionado->getPosX() - radio, jugadorSeleccionado->getPosY() - radio);
+        glVertex2f(jugadorSeleccionado->getPosX() + radio, jugadorSeleccionado->getPosY() - radio);
+        glVertex2f(jugadorSeleccionado->getPosX() + radio, jugadorSeleccionado->getPosY() + radio);
+        glVertex2f(jugadorSeleccionado->getPosX() - radio, jugadorSeleccionado->getPosY() + radio);
         glEnd();
 
         glEnable(GL_TEXTURE_2D);
@@ -148,10 +148,10 @@ void Mundo::dibuja() const
 int Mundo::equipoEn(int x, int y) const
 {
     for (const Jugador* pj : equipoMadrid)
-        if (pj != nullptr && (int)pj->pos.x == x && (int)pj->pos.y == y)
+        if (pj != nullptr && (int)pj->getPosX() == x && (int)pj->getPosY() == y)
             return 1;
     for (const Jugador* pj : equipoAtleti)
-        if (pj != nullptr && (int)pj->pos.x == x && (int)pj->pos.y == y)
+        if (pj != nullptr && (int)pj->getPosX() == x && (int)pj->getPosY() == y)
             return 2;
     return 0;
 }
@@ -160,12 +160,12 @@ void Mundo::calcularCasillasValidas()
 {
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
-            casillasValidas[i][j] = false;
+            casillasValidas.at(i, j) = false;
 
     if (jugadorSeleccionado == nullptr) return;
 
-    int gx       = (int)jugadorSeleccionado->pos.x;
-    int gy       = (int)jugadorSeleccionado->pos.y;
+    int gx       = (int)jugadorSeleccionado->getPosX();
+    int gy       = (int)jugadorSeleccionado->getPosY();
     int rango    = jugadorSeleccionado->getRango();
     int miEquipo = jugadorSeleccionado->getEquipo();
 
@@ -174,8 +174,8 @@ void Mundo::calcularCasillasValidas()
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
                 if (equipoEn(i, j) != miEquipo)
-                    casillasValidas[i][j] = true;
-        casillasValidas[gx][gy] = false; // No puede quedarse donde está
+                    casillasValidas.at(i, j) = true;
+        casillasValidas.at(gx, gy) = false; // No puede quedarse donde está
     }
     else if (jugadorSeleccionado->esVolador()) {
         // 8 direcciones, pasa sobre piezas, para en aliado o enemigo
@@ -187,7 +187,7 @@ void Mundo::calcularCasillasValidas()
                 if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
                 int eq = equipoEn(nx, ny);
                 if (eq == miEquipo) break;          // Bloqueado por aliado
-                casillasValidas[nx][ny] = true;
+                casillasValidas.at(nx, ny) = true;
                 if (eq != 0) break;                 // Para en enemigo (puede aterrizar)
             }
         }
@@ -202,7 +202,7 @@ void Mundo::calcularCasillasValidas()
                 if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
                 int eq = equipoEn(nx, ny);
                 if (eq == miEquipo) break;          // Bloqueado por aliado
-                casillasValidas[nx][ny] = true;
+                casillasValidas.at(nx, ny) = true;
                 if (eq != 0) break;                 // Para en enemigo
             }
         }
@@ -234,8 +234,8 @@ void Mundo::raton(int boton, int estado, float x, float y)
         std::vector<Jugador*>& equipoEnTurno = (turnoEquipo == 1) ? equipoMadrid : equipoAtleti;
         for (Jugador* pj : equipoEnTurno) {
             if (pj != nullptr) {
-                float difX = x - pj->pos.x;
-                float difY = y - pj->pos.y;
+                float difX = x - pj->getPosX();
+                float difY = y - pj->getPosY();
                 if (difX > -0.5f && difX < 0.5f && difY > -0.5f && difY < 0.5f)
                     jugadorSeleccionado = pj;
             }
@@ -244,15 +244,15 @@ void Mundo::raton(int boton, int estado, float x, float y)
     }
     else {
         // Segundo click: mover o iniciar combate si la casilla es valida
-        if (casillasValidas[gx][gy]) {
+        if (casillasValidas.at(gx, gy)) {
             int equipoDestino = equipoEn(gx, gy);
             if (equipoDestino != 0 && equipoDestino != turnoEquipo) {
                 // Hay un enemigo en la casilla destino: preparar combate
                 std::vector<Jugador*>& enemigoArr = (equipoDestino == 1) ? equipoMadrid : equipoAtleti;
                 for (Jugador* pj : enemigoArr) {
                     if (pj != nullptr &&
-                        (int)pj->pos.x == gx &&
-                        (int)pj->pos.y == gy) {
+                        (int)pj->getPosX() == gx &&
+                        (int)pj->getPosY() == gy) {
                         pendientePj1 = jugadorSeleccionado;
                         pendientePj2 = pj;
                         destCombateX = gx;

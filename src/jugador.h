@@ -27,9 +27,9 @@ protected:
 
     Jugador(float x, float y, int _equipo, const char* ruta);
 
-public:
     Posicion pos;
 
+public:
     virtual ~Jugador();
 
     virtual void dibuja() const;
@@ -39,16 +39,16 @@ public:
     // actualizacion por frame: cooldown + efectos pasivos (regen, etc.)
     virtual void actualiza(double dt);
 
-    // tablero
-    virtual int  getRango()   const = 0;
-    virtual bool esVolador()  const = 0;
-    virtual bool esTeleport() const = 0;
-    virtual bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const;
-
     // combate
     virtual bool   esRanged()      const = 0;
     virtual double alcanceAtaque() const;  // radio hitbox mele en px arena; 0 si es ranged
     virtual void   habilidadEspecial();    // efecto especial pasivo o activo de la pieza
+
+    // tablero
+    virtual int  getRango() const = 0;
+    virtual bool esVolador() const = 0;
+    virtual bool esTeleport() const = 0;
+    virtual bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const;
 
     // Fenix: puede revivir una vez; el resto de piezas devuelven false
     virtual bool puedeRevivir() const { return false; }

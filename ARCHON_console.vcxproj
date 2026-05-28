@@ -47,6 +47,7 @@
     <ClInclude Include="src\delantero.h" />
     <ClInclude Include="src\entrenador.h" />
     <ClInclude Include="src\extremo.h" />
+    <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\interaccionArena.h" />
     <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\lateral.h" />
