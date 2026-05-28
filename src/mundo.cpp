@@ -136,9 +136,9 @@ void Mundo::dibuja() const
 
     const char* msg;
     if (primerTurno)
-        msg = (turnoEquipo == 1) ? "SACA EQUIPO BLANCO" : "SACA EQUIPO ROJO";
+        msg = (turnoEquipo == 1) ? "SACA REAL MADRID" : "SACA ATLETICO";
     else
-        msg = (turnoEquipo == 1) ? "MUEVE EQUIPO BLANCO" : "MUEVE EQUIPO ROJO";
+        msg = (turnoEquipo == 1) ? "MUEVE REAL MADRID" : "MUEVE ATLETICO";
 
     glRasterPos2f(2.5f, -0.6f);
     for (const char* c = msg; *c; c++)

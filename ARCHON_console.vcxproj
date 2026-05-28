@@ -33,6 +33,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mediapunta.cpp" />
     <ClCompile Include="src\mundo.cpp" />
+    <ClCompile Include="src\Obstaculo.cpp" />
+    <ClCompile Include="src\Proyectil.cpp" />
     <ClCompile Include="src\pelota.cpp" />
     <ClCompile Include="src\portero.cpp" />
     <ClCompile Include="src\posicion.cpp" />
@@ -53,7 +55,9 @@
     <ClInclude Include="src\lateral.h" />
     <ClInclude Include="src\mediapunta.h" />
     <ClInclude Include="src\mundo.h" />
+    <ClInclude Include="src\Obstaculo.h" />
     <ClInclude Include="src\pelota.h" />
+    <ClInclude Include="src\Proyectil.h" />
     <ClInclude Include="src\portero.h" />
     <ClInclude Include="src\posicion.h" />
     <ClInclude Include="src\tablero.h" />

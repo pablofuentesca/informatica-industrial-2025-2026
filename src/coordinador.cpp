@@ -119,8 +119,8 @@ void Coordinador::dibuja() const
 
         // seccion campo
         dibujaTexto(60, 413, "CAMPO DE BATALLA", 1.0f, 1.0f, 1.0f);
-        dibujaTexto(80, 392, "Al inicio aparecen 5 barreras y 3 charcos de barro.", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 371, "Los jugadores no pueden moverse hasta que esten los 8 obstaculos.", 0.75f, 0.75f, 0.75f);
+        dibujaTexto(80, 392, "Al inicio aparecen 6 barreras y 4 charcos de barro.", 0.75f, 0.75f, 0.75f);
+        dibujaTexto(80, 371, "Los jugadores no pueden moverse hasta que esten los 10 obstaculos.", 0.75f, 0.75f, 0.75f);
         dibujaTexto(80, 350, "Barreras: bloquean movimiento y proyectiles.", 0.75f, 0.75f, 0.75f);
         dibujaTexto(80, 329, "Charcos de barro: frenan el movimiento, no bloquean proyectiles.", 0.75f, 0.75f, 0.75f);
 
