@@ -10,7 +10,7 @@ bool ConjuroTeleport::aplicar(Mundo& m, int equipo)
 
 bool ConjuroCurar::aplicar(Mundo& m, int equipo)
 {
-    m.curarEquipoCompleto(equipo);
+    if (!m.curarUnaPieza(equipo)) return false;
     usado = true;
     return true;
 }

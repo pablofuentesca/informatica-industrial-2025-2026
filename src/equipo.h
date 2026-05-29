@@ -34,8 +34,9 @@ public:
 
     // operaciones de combate / conjuros
     void elimina(Jugador* pj);                // pasa la pieza al cementerio
-    void curaTodos();
+    bool curaUna();              // cura del todo la primera pieza herida; false si ninguna lo esta
     void descuentaEncarcelados();
+    void descuentaTemporales();  // retira los elementales cuya vida temporal ha expirado
 
     // gestion del cementerio, para el conjuro Revivir
     Jugador* ultimaEnCementerio() const;      // peek; nullptr si esta vacio

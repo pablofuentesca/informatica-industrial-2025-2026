@@ -367,11 +367,14 @@ void Mundo::cierraTurno()
     miTablero.avanzarCiclo();
     madrid.descuentaEncarcelados();
     atleti.descuentaEncarcelados();
+    madrid.descuentaTemporales();
+    atleti.descuentaTemporales();
+    curarEnPuntosDePoder();
 }
 
-void Mundo::curarEquipoCompleto(int equipo)
+bool Mundo::curarUnaPieza(int equipo)
 {
-    equipoPorId(equipo).curaTodos();
+    return equipoPorId(equipo).curaUna();
 }
 
 bool Mundo::teleportarAleatoriamente(int equipo)
@@ -416,7 +419,10 @@ bool Mundo::encarcelarEnemigo(int equipo)
 {
     int rival = (equipo == 1) ? 2 : 1;
     for (Jugador* pj : equipoPorId(rival).getPiezas())
-        if (pj != nullptr && !pj->esEntrenador() && !pj->estaEncarcelado()) {
+        // Las piezas situadas en un punto de poder son inmunes a los hechizos rivales:
+        // no se las puede encarcelar mientras lo ocupen.
+        if (pj != nullptr && !pj->esEntrenador() && !pj->estaEncarcelado()
+            && !esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY())) {
             pj->encarcelar(3);
             return true;
         }
@@ -436,7 +442,9 @@ bool Mundo::invocarElemental(int equipo)
         int nx = ex + d[0];
         int ny = ey + d[1];
         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
-            miEquip.anade(new Delantero((float)nx, (float)ny, equipo));
+            Jugador* elemental = new Delantero((float)nx, (float)ny, equipo);
+            elemental->haceTemporal(4);   // elemental temporal: dura unos turnos y desaparece
+            miEquip.anade(elemental);
             return true;
         }
     }
@@ -483,18 +491,41 @@ bool Mundo::revivirPieza(int equipo)
     return false;
 }
 
+// Las cinco casillas de poder: el centro y el centro de cada borde del tablero.
+bool Mundo::esPuntoDePoder(int x, int y) const
+{
+    return (x == 4 && y == 4) ||   // centro
+           (x == 0 && y == 4) ||   // borde izquierdo
+           (x == 8 && y == 4) ||   // borde derecho
+           (x == 4 && y == 0) ||   // borde inferior
+           (x == 4 && y == 8);     // borde superior
+}
+
+// Cada turno, las piezas situadas en un punto de poder regeneran vida
+// (en el ARCHON las casillas de poder curan mas rapido a quien las ocupa).
+void Mundo::curarEnPuntosDePoder()
+{
+    const int REGEN = 10;   // vida que recupera por turno una pieza sobre un punto de poder
+    for (Jugador* pj : madrid.getPiezas())
+        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY()))
+            pj->cura(REGEN);
+    for (Jugador* pj : atleti.getPiezas())
+        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY()))
+            pj->cura(REGEN);
+}
+
 int Mundo::comprobarVictoria() const
 {
     // Condicion 1: controlar los 5 puntos de poder
-    int puntosX[5] = { 4, 0, 8, 4, 4 };
-    int puntosY[5] = { 4, 4, 4, 0, 8 };
     int controlMadrid = 0;
     int controlAtleti = 0;
-    for (int i = 0; i < 5; i++) {
-        int eq = equipoEn(puntosX[i], puntosY[i]);
-        if (eq == 1) controlMadrid++;
-        if (eq == 2) controlAtleti++;
-    }
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++)
+            if (esPuntoDePoder(i, j)) {
+                int eq = equipoEn(i, j);
+                if (eq == 1) controlMadrid++;
+                if (eq == 2) controlAtleti++;
+            }
     if (controlMadrid == 5) return 1;
     if (controlAtleti == 5) return 2;
 

@@ -28,6 +28,9 @@ protected:
     bool encarcelado{ false };
     int  ciclosEncarcelado{ 0 };
 
+    bool temporal{ false };   // elemental invocado: vive unos turnos y desaparece
+    int  ciclosVida{ 0 };
+
     Jugador(float x, float y, int _equipo, const char* ruta);
 
     Posicion pos;
@@ -65,6 +68,11 @@ public:
     bool estaEncarcelado()       const { return encarcelado; }
     void encarcelar(int ciclos)        { encarcelado = true; ciclosEncarcelado = ciclos; }
     void descuentaCicloEncarcelado()   { if (encarcelado && --ciclosEncarcelado <= 0) encarcelado = false; }
+
+    bool esTemporal()            const { return temporal; }
+    void haceTemporal(int ciclos)      { temporal = true; ciclosVida = ciclos; }
+    // descuenta un turno de vida; devuelve true cuando se agota (hay que retirarla)
+    bool expiraCicloVida()             { return temporal && --ciclosVida <= 0; }
 
     virtual bool esEntrenador() const { return false; }
 

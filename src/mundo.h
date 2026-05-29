@@ -26,6 +26,8 @@ class Mundo {
     const Equipo& equipoPorId(int id) const { return (id == 1) ? madrid : atleti; }
 
     int  equipoEn(int x, int y) const;
+    bool esPuntoDePoder(int x, int y) const;   // las 5 casillas de poder del tablero
+    void curarEnPuntosDePoder();               // regenera vida a las piezas situadas en ellas
     void calcularCasillasValidas();
     void eliminarPieza(Jugador* pj);
     void cierraTurno();   // cambia turno + avanza ciclo + descuenta encarcelados
@@ -48,7 +50,7 @@ public:
     void resolverCombate(int equipoGanador);
     void limpiarCombatePendiente();
     void invertirCiclo();
-    void curarEquipoCompleto(int equipo);
+    bool curarUnaPieza(int equipo);
     bool teleportarAleatoriamente(int equipo);
     bool intercambiarPiezas(int equipo);
     bool invocarElemental(int equipo);
