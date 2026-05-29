@@ -503,17 +503,17 @@ int Mundo::comprobarVictoria() const
     // Condicion 2: eliminar todas las piezas del rival
     int vivasMadrid = 0;
     int vivasAtleti = 0;
-    for (const Jugador* pj : equipoMadrid) if (pj != nullptr) vivasMadrid++;
-    for (const Jugador* pj : equipoAtleti) if (pj != nullptr) vivasAtleti++;
+    for (const Jugador* pj : madrid.getPiezas()) if (pj != nullptr) vivasMadrid++;
+    for (const Jugador* pj : atleti.getPiezas()) if (pj != nullptr) vivasAtleti++;
     if (vivasMadrid == 0) return 2;
     if (vivasAtleti == 0) return 1;
 
     // Condicion 3: dejar al rival con solo una pieza encarcelada
     if (vivasAtleti == 1)
-        for (const Jugador* pj : equipoAtleti)
+        for (const Jugador* pj : atleti.getPiezas())
             if (pj != nullptr && pj->estaEncarcelado()) return 1;
     if (vivasMadrid == 1)
-        for (const Jugador* pj : equipoMadrid)
+        for (const Jugador* pj : madrid.getPiezas())
             if (pj != nullptr && pj->estaEncarcelado()) return 2;
 
     return 0;
