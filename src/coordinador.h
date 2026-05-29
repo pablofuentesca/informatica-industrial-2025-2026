@@ -15,9 +15,10 @@ class Coordinador {
     int equipoVencedor{ 0 };
 
 public:
+    Coordinador() = default;
     ~Coordinador();
-	Coordinador(const Coordinador&) = delete; //Constructor de copia eliminado para evitar copias accidentales
-	Coordinador& operator=(const Coordinador&) = delete; //Destructor de asignación eliminado para evitar asignaciones accidentales
+    Coordinador(const Coordinador&) = delete;
+    Coordinador& operator=(const Coordinador&) = delete;
     void inicializa();
     void dibuja() const;
     void mueve(double dt);
