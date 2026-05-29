@@ -5,6 +5,7 @@
 #include <iostream>
 #include <climits>
 #include <cmath>
+#include <algorithm>
 
 int IA::valorPieza(Jugador* pj) const {
     if (pj->esEntrenador()) return 100;
@@ -143,10 +144,10 @@ void IA::puntuarConjuros(int& mejorScore, int& mejorIdx) const {
     if (!ent->conjuroUsado(4) && 80 > mejorScore) { mejorScore = 80; mejorIdx = 4; }
 
     if (!ent->conjuroUsado(1)) {
-        int danio = 0;
+        int maxDanio = 0;
         for (Jugador* pj : mundo->equipoPorId(equipo).getPiezas())
-            if (pj != nullptr) danio += pj->getHpMax() - pj->getHp();
-        int s = danio*2;
+            if (pj != nullptr) maxDanio = std::max(maxDanio, pj->getHpMax() - pj->getHp());
+        int s = maxDanio*2;
         if (s > mejorScore) { mejorScore = s; mejorIdx = 1; }
     }
 
