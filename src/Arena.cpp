@@ -598,6 +598,22 @@ void Arena::dibuja() const
     double cx = (xMin + xMax) / 2.0;
     double cy = (yMin + yMax) / 2.0;
 
+    // fondo: imagen del estadio cubriendo toda la ventana
+    {
+        static ETSIDI::GLTexture texEstadio = ETSIDI::getTexture("imagenes/estadio.png");
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texEstadio.id);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        glBegin(GL_QUADS);
+            glTexCoord2d(0, 1); glVertex2d(0,   0);
+            glTexCoord2d(1, 1); glVertex2d(800, 0);
+            glTexCoord2d(1, 0); glVertex2d(800, 600);
+            glTexCoord2d(0, 0); glVertex2d(0,   600);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    }
+
     // franjas de cesped alternadas
     double anchoFranja = (xMax - xMin) / 10.0;
     for (int i = 0; i < 10; i++) {

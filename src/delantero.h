@@ -28,13 +28,11 @@ public:
     }
 
     int    getRango()      const override { return 3; }
-    bool   esRanged()      const override { return false; }
+    // Caballero (Madrid): mele — Goblin (Atleti): ranged (enjambre)
+    bool   esRanged()      const override { return equipo == 2; }
 
-    // Hitbox de ataque: el cuerpo mas el alcance del arma (espada/lanza)
-    // Caballero tiene mas alcance que el Goblin
-    double alcanceAtaque() const override {
-        return (equipo == 1) ? 40.0 : 20.0;
-    }
+    // Solo el Caballero tiene hitbox de contacto; el Goblin dispara proyectiles
+    double alcanceAtaque() const override { return (equipo == 1) ? 40.0 : 0.0; }
 
     // Movimiento terrestre directo; el Caballero embiste al contactar
     void mover(float dirX, float dirY) override {
