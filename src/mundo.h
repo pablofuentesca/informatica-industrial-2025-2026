@@ -1,22 +1,20 @@
 #pragma once
-#include <vector>
 #include "tablero.h"
 #include "pelota.h"
 #include "jugador.h"
 #include "grid.h"
+#include "equipo.h"
+#include "turno.h"
 
 class Mundo {
 
     Tablero miTablero;
     Pelota balones[5];
-    std::vector<Jugador*> equipoMadrid;
-    std::vector<Jugador*> equipoAtleti;
-    std::vector<Jugador*> cementerioMadrid;
-    std::vector<Jugador*> cementerioAtleti;
+    Equipo madrid;
+    Equipo atleti;
+    Turno  turno;
     Jugador* jugadorSeleccionado;
     Grid<bool, 9> casillasValidas;
-    int  turnoEquipo{ 1 };   // 1 = Madrid/Blanco, 2 = Atleti/Rojo
-    bool primerTurno{ true };
 
     // pieza que ataca y pieza que defiende cuando se produce un enfrentamiento
     Jugador* pendientePj1{ nullptr };
@@ -24,10 +22,13 @@ class Mundo {
     int      destCombateX{ -1 };
     int      destCombateY{ -1 };
 
+    Equipo&       equipoPorId(int id)       { return (id == 1) ? madrid : atleti; }
+    const Equipo& equipoPorId(int id) const { return (id == 1) ? madrid : atleti; }
+
     int  equipoEn(int x, int y) const;
     void calcularCasillasValidas();
     void eliminarPieza(Jugador* pj);
-    void actualizarEncarcelados();
+    void cierraTurno();   // cambia turno + avanza ciclo + descuenta encarcelados
 
 public:
     Mundo();
