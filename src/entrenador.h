@@ -4,8 +4,8 @@
 #include <vector>
 class Mundo;
 
-// Equipo 1 (Madrid):  Mago      (Ancelotti) — PIEZA REY, ranged, 6 conjuros por partida
-// Equipo 2 (Atleti):  Hechicera (Simeone)   — PIEZA REY, ranged, 6 conjuros por partida
+// Equipo 1 (Madrid):  Mago      (Ancelotti) — PIEZA REY, ranged, 7 conjuros por partida
+// Equipo 2 (Atleti):  Hechicera (Simeone)   — PIEZA REY, ranged, 7 conjuros por partida
 // Si el Entrenador es eliminado en arena, el partido termina para ese bando
 class Entrenador : public Teletransportador {
     int conjurosRestantes{ 7 };

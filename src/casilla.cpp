@@ -40,42 +40,43 @@ void Casilla::dibuja() const
     float r = 1.0f, g = 1.0f, b = 1.0f;
 
     if (tipo == Tipo::LINEA) {
-        // Lineas del campo: siempre blancas.
-        r = 1.0f; g = 1.0f; b = 1.0f;
+        // Lineas del campo: tono hueso (blanco roto) para no deslumbrar.
+        r = 0.90f; g = 0.91f; b = 0.86f;
     }
     else {
         // t va de -1 (extremo oscuro) a +1 (extremo claro), 0 = neutro.
         float t = (float)(nivelLuz - NIVEL_NEUTRO) / (float)NIVEL_NEUTRO;
 
         if (tipo == Tipo::CLARA) {
-            // Color natural en neutro: verde claro (0.30, 0.80, 0.30)
-            // Extremo claro:           verde casi blanco (0.70, 1.00, 0.70)
-            // Extremo oscuro:          verde apagado (0.15, 0.45, 0.15)
+            // Tono cesped mate (menos saturado para aspecto cuidado).
+            // Neutro:          verde cesped  (0.46, 0.60, 0.42)
+            // Extremo claro:   verde salvia  (0.66, 0.78, 0.60)
+            // Extremo oscuro:  verde apagado (0.30, 0.42, 0.30)
             if (t >= 0.0f)
                 mezclaColor(t,
-                            0.30f, 0.80f, 0.30f,
-                            0.70f, 1.00f, 0.70f,
+                            0.46f, 0.60f, 0.42f,
+                            0.66f, 0.78f, 0.60f,
                             r, g, b);
             else
                 mezclaColor(-t,
-                            0.30f, 0.80f, 0.30f,
-                            0.15f, 0.45f, 0.15f,
+                            0.46f, 0.60f, 0.42f,
+                            0.30f, 0.42f, 0.30f,
                             r, g, b);
         }
         else {
             // tipo == OSCURA
-            // Color natural en neutro: verde oscuro (0.00, 0.20, 0.00)
-            // Extremo claro:           verde medio  (0.25, 0.55, 0.25)
-            // Extremo oscuro:          casi negro   (0.00, 0.08, 0.00)
+            // Neutro:          verde profundo (0.16, 0.28, 0.18)
+            // Extremo claro:   verde medio    (0.32, 0.46, 0.32)
+            // Extremo oscuro:  casi negro     (0.08, 0.16, 0.10)
             if (t >= 0.0f)
                 mezclaColor(t,
-                            0.00f, 0.20f, 0.00f,
-                            0.25f, 0.55f, 0.25f,
+                            0.16f, 0.28f, 0.18f,
+                            0.32f, 0.46f, 0.32f,
                             r, g, b);
             else
                 mezclaColor(-t,
-                            0.00f, 0.20f, 0.00f,
-                            0.00f, 0.08f, 0.00f,
+                            0.16f, 0.28f, 0.18f,
+                            0.08f, 0.16f, 0.10f,
                             r, g, b);
         }
     }
