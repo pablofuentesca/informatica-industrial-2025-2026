@@ -1,6 +1,7 @@
 #pragma once
 #include "mundo.h"
 #include "Arena.h"
+#include "ia.h"
 
 namespace ETSIDI { class Sprite; }
 
@@ -8,10 +9,15 @@ class Coordinador {
     enum Estado { INICIO, REGLAS, JUEGO, COMBATE, PAUSA, FIN } estado{};
     Mundo mundo;
     Arena arena;
+    IA ia;
+    bool modoIA{ false };
     ETSIDI::Sprite* portada{ nullptr };
+    int equipoVencedor{ 0 };
 
 public:
     ~Coordinador();
+	Coordinador(const Coordinador&) = delete; //Constructor de copia eliminado para evitar copias accidentales
+	Coordinador& operator=(const Coordinador&) = delete; //Destructor de asignación eliminado para evitar asignaciones accidentales
     void inicializa();
     void dibuja() const;
     void mueve(double dt);

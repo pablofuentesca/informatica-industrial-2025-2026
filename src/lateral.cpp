@@ -11,11 +11,11 @@ bool Lateral::esMovimientoValido(int origenX, int origenY, int destinoX, int des
     if (distancia > getRango()) return false;
 
     if (getEquipo() == 1) {
-        // MADRID (Unicornio): Movimiento en "L"
-        return (difX == 2 && difY == 1) || (difX == 1 && difY == 2);
+        // MADRID (Unicornio): cualquier direccion hasta 2 casillas (ortogonal o diagonal)
+        return (difX == 0 || difY == 0 || difX == difY);
     }
     else {
-        // ATLETI (Basilisco): Diagonal
+        // ATLETI (Basilisco): solo diagonal, hasta 4 casillas
         return (difX == difY);
     }
 }

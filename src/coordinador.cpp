@@ -11,6 +11,8 @@ void Coordinador::inicializa()
 {
     portada = new ETSIDI::Sprite("../bin/imagenes/portada.png", 400, 300, 800, 600);
     mundo.inicializa();
+    ia.setMundo(&mundo);
+    ia.setEquipo(2);
 }
 
 static void dibujaTexto(float x, float y, const char* texto, float r, float g, float b)
@@ -55,8 +57,32 @@ static void dibujaBoton(float x1, float y1, float x2, float y2,
 
 void Coordinador::mueve(double dt)
 {
-    if (estado == COMBATE)
+    if (estado == COMBATE) {
         arena.mueve(dt);
+        if (arena.getGanador() != 0) {
+            ETSIDI::stopMusica();
+            mundo.resolverCombate(arena.getGanador());
+            arena.inicializa();
+            int v = mundo.comprobarVictoria();
+            if (v != 0) { equipoVencedor = v; estado = FIN; }
+            else {
+                estado = JUEGO;
+                if (modoIA) ia.elegirMovimiento();
+            }
+        }
+    }
+    if (estado == JUEGO) {
+        int v = mundo.comprobarVictoria();
+        if (v != 0) { equipoVencedor = v; estado = FIN; }
+
+        if (modoIA) {
+            if (ia.mueve(dt) && mundo.hayCombatePendiente()) {
+                arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                arena.setIAActiva(true);
+                estado = COMBATE;
+            }
+        }
+    }
 }
 
 void Coordinador::dibuja() const
@@ -172,6 +198,23 @@ void Coordinador::dibuja() const
         glClear(GL_COLOR_BUFFER_BIT);
         arena.dibuja();
         break;
+
+    case FIN: {
+        glMatrixMode(GL_PROJECTION); glLoadIdentity(); gluOrtho2D(0, 800, 0, 600);
+        glMatrixMode(GL_MODELVIEW);  glLoadIdentity();
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+
+        const char* ganador = (equipoVencedor == 1) ? "GANA REAL MADRID" : "GANA ATLETICO";
+        dibujaTexto(270.0f, 330.0f, ganador, 1.0f, 0.85f, 0.1f);
+        dibujaTexto(270.0f, 285.0f, "Pulsa ESC para volver al inicio", 0.6f, 0.6f, 0.6f);
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
@@ -187,6 +230,9 @@ void Coordinador::tecla(unsigned char key)
         break;
     case JUEGO:
         mundo.tecla(key);
+        break;
+    case FIN:
+        if (key == 27) { equipoVencedor = 0; estado = INICIO; }
         break;
     case COMBATE:
         if (key == 27) {
@@ -227,23 +273,42 @@ void Coordinador::teclaEspecialArriba(int key)
 
 void Coordinador::raton(int boton, int estadoRat, int x, int y)
 {
+	//Aqui esta lasolucion al bug de la ventana maximizada: el clic se normaliza al tamaño real de la ventana, no a un 800x600 fijo.
+    float anchoVentana = (float)glutGet(GLUT_WINDOW_WIDTH);
+    float altoVentana  = (float)glutGet(GLUT_WINDOW_HEIGHT);
+    if (anchoVentana <= 0.0f) anchoVentana = 800.0f;
+    if (altoVentana  <= 0.0f) altoVentana  = 600.0f;
+
     if (estado == INICIO) {
         if (boton == GLUT_LEFT_BUTTON && estadoRat == GLUT_DOWN) {
-            // Botón "1 vs 1": OpenGL x[200-390] y[120-185] → GLUT y[415-480]
-            if (x >= 200 && x <= 390 && y >= 415 && y <= 480)
+            // El menu se dibuja en gluOrtho2D(0,800, 0,600): reescalamos el clic
+            // a ese espacio. Boton "1 vs 1": x[200-390], GLUT y[415-480].
+            float mx = (x / anchoVentana) * 800.0f;
+            float my = (y / altoVentana)  * 600.0f;
+            if (mx >= 200 && mx <= 390 && my >= 415 && my <= 480) {
+                modoIA = false;
                 estado = JUEGO;
+            }
+            if (mx >= 410 && mx <= 620 && my >= 415 && my <= 480) {
+                modoIA = true;
+                estado = JUEGO;
+            }
         }
         return;
     }
 
     if (estado == JUEGO) {
-        float x_logico = (x / 800.0f) * 11.0f - 1.0f;
-        float y_logico = ((600.0f - y) / 600.0f) * 11.0f - 1.0f;
+        // El tablero se dibuja en gluOrtho2D(-1,10, -1,10) → rango logico de 11 unidades.
+        float x_logico = (x / anchoVentana) * 11.0f - 1.0f;
+        float y_logico = ((altoVentana - y) / altoVentana) * 11.0f - 1.0f;
         mundo.raton(boton, estadoRat, x_logico, y_logico);
 
         if (mundo.hayCombatePendiente()) {
             arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+            if (modoIA) arena.setIAActiva(true);
             estado = COMBATE;
         }
+
+        if (modoIA && estado == JUEGO) ia.elegirMovimiento();
     }
 }

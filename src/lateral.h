@@ -27,7 +27,7 @@ public:
         hp = hpMax;
     }
 
-    int    getRango()      const override { return 3; }
+    int    getRango()      const override { return equipo == 1 ? 2 : 4; }
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
 

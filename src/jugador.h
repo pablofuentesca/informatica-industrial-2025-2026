@@ -25,12 +25,20 @@ protected:
     bool disparaRayoArcano{ false };   // Entrenador: rayo rapido que atraviesa Y paraliza
     bool disparaEnjambre{ false };     // Goblin: enjambre de 3 proyectiles en abanico
 
+    bool encarcelado{ false };
+    int  ciclosEncarcelado{ 0 };
+
+    bool temporal{ false };   // elemental invocado: vive unos turnos y desaparece
+    int  ciclosVida{ 0 };
+
     Jugador(float x, float y, int _equipo, const char* ruta);
 
     Posicion pos;
 
 public:
     virtual ~Jugador();
+    Jugador(const Jugador&) = delete;//constructor de copia
+    Jugador& operator=(const Jugador&) = delete;
 
     virtual void dibuja() const;
     virtual void mover(float dirX, float dirY);
@@ -55,7 +63,20 @@ public:
     virtual void revive() {}
 
     void recibeGolpe(int dano);
-    void reiniciaCooldown() { timerAtaque = cooldownMax; }
+    void cura(int cantidad)      { hp += cantidad; if (hp > hpMax) hp = hpMax; }
+    void curarCompleto()         { hp = hpMax; }
+    void reiniciaCooldown()      { timerAtaque = cooldownMax; }
+
+    bool estaEncarcelado()       const { return encarcelado; }
+    void encarcelar(int ciclos)        { encarcelado = true; ciclosEncarcelado = ciclos; }
+    void descuentaCicloEncarcelado()   { if (encarcelado && --ciclosEncarcelado <= 0) encarcelado = false; }
+
+    bool esTemporal()            const { return temporal; }
+    void haceTemporal(int ciclos)      { temporal = true; ciclosVida = ciclos; }
+    // descuenta un turno de vida; devuelve true cuando se agota (hay que retirarla)
+    bool expiraCicloVida()             { return temporal && --ciclosVida <= 0; }
+
+    virtual bool esEntrenador() const { return false; }
 
     int    getHp()          const { return hp; }
     int    getHpMax()       const { return hpMax; }
