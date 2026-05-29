@@ -48,7 +48,7 @@ public:
     void resolverCombate(int equipoGanador);
     void limpiarCombatePendiente();
     void invertirCiclo();
-    void curarEquipoCompleto(int equipo);
+    bool curarUnaPieza(int equipo);
     bool teleportarAleatoriamente(int equipo);
     bool intercambiarPiezas(int equipo);
     bool invocarElemental(int equipo);

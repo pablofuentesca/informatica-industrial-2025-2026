@@ -367,11 +367,13 @@ void Mundo::cierraTurno()
     miTablero.avanzarCiclo();
     madrid.descuentaEncarcelados();
     atleti.descuentaEncarcelados();
+    madrid.descuentaTemporales();
+    atleti.descuentaTemporales();
 }
 
-void Mundo::curarEquipoCompleto(int equipo)
+bool Mundo::curarUnaPieza(int equipo)
 {
-    equipoPorId(equipo).curaTodos();
+    return equipoPorId(equipo).curaUna();
 }
 
 bool Mundo::teleportarAleatoriamente(int equipo)
@@ -436,7 +438,9 @@ bool Mundo::invocarElemental(int equipo)
         int nx = ex + d[0];
         int ny = ey + d[1];
         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
-            miEquip.anade(new Delantero((float)nx, (float)ny, equipo));
+            Jugador* elemental = new Delantero((float)nx, (float)ny, equipo);
+            elemental->haceTemporal(4);   // elemental temporal: dura unos turnos y desaparece
+            miEquip.anade(elemental);
             return true;
         }
     }

@@ -54,16 +54,29 @@ void Equipo::elimina(Jugador* pj)
         if (slot == pj) { cementerio.push_back(slot); slot = nullptr; return; }
 }
 
-void Equipo::curaTodos()
+bool Equipo::curaUna()
 {
     for (Jugador* pj : piezas)
-        if (pj != nullptr) pj->curarCompleto();
+        if (pj != nullptr && pj->getHp() < pj->getHpMax()) {
+            pj->curarCompleto();
+            return true;
+        }
+    return false;
 }
 
 void Equipo::descuentaEncarcelados()
 {
     for (Jugador* pj : piezas)
         if (pj != nullptr) pj->descuentaCicloEncarcelado();
+}
+
+void Equipo::descuentaTemporales()
+{
+    for (Jugador*& slot : piezas)
+        if (slot != nullptr && slot->expiraCicloVida()) {
+            delete slot;
+            slot = nullptr;
+        }
 }
 
 Jugador* Equipo::ultimaEnCementerio() const
