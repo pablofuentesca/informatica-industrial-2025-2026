@@ -524,3 +524,37 @@ bool Mundo::revivirPieza(int equipo)
     cementerio.push_back(revivida);
     return false;
 }
+
+int Mundo::comprobarVictoria() const
+{
+    // Condicion 1: controlar los 5 puntos de poder
+    int puntosX[5] = { 4, 0, 8, 4, 4 };
+    int puntosY[5] = { 4, 4, 4, 0, 8 };
+    int controlMadrid = 0;
+    int controlAtleti = 0;
+    for (int i = 0; i < 5; i++) {
+        int eq = equipoEn(puntosX[i], puntosY[i]);
+        if (eq == 1) controlMadrid++;
+        if (eq == 2) controlAtleti++;
+    }
+    if (controlMadrid == 5) return 1;
+    if (controlAtleti == 5) return 2;
+
+    // Condicion 2: eliminar todas las piezas del rival
+    int vivasMadrid = 0;
+    int vivasAtleti = 0;
+    for (const Jugador* pj : equipoMadrid) if (pj != nullptr) vivasMadrid++;
+    for (const Jugador* pj : equipoAtleti) if (pj != nullptr) vivasAtleti++;
+    if (vivasMadrid == 0) return 2;
+    if (vivasAtleti == 0) return 1;
+
+    // Condicion 3: dejar al rival con solo una pieza encarcelada
+    if (vivasAtleti == 1)
+        for (const Jugador* pj : equipoAtleti)
+            if (pj != nullptr && pj->estaEncarcelado()) return 1;
+    if (vivasMadrid == 1)
+        for (const Jugador* pj : equipoMadrid)
+            if (pj != nullptr && pj->estaEncarcelado()) return 2;
+
+    return 0;
+}

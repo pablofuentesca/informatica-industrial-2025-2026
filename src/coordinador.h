@@ -9,6 +9,7 @@ class Coordinador {
     Mundo mundo;
     Arena arena;
     ETSIDI::Sprite* portada{ nullptr };
+    int equipoVencedor{ 0 };
 
 public:
     ~Coordinador();

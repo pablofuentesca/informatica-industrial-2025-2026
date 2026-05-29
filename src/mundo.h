@@ -53,4 +53,5 @@ public:
     bool invocarElemental(int equipo);
     bool revivirPieza(int equipo);
     bool encarcelarEnemigo(int equipo);
+    int  comprobarVictoria() const;
 };

@@ -61,8 +61,14 @@ void Coordinador::mueve(double dt)
             ETSIDI::stopMusica();
             mundo.resolverCombate(arena.getGanador());
             arena.inicializa();
-            estado = JUEGO;
+            int v = mundo.comprobarVictoria();
+            if (v != 0) { equipoVencedor = v; estado = FIN; }
+            else           estado = JUEGO;
         }
+    }
+    if (estado == JUEGO) {
+        int v = mundo.comprobarVictoria();
+        if (v != 0) { equipoVencedor = v; estado = FIN; }
     }
 }
 
@@ -179,6 +185,23 @@ void Coordinador::dibuja() const
         glClear(GL_COLOR_BUFFER_BIT);
         arena.dibuja();
         break;
+
+    case FIN: {
+        glMatrixMode(GL_PROJECTION); glLoadIdentity(); gluOrtho2D(0, 800, 0, 600);
+        glMatrixMode(GL_MODELVIEW);  glLoadIdentity();
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+
+        const char* ganador = (equipoVencedor == 1) ? "GANA REAL MADRID" : "GANA ATLETICO";
+        dibujaTexto(270.0f, 330.0f, ganador, 1.0f, 0.85f, 0.1f);
+        dibujaTexto(270.0f, 285.0f, "Pulsa ESC para volver al inicio", 0.6f, 0.6f, 0.6f);
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
@@ -194,6 +217,9 @@ void Coordinador::tecla(unsigned char key)
         break;
     case JUEGO:
         mundo.tecla(key);
+        break;
+    case FIN:
+        if (key == 27) { equipoVencedor = 0; estado = INICIO; }
         break;
     case COMBATE:
         if (key == 27) {
