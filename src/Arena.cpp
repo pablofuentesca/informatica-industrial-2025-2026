@@ -207,6 +207,7 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     j2Ataca = false;
     j1FacingIzq = false;
     j2FacingIzq = true;
+    iaActiva = false;
 
     for (int i = 0; i < MAX_PROYECTILES; i++)
         proyectiles[i] = Proyectil();
@@ -487,6 +488,27 @@ void Arena::mueve(double dt)
         for (int i = 0; i < 10; i++) {
             if (!obstaculos[i].activo) continue;
             obstaculos[i].separaJugador(j1x, j1y, tam);
+        }
+
+        // IA controla j2 si esta activa
+        if (iaActiva && campoListo && timerParalizadoJ2 <= 0.0) {
+            j2Arr = j2Aba = j2Izq = j2Der = j2Ataca = false;
+            double dx = j1x - j2x;
+            double dy = j1y - j2y;
+            double dist = sqrt(dx*dx + dy*dy);
+            bool esRanged = pj2 && pj2->esRanged();
+            double objetivo = esRanged ? 180.0 : 35.0;
+
+            if (dist > objetivo + 15.0) {
+                if (dx > 0) j2Der = true; else j2Izq = true;
+                if (abs(dy) > 15.0) {
+                    if (dy > 0) j2Arr = true; else j2Aba = true;
+                }
+            } else if (esRanged && dist < objetivo - 15.0) {
+                if (dx > 0) j2Izq = true; else j2Der = true;
+            }
+
+            if (dist < (esRanged ? 350.0 : 50.0)) j2Ataca = true;
         }
 
         // movimiento jugador 2 (flechas) — bloqueado si el campo no esta listo o esta paralizado

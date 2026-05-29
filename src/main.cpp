@@ -61,6 +61,7 @@ int main(int argc, char* argv[]) {
     glutSpecialFunc(OnSpecialKeyboardDown);
     glutSpecialUpFunc(OnSpecialKeyboardUp);
     glutMouseFunc(OnMouseClick);
+    glutIgnoreKeyRepeat(1);
 
     coordinador.inicializa();
     glutMainLoop();

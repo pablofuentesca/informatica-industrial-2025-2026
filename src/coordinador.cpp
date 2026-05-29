@@ -67,19 +67,21 @@ void Coordinador::mueve(double dt)
             if (v != 0) { equipoVencedor = v; estado = FIN; }
             else {
                 estado = JUEGO;
-                if (modoIA) {
-                    ia.elegirMovimiento();
-                    if (mundo.hayCombatePendiente()) {
-                        arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
-                        estado = COMBATE;
-                    }
-                }
+                if (modoIA) ia.elegirMovimiento();
             }
         }
     }
     if (estado == JUEGO) {
         int v = mundo.comprobarVictoria();
         if (v != 0) { equipoVencedor = v; estado = FIN; }
+
+        if (modoIA) {
+            if (ia.mueve(dt) && mundo.hayCombatePendiente()) {
+                arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                arena.setIAActiva(true);
+                estado = COMBATE;
+            }
+        }
     }
 }
 
@@ -303,15 +305,10 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
 
         if (mundo.hayCombatePendiente()) {
             arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+            if (modoIA) arena.setIAActiva(true);
             estado = COMBATE;
         }
 
-        if (modoIA && estado == JUEGO) {
-            ia.elegirMovimiento();
-            if (mundo.hayCombatePendiente()) {
-                arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
-                estado = COMBATE;
-            }
-        }
+        if (modoIA && estado == JUEGO) ia.elegirMovimiento();
     }
 }
