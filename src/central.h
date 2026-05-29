@@ -26,7 +26,7 @@ public:
         hp = hpMax;
     }
 
-    int    getRango()      const override { return 3; }
+    int    getRango()      const override { return equipo == 1 ? 3 : 2; }
     bool   esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
     bool   esRanged()      const override { return false; }
 

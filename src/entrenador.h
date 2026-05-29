@@ -1,5 +1,5 @@
 #pragma once
-#include "teletransportador.h"
+#include "volador.h"
 #include "conjuro.h"
 #include <vector>
 class Mundo;
@@ -7,13 +7,13 @@ class Mundo;
 // Equipo 1 (Madrid):  Mago      (Ancelotti) — PIEZA REY, ranged, 7 conjuros por partida
 // Equipo 2 (Atleti):  Hechicera (Simeone)   — PIEZA REY, ranged, 7 conjuros por partida
 // Si el Entrenador es eliminado en arena, el partido termina para ese bando
-class Entrenador : public Teletransportador {
+class Entrenador : public Volador {
     int conjurosRestantes{ 7 };
     std::vector<Conjuro*> conjuros;
 
 public:
     Entrenador(float x, float y, int equipo)
-        : Teletransportador(x, y, equipo, equipo == 1
+        : Volador(x, y, equipo, equipo == 1
             ? "../bin/imagenes/fotosjugadores/madridentrenador.png"
             : "../bin/imagenes/fotosjugadores/atletientrenador.png")
     {
@@ -37,15 +37,11 @@ public:
         for (Conjuro* c : conjuros) delete c;
     }
 
-    // En el tablero puede teletransportarse a cualquier casilla libre
+    // En el tablero se mueve como una reina hasta 3 casillas, volando sobre piezas
     int getRango() const override { return 3; }
 
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
-
-    void mover(float dirX, float dirY) override {
-        Jugador::mover(dirX, dirY);
-    }
 
     int  getConjurosRestantes() const { return conjurosRestantes; }
     bool tieneConjuros()        const { return conjurosRestantes > 0; }

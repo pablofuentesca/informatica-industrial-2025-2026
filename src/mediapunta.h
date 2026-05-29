@@ -17,9 +17,9 @@ public:
         hp = hpMax;
     }
 
-    // Genio (Madrid):    rango 4 — puede moverse a cualquier casilla libre (tablero)
-    // Cambiaformas (At): rango 5 — se acerca al rival para copiarlo bien
-    int getRango() const override { return equipo == 1 ? 4 : 5; }
+    // Genio (Madrid):    rango 4 — alfil diagonal hasta 4 casillas
+    // Cambiaformas (At): rango 4 — alfil diagonal hasta 4 casillas
+    int getRango() const override { return 4; }
 
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }

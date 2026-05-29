@@ -211,44 +211,42 @@ void Mundo::calcularCasillasValidas()
 
     int gx       = (int)jugadorSeleccionado->getPosX();
     int gy       = (int)jugadorSeleccionado->getPosY();
-    int rango    = jugadorSeleccionado->getRango();
     int miEquipo = jugadorSeleccionado->getEquipo();
 
-    if (jugadorSeleccionado->esTeleport()) {
-        // Puede ir a cualquier casilla que no esté ocupada por un aliado
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
-                if (equipoEn(i, j) != miEquipo)
+	for (int i = 0; i < 9; i++) {  //Utilizamos un bucle doble para recorrer todas las casillas del tablero y comprobar si el jugador seleccionado puede moverse a cada una de ellas, teniendo en cuenta su rango, tipo de movimiento y obstáculos en el camino.
+        for (int j = 0; j < 9; j++) {
+            if (i == gx && j == gy) continue;
+            if (equipoEn(i, j) == miEquipo) continue;
+            if (!jugadorSeleccionado->esMovimientoValido(gx, gy, i, j)) continue;
+
+            if (jugadorSeleccionado->esTeleport() || jugadorSeleccionado->esVolador()) {
+                // Piezas voladoras y teletransportadoras no se bloquean por piezas intermedias
+                casillasValidas.at(i, j) = true;
+            } else {
+                // Terrestre: verificar que el camino este libre de obstaculos
+                int difX    = i - gx;
+                int difY    = j - gy;
+                int absDifX = std::abs(difX);
+                int absDifY = std::abs(difY);
+
+                // Movimiento en L (Caballero/Goblin): salta sobre piezas intermedias
+                if ((absDifX == 2 && absDifY == 1) || (absDifX == 1 && absDifY == 2)) {
                     casillasValidas.at(i, j) = true;
-        casillasValidas.at(gx, gy) = false; // No puede quedarse donde está
-    }
-    else if (jugadorSeleccionado->esVolador()) {
-        // 8 direcciones, pasa sobre piezas, para en aliado o enemigo
-        int dirs[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
-        for (auto& d : dirs) {
-            for (int r = 1; r <= rango; r++) {
-                int nx = gx + d[0] * r;
-                int ny = gy + d[1] * r;
-                if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
-                int eq = equipoEn(nx, ny);
-                if (eq == miEquipo) break;          // Bloqueado por aliado
-                casillasValidas.at(nx, ny) = true;
-                if (eq != 0) break;                 // Para en enemigo (puede aterrizar)
-            }
-        }
-    }
-    else {
-        // Terrestre: 4 direcciones, bloqueado por cualquier pieza
-        int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
-        for (auto& d : dirs) {
-            for (int r = 1; r <= rango; r++) {
-                int nx = gx + d[0] * r;
-                int ny = gy + d[1] * r;
-                if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) break;
-                int eq = equipoEn(nx, ny);
-                if (eq == miEquipo) break;          // Bloqueado por aliado
-                casillasValidas.at(nx, ny) = true;
-                if (eq != 0) break;                 // Para en enemigo
+                    continue;
+                }
+
+                // Movimiento en linea recta (ortogonal o diagonal): camino debe estar libre
+                int stepX = (difX == 0) ? 0 : (difX > 0 ? 1 : -1);
+                int stepY = (difY == 0) ? 0 : (difY > 0 ? 1 : -1);
+                bool caminoLibre = true;
+                int cx = gx + stepX;
+                int cy = gy + stepY;
+                while (cx != i || cy != j) {
+                    if (equipoEn(cx, cy) != 0) { caminoLibre = false; break; }
+                    cx += stepX;
+                    cy += stepY;
+                }
+                if (caminoLibre) casillasValidas.at(i, j) = true;
             }
         }
     }

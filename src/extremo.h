@@ -26,9 +26,9 @@ public:
         hp = hpMax;
     }
 
-    // Fenix (Madrid): rango 5 — largo desplazamiento en tablero
-    // Dragon (Atleti): rango 4 — mas corto, avanza lento
-    int getRango() const override { return equipo == 1 ? 5 : 4; }
+    // Fenix (Madrid): rango 5 — reina, el mas movil del tablero
+    // Dragon (Atleti): rango 3 — torre ortogonal, alcance corto
+    int getRango() const override { return equipo == 1 ? 5 : 3; }
 
     bool   esRanged()      const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
