@@ -11,6 +11,8 @@ void Coordinador::inicializa()
 {
     portada = new ETSIDI::Sprite("../bin/imagenes/portada.png", 400, 300, 800, 600);
     mundo.inicializa();
+    ia.setMundo(&mundo);
+    ia.setEquipo(2);
 }
 
 static void dibujaTexto(float x, float y, const char* texto, float r, float g, float b)
@@ -63,7 +65,16 @@ void Coordinador::mueve(double dt)
             arena.inicializa();
             int v = mundo.comprobarVictoria();
             if (v != 0) { equipoVencedor = v; estado = FIN; }
-            else           estado = JUEGO;
+            else {
+                estado = JUEGO;
+                if (modoIA) {
+                    ia.elegirMovimiento();
+                    if (mundo.hayCombatePendiente()) {
+                        arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                        estado = COMBATE;
+                    }
+                }
+            }
         }
     }
     if (estado == JUEGO) {
@@ -272,8 +283,14 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
             // a ese espacio. Boton "1 vs 1": x[200-390], GLUT y[415-480].
             float mx = (x / anchoVentana) * 800.0f;
             float my = (y / altoVentana)  * 600.0f;
-            if (mx >= 200 && mx <= 390 && my >= 415 && my <= 480)
+            if (mx >= 200 && mx <= 390 && my >= 415 && my <= 480) {
+                modoIA = false;
                 estado = JUEGO;
+            }
+            if (mx >= 410 && mx <= 620 && my >= 415 && my <= 480) {
+                modoIA = true;
+                estado = JUEGO;
+            }
         }
         return;
     }
@@ -287,6 +304,14 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
         if (mundo.hayCombatePendiente()) {
             arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
             estado = COMBATE;
+        }
+
+        if (modoIA && estado == JUEGO) {
+            ia.elegirMovimiento();
+            if (mundo.hayCombatePendiente()) {
+                arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                estado = COMBATE;
+            }
         }
     }
 }
