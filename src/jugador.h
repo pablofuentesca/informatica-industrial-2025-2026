@@ -37,6 +37,8 @@ protected:
 
 public:
     virtual ~Jugador();
+    Jugador(const Jugador&) = delete;//constructor de copia
+    Jugador& operator=(const Jugador&) = delete;
 
     virtual void dibuja() const;
     virtual void mover(float dirX, float dirY);
