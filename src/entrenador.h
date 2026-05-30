@@ -63,6 +63,9 @@ public:
 
     // lanza el conjuro i; devuelve true si tuvo efecto
     bool lanzarConjuro(int i, Mundo& m);
+    void marcarConjuroUsado(int i) {
+        if (i >= 0 && i < (int)conjuros.size()) conjuros[i]->marcarUsado();
+    }
 
     bool esEntrenador() const override { return true; }
     void habilidadEspecial() override {}

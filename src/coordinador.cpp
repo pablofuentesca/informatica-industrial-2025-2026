@@ -96,6 +96,7 @@ void Coordinador::mueve(double dt)
         if (modoIA) {
             if (ia.mueve(dt) && mundo.hayCombatePendiente()) {
                 arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                arena.setVentajaCasilla(mundo.ventajaCombate());
                 arena.setIAActiva(true);
                 estado = COMBATE;
             }
@@ -430,6 +431,7 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
 
         if (mundo.hayCombatePendiente()) {
             arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+            arena.setVentajaCasilla(mundo.ventajaCombate());
             if (modoIA) arena.setIAActiva(true);
             estado = COMBATE;
         }

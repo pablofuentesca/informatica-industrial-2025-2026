@@ -199,6 +199,7 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     usarDiagonal = ETSIDI::lanzaMoneda();
     estado = TRANSICION;
     ganador = 0;
+    equipoVentaja = 0;
     timerParalizadoJ1 = 0.0;
     timerParalizadoJ2 = 0.0;
     timerMeleeJ1 = 0.0;
@@ -308,6 +309,8 @@ void Arena::lanzaAtaque(int equipo)
     int    danio   = pj ? pj->getDanio()     : 10;
     bool   ranged  = pj ? pj->esRanged()     : true;
     double alcance = pj ? pj->alcanceAtaque(): 30.0;
+
+    if (equipo == equipoVentaja) danio = (int)(danio * 1.30);
 
     // --- habilidades especiales (tienen prioridad sobre el ataque base) ---
 
