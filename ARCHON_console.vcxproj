@@ -29,6 +29,7 @@
     <ClCompile Include="src\entrenador.cpp" />
     <ClCompile Include="src\equipo.cpp" />
     <ClCompile Include="src\extremo.cpp" />
+    <ClCompile Include="src\ia.cpp" />
     <ClCompile Include="src\interaccionArena.cpp" />
     <ClCompile Include="src\jugador.cpp" />
     <ClCompile Include="src\lateral.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="src\equipo.h" />
     <ClInclude Include="src\extremo.h" />
     <ClInclude Include="src\grid.h" />
+    <ClInclude Include="src\ia.h" />
     <ClInclude Include="src\interaccionArena.h" />
     <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\lateral.h" />

@@ -43,6 +43,7 @@ class Arena {
 
     bool j1FacingIzq{ false };   // ultima direccion horizontal de j1
     bool j2FacingIzq{ true  };   // ultima direccion horizontal de j2
+    bool iaActiva{ false };
 
     enum EstadoArena {
         TRANSICION,
@@ -90,4 +91,5 @@ public:
     void teclaEspecialArriba(int key);
 
     int getGanador() const { return ganador; }
+    void setIAActiva(bool v) { iaActiva = v; }
 };

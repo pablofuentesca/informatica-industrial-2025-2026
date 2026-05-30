@@ -207,6 +207,7 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     j2Ataca = false;
     j1FacingIzq = false;
     j2FacingIzq = true;
+    iaActiva = false;
 
     for (int i = 0; i < MAX_PROYECTILES; i++)
         proyectiles[i] = Proyectil();
@@ -489,6 +490,27 @@ void Arena::mueve(double dt)
             obstaculos[i].separaJugador(j1x, j1y, tam);
         }
 
+        // IA controla j2 si esta activa
+        if (iaActiva && campoListo && timerParalizadoJ2 <= 0.0) {
+            j2Arr = j2Aba = j2Izq = j2Der = j2Ataca = false;
+            double dx = j1x - j2x;
+            double dy = j1y - j2y;
+            double dist = sqrt(dx*dx + dy*dy);
+            bool esRanged = pj2 && pj2->esRanged();
+            double objetivo = esRanged ? 180.0 : 35.0;
+
+            if (dist > objetivo + 15.0) {
+                if (dx > 0) j2Der = true; else j2Izq = true;
+                if (abs(dy) > 15.0) {
+                    if (dy > 0) j2Arr = true; else j2Aba = true;
+                }
+            } else if (esRanged && dist < objetivo - 15.0) {
+                if (dx > 0) j2Izq = true; else j2Der = true;
+            }
+
+            if (dist < (esRanged ? 350.0 : 50.0)) j2Ataca = true;
+        }
+
         // movimiento jugador 2 (flechas) — bloqueado si el campo no esta listo o esta paralizado
         if (campoListo && timerParalizadoJ2 <= 0.0) {
             if (j2Arr) j2y += vel2 * dt;
@@ -597,6 +619,22 @@ void Arena::dibuja() const
 
     double cx = (xMin + xMax) / 2.0;
     double cy = (yMin + yMax) / 2.0;
+
+    // fondo: imagen del estadio cubriendo toda la ventana
+    {
+        static ETSIDI::GLTexture texEstadio = ETSIDI::getTexture("imagenes/estadio.png");
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texEstadio.id);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        glBegin(GL_QUADS);
+            glTexCoord2d(0, 1); glVertex2d(0,   0);
+            glTexCoord2d(1, 1); glVertex2d(800, 0);
+            glTexCoord2d(1, 0); glVertex2d(800, 600);
+            glTexCoord2d(0, 0); glVertex2d(0,   600);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    }
 
     // franjas de cesped alternadas
     double anchoFranja = (xMax - xMin) / 10.0;

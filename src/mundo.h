@@ -6,7 +6,10 @@
 #include "equipo.h"
 #include "turno.h"
 
+class IA;
+
 class Mundo {
+    friend class IA;
 
     Tablero miTablero;
     Pelota balones[5];

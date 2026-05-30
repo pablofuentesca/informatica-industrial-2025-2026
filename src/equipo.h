@@ -19,6 +19,8 @@ private:
 public:
     Equipo(int id, const char* nombre);
     ~Equipo();
+    Equipo(const Equipo&) = delete;//contructor de copia
+    Equipo& operator=(const Equipo&) = delete;
 
     int         getId()     const { return id; }
     const char* getNombre() const { return nombre; }
