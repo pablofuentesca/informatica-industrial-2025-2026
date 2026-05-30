@@ -2,17 +2,28 @@
 #include "mundo.h"
 #include "Arena.h"
 #include "ia.h"
+#include "ranking.h"
+#include <string>
 
 namespace ETSIDI { class Sprite; }
 
 class Coordinador {
-    enum Estado { INICIO, REGLAS, JUEGO, COMBATE, PAUSA, FIN } estado{};
+    enum Estado { INICIO, REGLAS, NOMBRES, JUEGO, COMBATE, PAUSA, FIN, RANKING } estado{};
     Mundo mundo;
     Arena arena;
     IA ia;
+    Ranking ranking{ "../bin/ranking.txt" };
     bool modoIA{ false };
     ETSIDI::Sprite* portada{ nullptr };
     int equipoVencedor{ 0 };
+
+    // nombres que los jugadores introducen al empezar (para el ranking)
+    std::string nombreMadrid;
+    std::string nombreAtleti;
+    std::string entradaActual;    // texto que se esta tecleando ahora
+    int         campoNombre{ 0 }; // 0 = nombre de Madrid, 1 = nombre de Atleti
+
+    void iniciaEntradaNombres(bool conIA);   // prepara la pantalla de nombres
 
 public:
     Coordinador() = default;
