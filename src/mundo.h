@@ -19,6 +19,13 @@ class Mundo {
     Jugador* jugadorSeleccionado;
     Grid<bool, 9> casillasValidas;
 
+    enum class FaseConjuro { NINGUNO, TELEPORT_PIEZA, TELEPORT_DESTINO,
+                             EXCHANGE_PRIMERA, EXCHANGE_SEGUNDA };
+    FaseConjuro faseConjuro{ FaseConjuro::NINGUNO };
+    Jugador*    piezaConjuro{ nullptr };
+    int         equipoConjuro{ 0 };
+    bool        mostrarHechizos{ false };
+
     // pieza que ataca y pieza que defiende cuando se produce un enfrentamiento
     Jugador* pendientePj1{ nullptr };
     Jugador* pendientePj2{ nullptr };
@@ -52,6 +59,7 @@ public:
     Jugador* getCombatiente2()     const { return pendientePj2; }
     void resolverCombate(int equipoGanador);
     void limpiarCombatePendiente();
+    int  ventajaCombate() const;
     void invertirCiclo();
     bool curarUnaPieza(int equipo);
     bool teleportarAleatoriamente(int equipo);

@@ -14,6 +14,14 @@
 #include <cstdlib>
 #include <ctime>
 
+static void textoPanel(float x, float y, const char* s, void* fuente,
+                       float r, float g, float b)
+{
+    glColor3f(r, g, b);
+    glRasterPos2f(x, y);
+    for (const char* c = s; *c; c++) glutBitmapCharacter(fuente, *c);
+}
+
 Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) },
                  madrid(1, "REAL MADRID"),
                  atleti(2, "ATLETICO")
@@ -133,14 +141,14 @@ void Mundo::dibuja() const
     glColor3f(1.0f, 1.0f, 1.0f);
 
     const char* msg;
-    if (turno.esPrimerTurno())
+    if      (faseConjuro == FaseConjuro::TELEPORT_PIEZA)   msg = "TELEPORT: elige la pieza a mover";
+    else if (faseConjuro == FaseConjuro::TELEPORT_DESTINO) msg = "TELEPORT: elige el destino";
+    else if (faseConjuro == FaseConjuro::EXCHANGE_PRIMERA) msg = "INTERCAMBIAR: elige la primera pieza";
+    else if (faseConjuro == FaseConjuro::EXCHANGE_SEGUNDA) msg = "INTERCAMBIAR: elige la segunda pieza";
+    else if (turno.esPrimerTurno())
         msg = (turno.equipoEnJuego() == 1) ? "SACA REAL MADRID" : "SACA ATLETICO";
     else
         msg = (turno.equipoEnJuego() == 1) ? "MUEVE REAL MADRID" : "MUEVE ATLETICO";
-
-    glRasterPos2f(2.5f, -0.6f);
-    for (const char* c = msg; *c; c++)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     // Piezas encarceladas (tinte rojo)
     glEnable(GL_BLEND);
@@ -170,27 +178,136 @@ void Mundo::dibuja() const
         }
     glDisable(GL_BLEND);
 
-    // Panel de conjuros si el Entrenador esta seleccionado
-    if (jugadorSeleccionado != nullptr && jugadorSeleccionado->esEntrenador()) {
-        const Entrenador* ent = static_cast<const Entrenador*>(jugadorSeleccionado);
-
+    {
+        glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
+        gluOrtho2D(0, 800, 0, 600);
+        glMatrixMode(GL_MODELVIEW);  glPushMatrix(); glLoadIdentity();
         glDisable(GL_TEXTURE_2D);
+
+        bool hayEntrenador = (jugadorSeleccionado != nullptr &&
+                              jugadorSeleccionado->esEntrenador());
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(0.03f, 0.05f, 0.09f, 0.92f);
+        glBegin(GL_QUADS);
+            glVertex2f(0, 560); glVertex2f(800, 560); glVertex2f(800, 598); glVertex2f(0, 598);
+        glEnd();
+        glColor3f(0.70f, 0.55f, 0.10f);
+        glBegin(GL_LINES); glVertex2f(0, 560); glVertex2f(800, 560); glEnd();
         glDisable(GL_BLEND);
 
-        for (int i = 0; i < ent->numConjuros(); i++) {
-            bool usado = ent->conjuroUsado(i);
-            glColor3f(usado ? 0.35f : 1.0f,
-                      usado ? 0.35f : 0.9f,
-                      usado ? 0.35f : 0.2f);
+        int ancho = glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)msg);
+        textoPanel(400 - ancho / 2.0f, 572, msg, GLUT_BITMAP_HELVETICA_18, 1.0f, 1.0f, 1.0f);
+        if (hayEntrenador)
+            textoPanel(690, 573, "[8] Ayuda", GLUT_BITMAP_HELVETICA_12, 0.55f, 0.80f, 0.95f);
 
-            glRasterPos2f(-0.9f + i * 1.55f, -0.85f);
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, '[');
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, '1' + i);
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, ']');
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, ' ');
-            for (const char* c = ent->nombreConjuro(i); *c; c++)
-                glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *c);
+        if (hayEntrenador) {
+            const Entrenador* ent = static_cast<const Entrenador*>(jugadorSeleccionado);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4f(0.03f, 0.05f, 0.09f, 0.92f);
+            glBegin(GL_QUADS);
+                glVertex2f(0, 4); glVertex2f(800, 4); glVertex2f(800, 40); glVertex2f(0, 40);
+            glEnd();
+            glColor3f(0.70f, 0.55f, 0.10f);
+            glBegin(GL_LINES); glVertex2f(0, 40); glVertex2f(800, 40); glEnd();
+            glDisable(GL_BLEND);
+
+            for (int i = 0; i < ent->numConjuros(); i++) {
+                bool usado = ent->conjuroUsado(i);
+                float r = usado ? 0.40f : 0.95f;
+                float g = usado ? 0.40f : 0.80f;
+                float b = usado ? 0.40f : 0.30f;
+
+                char etiqueta[40];
+                etiqueta[0] = '[';  etiqueta[1] = (char)('1' + i);
+                etiqueta[2] = ']';  etiqueta[3] = ' ';
+                int k = 4;
+                for (const char* c = ent->nombreConjuro(i); *c && k < 39; c++)
+                    etiqueta[k++] = *c;
+                etiqueta[k] = '\0';
+
+                textoPanel(12 + i * 112.0f, 14, etiqueta, GLUT_BITMAP_HELVETICA_12, r, g, b);
+            }
         }
+
+        glMatrixMode(GL_PROJECTION); glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);  glPopMatrix();
+    }
+
+    if (mostrarHechizos) {
+        glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
+        gluOrtho2D(0, 800, 0, 600);
+        glMatrixMode(GL_MODELVIEW);  glPushMatrix(); glLoadIdentity();
+
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+        glBegin(GL_QUADS);
+            glVertex2f(0, 0); glVertex2f(800, 0); glVertex2f(800, 600); glVertex2f(0, 600);
+        glEnd();
+
+        const float x0 = 90, x1 = 710, y0 = 95, y1 = 505;
+
+        glColor4f(0.04f, 0.06f, 0.10f, 0.97f);
+        glBegin(GL_QUADS);
+            glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+        glEnd();
+
+        glColor3f(0.90f, 0.90f, 0.95f);
+        glBegin(GL_QUADS);
+            glVertex2f(x0, y1 - 8); glVertex2f(400, y1 - 8); glVertex2f(400, y1); glVertex2f(x0, y1);
+        glEnd();
+        glColor3f(0.70f, 0.10f, 0.15f);
+        glBegin(GL_QUADS);
+            glVertex2f(400, y1 - 8); glVertex2f(x1, y1 - 8); glVertex2f(x1, y1); glVertex2f(400, y1);
+        glEnd();
+
+        glColor3f(0.82f, 0.66f, 0.12f);
+        glLineWidth(2.5f);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+        glEnd();
+        glColor3f(0.45f, 0.36f, 0.06f);
+        glLineWidth(1.0f);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(x0 + 6, y0 + 6); glVertex2f(x1 - 6, y0 + 6);
+            glVertex2f(x1 - 6, y1 - 14); glVertex2f(x0 + 6, y1 - 14);
+        glEnd();
+        glDisable(GL_BLEND);
+
+        textoPanel(272, 470, "HECHIZOS DEL ENTRENADOR", GLUT_BITMAP_HELVETICA_18, 0.95f, 0.82f, 0.25f);
+        glColor3f(0.50f, 0.40f, 0.08f);
+        glBegin(GL_LINES); glVertex2f(265, 462); glVertex2f(540, 462); glEnd();
+
+        struct { const char* etiqueta; const char* desc; } h[7] = {
+            { "[1] Teleport",     "mueve una pieza tuya a cualquier casilla libre que elijas." },
+            { "[2] Curar",        "devuelve toda la vida a tu pieza mas debilitada." },
+            { "[3] Ciclo",        "invierte la luz del tablero (las casillas cambian de color)." },
+            { "[4] Intercambiar", "cambia de posicion dos piezas tuyas que elijas." },
+            { "[5] Elemental",    "invoca una pieza aliada temporal junto al entrenador." },
+            { "[6] Revivir",      "recupera tu ultima pieza eliminada, junto al entrenador." },
+            { "[7] Encarcelar",   "inmoviliza 3 turnos a una pieza enemiga rival." }
+        };
+
+        float y = 425;
+        for (int i = 0; i < 7; i++) {
+            textoPanel(115, y, h[i].etiqueta, GLUT_BITMAP_HELVETICA_12, 0.95f, 0.80f, 0.30f);
+            textoPanel(250, y, h[i].desc,     GLUT_BITMAP_HELVETICA_12, 0.85f, 0.87f, 0.92f);
+            y -= 45;
+        }
+
+        textoPanel(205, 122, "Cada hechizo solo se usa UNA vez por partida.",
+                   GLUT_BITMAP_HELVETICA_12, 0.60f, 0.60f, 0.62f);
+        textoPanel(312, 104, "Pulsa 8 para cerrar",
+                   GLUT_BITMAP_HELVETICA_12, 0.55f, 0.55f, 0.57f);
+
+        glMatrixMode(GL_PROJECTION); glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);  glPopMatrix();
     }
 }
 
@@ -259,9 +376,31 @@ void Mundo::tecla(unsigned char key)
     if (jugadorSeleccionado == nullptr) return;
     if (!jugadorSeleccionado->esEntrenador()) return;
 
+    if (key == '8') { mostrarHechizos = !mostrarHechizos; return; }
+
     if (key >= '1' && key <= '7') {
         int idx = key - '1';
         Entrenador* ent = static_cast<Entrenador*>(jugadorSeleccionado);
+
+        if (!ent->tieneConjuros()) return;
+        if (ent->conjuroUsado(idx)) return;
+
+        if (idx == 0) {
+            faseConjuro   = FaseConjuro::TELEPORT_PIEZA;
+            equipoConjuro = ent->getEquipo();
+            jugadorSeleccionado = nullptr;
+            calcularCasillasValidas();
+            return;
+        }
+        if (idx == 3) {
+            faseConjuro   = FaseConjuro::EXCHANGE_PRIMERA;
+            equipoConjuro = ent->getEquipo();
+            piezaConjuro  = nullptr;
+            jugadorSeleccionado = nullptr;
+            calcularCasillasValidas();
+            return;
+        }
+
         if (ent->lanzarConjuro(idx, *this)) {
             jugadorSeleccionado = nullptr;
             calcularCasillasValidas();
@@ -282,7 +421,75 @@ void Mundo::raton(int boton, int estado, float x, float y)
     // Click fuera del tablero → deseleccionar
     if (gx < 0 || gx >= 9 || gy < 0 || gy >= 9) {
         jugadorSeleccionado = nullptr;
+        faseConjuro  = FaseConjuro::NINGUNO;
+        piezaConjuro = nullptr;
         calcularCasillasValidas();
+        return;
+    }
+
+    if (faseConjuro == FaseConjuro::TELEPORT_PIEZA) {
+        Jugador* pj = equipoPorId(equipoConjuro).piezaEn(gx, gy);
+        if (pj != nullptr) {
+            piezaConjuro = pj;
+            faseConjuro  = FaseConjuro::TELEPORT_DESTINO;
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 9; j++)
+                    casillasValidas.at(i, j) = (equipoEn(i, j) == 0);
+        }
+        return;
+    }
+
+    if (faseConjuro == FaseConjuro::TELEPORT_DESTINO) {
+        if (equipoEn(gx, gy) == 0) {
+            piezaConjuro->moverA((float)gx, (float)gy);
+            Jugador* entPj = equipoPorId(equipoConjuro).buscaEntrenador();
+            if (entPj != nullptr) {
+                Entrenador* ent = static_cast<Entrenador*>(entPj);
+                ent->marcarConjuroUsado(0);
+                ent->gastaConjuro();
+            }
+            faseConjuro  = FaseConjuro::NINGUNO;
+            piezaConjuro = nullptr;
+            calcularCasillasValidas();
+            cierraTurno();
+        }
+        return;
+    }
+
+    if (faseConjuro == FaseConjuro::EXCHANGE_PRIMERA) {
+        Jugador* pj = equipoPorId(equipoConjuro).piezaEn(gx, gy);
+        if (pj != nullptr) {
+            piezaConjuro = pj;
+            faseConjuro  = FaseConjuro::EXCHANGE_SEGUNDA;
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 9; j++) {
+                    Jugador* otro = equipoPorId(equipoConjuro).piezaEn(i, j);
+                    casillasValidas.at(i, j) = (otro != nullptr && otro != pj);
+                }
+        }
+        return;
+    }
+
+    if (faseConjuro == FaseConjuro::EXCHANGE_SEGUNDA) {
+        Jugador* pj = equipoPorId(equipoConjuro).piezaEn(gx, gy);
+        if (pj != nullptr && pj != piezaConjuro) {
+            float ax = piezaConjuro->getPosX() - 0.5f;
+            float ay = piezaConjuro->getPosY() - 0.5f;
+            float bx = pj->getPosX() - 0.5f;
+            float by = pj->getPosY() - 0.5f;
+            piezaConjuro->moverA(bx, by);
+            pj->moverA(ax, ay);
+            Jugador* entPj = equipoPorId(equipoConjuro).buscaEntrenador();
+            if (entPj != nullptr) {
+                Entrenador* ent = static_cast<Entrenador*>(entPj);
+                ent->marcarConjuroUsado(3);
+                ent->gastaConjuro();
+            }
+            faseConjuro  = FaseConjuro::NINGUNO;
+            piezaConjuro = nullptr;
+            calcularCasillasValidas();
+            cierraTurno();
+        }
         return;
     }
 
@@ -320,6 +527,7 @@ void Mundo::raton(int boton, int estado, float x, float y)
             }
         }
         jugadorSeleccionado = nullptr;
+        mostrarHechizos     = false;
         calcularCasillasValidas();
     }
 }
@@ -352,6 +560,13 @@ void Mundo::limpiarCombatePendiente()
     pendientePj2 = nullptr;
     destCombateX = -1;
     destCombateY = -1;
+}
+
+int Mundo::ventajaCombate() const
+{
+    if (miTablero.casillaFavoreceLuz(destCombateX, destCombateY))    return 1;
+    if (miTablero.casillaFavoreceOscuro(destCombateX, destCombateY)) return 2;
+    return 0;
 }
 
 void Mundo::invertirCiclo()

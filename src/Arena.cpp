@@ -199,6 +199,7 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     usarDiagonal = ETSIDI::lanzaMoneda();
     estado = TRANSICION;
     ganador = 0;
+    equipoVentaja = 0;
     timerParalizadoJ1 = 0.0;
     timerParalizadoJ2 = 0.0;
     timerMeleeJ1 = 0.0;
@@ -312,6 +313,8 @@ void Arena::lanzaAtaque(int equipo)
     // sonido de disparo para ataques a distancia
     if (ranged) ETSIDI::play("sonidos/tiro.wav");
 
+    if (equipo == equipoVentaja) danio = (int)(danio * 1.30);
+
     // --- habilidades especiales (tienen prioridad sobre el ataque base) ---
 
     // Mago/Hechicera: rayo arcano — rapido y paraliza
@@ -332,9 +335,10 @@ void Arena::lanzaAtaque(int equipo)
 
     // --- ataque normal ---
     if (!ranged) {
-        // destello visual del swing, tanto si alcanza como si no
+        // destello visual del swing y sonido de golpe
         if (equipo == 1) timerMeleeJ1 = 0.18;
         else             timerMeleeJ2 = 0.18;
+        ETSIDI::play("sonidos/golpe.wav");
         // dano directo si el rival esta dentro del alcance del arma
         if (dist <= tam + alcance) {
             if (objetivo) objetivo->recibeGolpe(danio);

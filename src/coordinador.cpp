@@ -81,6 +81,7 @@ void Coordinador::mueve(double dt)
             }
             else {
                 estado = JUEGO;
+                ETSIDI::playMusica("sonidos/partido.wav", true);
                 if (modoIA) ia.elegirMovimiento();
             }
         }
@@ -96,6 +97,7 @@ void Coordinador::mueve(double dt)
         if (modoIA) {
             if (ia.mueve(dt) && mundo.hayCombatePendiente()) {
                 arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+                arena.setVentajaCasilla(mundo.ventajaCombate());
                 arena.setIAActiva(true);
                 estado = COMBATE;
             }
@@ -342,12 +344,13 @@ void Coordinador::tecla(unsigned char key)
         if (key == 13) {                                    // ENTER confirma el nombre
             if (campoNombre == 0) {
                 nombreMadrid = entradaActual.empty() ? "Jugador 1" : entradaActual;
-                if (modoIA) estado = JUEGO;                 // el rival ya es la IA
+                if (modoIA) { estado = JUEGO; ETSIDI::playMusica("sonidos/partido.wav", true); }   // el rival ya es la IA
                 else { campoNombre = 1; entradaActual = ""; }   // pedir el de Atleti
             }
             else {
                 nombreAtleti = entradaActual.empty() ? "Jugador 2" : entradaActual;
                 estado = JUEGO;
+                ETSIDI::playMusica("sonidos/partido.wav", true);
             }
             break;
         }
@@ -370,6 +373,7 @@ void Coordinador::tecla(unsigned char key)
                 mundo.limpiarCombatePendiente();
             arena.inicializa();   // limpia punteros internos de arena
             estado = JUEGO;
+            ETSIDI::playMusica("sonidos/partido.wav", true);
             return;
         }
         arena.tecla(key);
@@ -430,6 +434,7 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
 
         if (mundo.hayCombatePendiente()) {
             arena.inicializa(mundo.getCombatiente1(), mundo.getCombatiente2());
+            arena.setVentajaCasilla(mundo.ventajaCombate());
             if (modoIA) arena.setIAActiva(true);
             estado = COMBATE;
         }

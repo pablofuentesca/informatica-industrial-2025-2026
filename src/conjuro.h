@@ -8,7 +8,8 @@ public:
     virtual ~Conjuro() = default;
     virtual bool        aplicar(Mundo& m, int equipo) = 0;
     virtual const char* nombre() const = 0;
-    bool estaUsado() const { return usado; }
+    bool estaUsado()  const { return usado; }
+    void marcarUsado()     { usado = true; }
 };
 
 // Mueve una pieza aliada a una casilla libre al azar
