@@ -44,6 +44,7 @@ class Arena {
     bool j1FacingIzq{ false };   // ultima direccion horizontal de j1
     bool j2FacingIzq{ true  };   // ultima direccion horizontal de j2
     bool iaActiva{ false };
+    bool pausado{ false };
     int  equipoVentaja{ 0 };
 
     enum EstadoArena {
@@ -62,7 +63,7 @@ class Arena {
     void lanzaAtaque(int equipo);
     void agregaProyectil(double ox, double oy, double dx, double dy,
                          int danio, int equipo, bool atraviesa, bool paraliza,
-                         double vel = 350.0);
+                         double vel = 350.0, double distMax = 0.0);
     void actualizaProyectiles(double dt);
     void dibujaBarrasVida() const;
 

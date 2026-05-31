@@ -15,7 +15,7 @@ public:
             hpMax       = 100;
             velArena    = 180.0;
             danio       = 25;
-            cooldownMax = 0.70;
+            cooldownMax = 0.35;
         } else {
             // Goblin: rapido y agresivo, lanza un enjambre de proyectiles
             hpMax           = 25;

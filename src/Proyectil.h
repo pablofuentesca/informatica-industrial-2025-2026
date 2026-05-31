@@ -10,6 +10,8 @@ public:
     bool   activo;
     bool   atraviesaObstaculos; // Banshee: ignora barreras y charcos
     bool   paraliza;            // Basilisco: inmoviliza al rival 1 s
+    double distanciaMax;        // max px antes de desvanecerse (0 = sin limite)
+    double distRecorrida;       // acumulado desde el disparo
 
     Proyectil();
 };

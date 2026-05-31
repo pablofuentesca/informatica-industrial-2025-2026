@@ -2,7 +2,8 @@
 #include "ETSIDI.h"
 #include "freeglut.h"
 
-VistaJugador::VistaJugador(const char* ruta, float posX, float posY, float radio : sprite(new ETSIDI::Sprite(ruta, posX, posY, radio * 2.0f, radio * 2.0f)){}
+VistaJugador::VistaJugador(const char* ruta, float posX, float posY, float radio)
+    : sprite(new ETSIDI::Sprite(ruta, posX, posY, radio * 2.0f, radio * 2.0f)) {}
 VistaJugador::~VistaJugador()
 {
     delete sprite;

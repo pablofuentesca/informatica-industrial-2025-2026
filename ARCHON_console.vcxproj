@@ -45,6 +45,7 @@
     <ClCompile Include="src\posicion.cpp" />
     <ClCompile Include="src\tablero.cpp" />
     <ClCompile Include="src\turno.cpp" />
+    <ClCompile Include="src\vistaJugador.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Arena.h" />
@@ -70,6 +71,7 @@
     <ClInclude Include="src\Proyectil.h" />
     <ClInclude Include="src\portero.h" />
     <ClInclude Include="src\ranking.h" />
+    <ClInclude Include="src\vistaJugador.h" />
     <ClInclude Include="src\posicion.h" />
     <ClInclude Include="src\tablero.h" />
     <ClInclude Include="src\teletransportador.h" />

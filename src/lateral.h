@@ -20,7 +20,7 @@ public:
             // Basilisco: lento pero su mirada petrificante congela al rival
             hpMax              = 55;
             velArena           = 150.0;
-            danio              = 15;
+            danio              = 12;
             cooldownMax        = 0.70;
             proyectilParaliza  = true;  // Basilisco: paraliza 1 s al impactar
         }
