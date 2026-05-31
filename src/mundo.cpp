@@ -1,4 +1,5 @@
 #include "mundo.h"
+#include "vistaJugador.h"
 #include <cmath>
 #include <algorithm>
 #include "ETSIDI.h"
@@ -14,71 +15,85 @@
 #include <cstdlib>
 #include <ctime>
 
-static void textoPanel(float x, float y, const char* s, void* fuente,
-                       float r, float g, float b)
+static void textoPanel(float x, float y, const char* s, void* fuente,float r, float g, float b)
 {
     glColor3f(r, g, b);
     glRasterPos2f(x, y);
     for (const char* c = s; *c; c++) glutBitmapCharacter(fuente, *c);
 }
 
-Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) },
-                 madrid(1, "REAL MADRID"),
-                 atleti(2, "ATLETICO")
+Mundo::Mundo() : balones{ Pelota(4, 4), Pelota(0, 4), Pelota(8, 4), Pelota(4, 0), Pelota(4, 8) },madrid(1, "REAL MADRID"), atleti(2, "ATLETICO")
 {
     jugadorSeleccionado = nullptr;
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 9; i++){
         for (int j = 0; j < 9; j++)
+        {
             casillasValidas.at(i, j) = false;
+        }
+     }
 }
 
 Mundo::~Mundo()
 {
     // cada Equipo libera sus propias piezas y cementerio en su destructor
+    for (auto& par : vistas) delete par.second;
 }
 
 void Mundo::inicializa()
 {
-    // --- REAL MADRID (Izquierda) ---
+    // REAL MADRID (Izquierda) 
 
     // Línea frontal (Columna 1)
-    madrid.coloca(0, new Portero      (1, 0, 1)); // Arquera abajo
-    for (int i = 1; i < 8; i++)
-        madrid.coloca(i, new Delantero(1, (float)i, 1)); // Caballeros
-    madrid.coloca(8, new Portero      (1, 8, 1)); // Arquera arriba
+    madrid.coloca(0, new Portero(1, 0, 1)); // Arquera abajo
+    for (int i = 1; i < 8; i++) 
+        madrid.coloca(i, new Delantero(1,(float)i, 1)); // Caballeros
+    madrid.coloca(8, new Portero(1, 8, 1)); // Arquera arriba
 
     // Línea trasera (Columna 0)
     madrid.coloca(9,  new Centrocampista(0, 0, 1)); // Valkiria
-    madrid.coloca(10, new Central       (0, 1, 1)); // Golem
-    madrid.coloca(11, new Lateral       (0, 2, 1)); // Unicornio
-    madrid.coloca(12, new Mediapunta    (0, 3, 1)); // Genio
-    madrid.coloca(13, new Entrenador    (0, 4, 1)); // Mago
-    madrid.coloca(14, new Extremo       (0, 5, 1)); // Fénix
-    madrid.coloca(15, new Lateral       (0, 6, 1)); // Unicornio
-    madrid.coloca(16, new Central       (0, 7, 1)); // Golem
+    madrid.coloca(10, new Central(0, 1, 1)); // Golem
+    madrid.coloca(11, new Lateral(0, 2, 1)); // Unicornio
+    madrid.coloca(12, new Mediapunta(0, 3, 1)); // Genio
+    madrid.coloca(13, new Entrenador(0, 4, 1)); // Mago
+    madrid.coloca(14, new Extremo(0, 5, 1)); // Fénix
+    madrid.coloca(15, new Lateral(0, 6, 1)); // Unicornio
+    madrid.coloca(16, new Central(0, 7, 1)); // Golem
     madrid.coloca(17, new Centrocampista(0, 8, 1)); // Valkiria
 
-    // --- ATLETI (Derecha) ---
+    //ATLETI (Derecha)
 
     // Línea frontal (Columna 7)
-    atleti.coloca(0, new Portero      (7, 0, 2)); // Mantícora abajo
+    atleti.coloca(0, new Portero(7, 0, 2)); // Mantícora abajo
     for (int i = 1; i < 8; i++)
         atleti.coloca(i, new Delantero(7, (float)i, 2)); // Goblins
-    atleti.coloca(8, new Portero      (7, 8, 2)); // Mantícora arriba
+    atleti.coloca(8, new Portero(7, 8, 2)); // Mantícora arriba
 
     // Línea trasera (Columna 8)
     atleti.coloca(9,  new Centrocampista(8, 0, 2)); // Banshee
-    atleti.coloca(10, new Central       (8, 1, 2)); // Troll
-    atleti.coloca(11, new Lateral       (8, 2, 2)); // Basilisco
-    atleti.coloca(12, new Mediapunta    (8, 3, 2)); // Cambiaformas
-    atleti.coloca(13, new Entrenador    (8, 4, 2)); // Hechicera
-    atleti.coloca(14, new Extremo       (8, 5, 2)); // Dragón
-    atleti.coloca(15, new Lateral       (8, 6, 2)); // Basilisco
-    atleti.coloca(16, new Central       (8, 7, 2)); // Troll
+    atleti.coloca(10, new Central(8, 1, 2)); // Troll
+    atleti.coloca(11, new Lateral(8, 2, 2)); // Basilisco
+    atleti.coloca(12, new Mediapunta(8, 3, 2)); // Cambiaformas
+    atleti.coloca(13, new Entrenador(8, 4, 2)); // Hechicera
+    atleti.coloca(14, new Extremo(8, 5, 2)); // Dragón
+    atleti.coloca(15, new Lateral(8, 6, 2)); // Basilisco
+    atleti.coloca(16, new Central(8, 7, 2)); // Troll
     atleti.coloca(17, new Centrocampista(8, 8, 2)); // Banshee
 
     // Tirada de moneda: decide qué equipo saca primero
     turno.sortea();
+
+    // Crear una VistaJugador por cada pieza: el sprite vive aqui, no en Jugador
+    static const float RADIO = 0.4f;
+    for (Jugador* pj : madrid.getPiezas())
+    {
+        if (pj != nullptr)
+            vistas[pj] = new VistaJugador(pj->getRutaTextura(), pj->getPosX(), pj->getPosY(), RADIO);
+    }
+    for (Jugador* pj : atleti.getPiezas())
+    {
+     if (pj != nullptr)
+            vistas[pj] = new VistaJugador(pj->getRutaTextura(), pj->getPosX(), pj->getPosY(), RADIO);
+     }
 }
 
 void Mundo::dibuja() const
@@ -96,18 +111,20 @@ void Mundo::dibuja() const
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(1.0f, 1.0f, 0.0f, 0.45f);
-    for (int i = 0; i < 9; i++)
-        for (int j = 0; j < 9; j++)
+    for (int i = 0; i < 9; i++){
+        for (int j = 0; j < 9; j++){
             if (casillasValidas.at(i, j)) {
                 glBegin(GL_QUADS);
-                    glVertex2f((float)i,        (float)j);
-                    glVertex2f((float)i + 1.0f, (float)j);
-                    glVertex2f((float)i + 1.0f, (float)j + 1.0f);
-                    glVertex2f((float)i,        (float)j + 1.0f);
+                glVertex2f((float)i,(float)j);
+                glVertex2f((float)i + 1.0f,(float)j);
+                glVertex2f((float)i + 1.0f,(float)j + 1.0f);
+                glVertex2f((float)i,(float)j + 1.0f);
                 glEnd();
             }
-    glDisable(GL_BLEND);
+        }
+     }
 
+    glDisable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     for (int i = 0; i < 5; i++) balones[i].dibuja();
 
@@ -131,8 +148,16 @@ void Mundo::dibuja() const
     }
 
     glDisable(GL_TEXTURE_2D);
-    for (Jugador* pj : madrid.getPiezas()) if (pj != nullptr) pj->dibuja();
-    for (Jugador* pj : atleti.getPiezas()) if (pj != nullptr) pj->dibuja();
+    for (Jugador* pj : madrid.getPiezas())
+        if (pj != nullptr) {
+            auto it = vistas.find(pj);
+            if (it != vistas.end()) it->second->dibuja(pj->getPosX(), pj->getPosY());
+        }
+    for (Jugador* pj : atleti.getPiezas())
+        if (pj != nullptr) {
+            auto it = vistas.find(pj);
+            if (it != vistas.end()) it->second->dibuja(pj->getPosX(), pj->getPosY());
+        }
 
     // Mensaje de turno
     glDisable(GL_TEXTURE_2D);
@@ -141,7 +166,7 @@ void Mundo::dibuja() const
     glColor3f(1.0f, 1.0f, 1.0f);
 
     const char* msg;
-    if      (faseConjuro == FaseConjuro::TELEPORT_PIEZA)   msg = "TELEPORT: elige la pieza a mover";
+    if      (faseConjuro == FaseConjuro::TELEPORT_PIEZA) msg = "TELEPORT: elige la pieza a mover";
     else if (faseConjuro == FaseConjuro::TELEPORT_DESTINO) msg = "TELEPORT: elige el destino";
     else if (faseConjuro == FaseConjuro::EXCHANGE_PRIMERA) msg = "INTERCAMBIAR: elige la primera pieza";
     else if (faseConjuro == FaseConjuro::EXCHANGE_SEGUNDA) msg = "INTERCAMBIAR: elige la segunda pieza";
@@ -159,10 +184,10 @@ void Mundo::dibuja() const
             float px = pj->getPosX() - 0.5f;
             float py = pj->getPosY() - 0.5f;
             glBegin(GL_QUADS);
-                glVertex2f(px,        py);
-                glVertex2f(px + 1.0f, py);
-                glVertex2f(px + 1.0f, py + 1.0f);
-                glVertex2f(px,        py + 1.0f);
+            glVertex2f(px,py);
+            glVertex2f(px + 1.0f,py);
+            glVertex2f(px + 1.0f,py + 1.0f);
+            glVertex2f(px,py + 1.0f);
             glEnd();
         }
     for (const Jugador* pj : atleti.getPiezas())
@@ -170,10 +195,10 @@ void Mundo::dibuja() const
             float px = pj->getPosX() - 0.5f;
             float py = pj->getPosY() - 0.5f;
             glBegin(GL_QUADS);
-                glVertex2f(px,        py);
-                glVertex2f(px + 1.0f, py);
-                glVertex2f(px + 1.0f, py + 1.0f);
-                glVertex2f(px,        py + 1.0f);
+            glVertex2f(px,py);
+            glVertex2f(px + 1.0f,py);
+            glVertex2f(px + 1.0f,py + 1.0f);
+            glVertex2f(px, py + 1.0f);
             glEnd();
         }
     glDisable(GL_BLEND);
@@ -184,14 +209,12 @@ void Mundo::dibuja() const
         glMatrixMode(GL_MODELVIEW);  glPushMatrix(); glLoadIdentity();
         glDisable(GL_TEXTURE_2D);
 
-        bool hayEntrenador = (jugadorSeleccionado != nullptr &&
-                              jugadorSeleccionado->esEntrenador());
-
+        bool hayEntrenador = (jugadorSeleccionado != nullptr && jugadorSeleccionado->esEntrenador());
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(0.03f, 0.05f, 0.09f, 0.92f);
         glBegin(GL_QUADS);
-            glVertex2f(0, 560); glVertex2f(800, 560); glVertex2f(800, 598); glVertex2f(0, 598);
+        glVertex2f(0, 560); glVertex2f(800, 560); glVertex2f(800, 598); glVertex2f(0, 598);
         glEnd();
         glColor3f(0.70f, 0.55f, 0.10f);
         glBegin(GL_LINES); glVertex2f(0, 560); glVertex2f(800, 560); glEnd();
@@ -209,7 +232,7 @@ void Mundo::dibuja() const
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glColor4f(0.03f, 0.05f, 0.09f, 0.92f);
             glBegin(GL_QUADS);
-                glVertex2f(0, 4); glVertex2f(800, 4); glVertex2f(800, 40); glVertex2f(0, 40);
+            glVertex2f(0, 4); glVertex2f(800, 4); glVertex2f(800, 40); glVertex2f(0, 40);
             glEnd();
             glColor3f(0.70f, 0.55f, 0.10f);
             glBegin(GL_LINES); glVertex2f(0, 40); glVertex2f(800, 40); glEnd();
@@ -222,11 +245,11 @@ void Mundo::dibuja() const
                 float b = usado ? 0.40f : 0.30f;
 
                 char etiqueta[40];
-                etiqueta[0] = '[';  etiqueta[1] = (char)('1' + i);
-                etiqueta[2] = ']';  etiqueta[3] = ' ';
+                etiqueta[0] = '['; etiqueta[1] = (char)('1' + i);
+                etiqueta[2] = ']'; etiqueta[3] = ' ';
                 int k = 4;
                 for (const char* c = ent->nombreConjuro(i); *c && k < 39; c++)
-                    etiqueta[k++] = *c;
+                etiqueta[k++] = *c;
                 etiqueta[k] = '\0';
 
                 textoPanel(12 + i * 112.0f, 14, etiqueta, GLUT_BITMAP_HELVETICA_12, r, g, b);
@@ -234,13 +257,13 @@ void Mundo::dibuja() const
         }
 
         glMatrixMode(GL_PROJECTION); glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);  glPopMatrix();
+        glMatrixMode(GL_MODELVIEW); glPopMatrix();
     }
 
     if (mostrarHechizos) {
-        glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);glPushMatrix(); glLoadIdentity();
         gluOrtho2D(0, 800, 0, 600);
-        glMatrixMode(GL_MODELVIEW);  glPushMatrix(); glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
 
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
@@ -248,35 +271,35 @@ void Mundo::dibuja() const
 
         glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
         glBegin(GL_QUADS);
-            glVertex2f(0, 0); glVertex2f(800, 0); glVertex2f(800, 600); glVertex2f(0, 600);
+        glVertex2f(0, 0); glVertex2f(800, 0); glVertex2f(800, 600); glVertex2f(0, 600);
         glEnd();
 
         const float x0 = 90, x1 = 710, y0 = 95, y1 = 505;
 
         glColor4f(0.04f, 0.06f, 0.10f, 0.97f);
         glBegin(GL_QUADS);
-            glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+        glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
         glEnd();
 
         glColor3f(0.90f, 0.90f, 0.95f);
         glBegin(GL_QUADS);
-            glVertex2f(x0, y1 - 8); glVertex2f(400, y1 - 8); glVertex2f(400, y1); glVertex2f(x0, y1);
+        glVertex2f(x0, y1 - 8); glVertex2f(400, y1 - 8); glVertex2f(400, y1); glVertex2f(x0, y1);
         glEnd();
         glColor3f(0.70f, 0.10f, 0.15f);
         glBegin(GL_QUADS);
-            glVertex2f(400, y1 - 8); glVertex2f(x1, y1 - 8); glVertex2f(x1, y1); glVertex2f(400, y1);
+        glVertex2f(400, y1 - 8); glVertex2f(x1, y1 - 8); glVertex2f(x1, y1); glVertex2f(400, y1);
         glEnd();
 
         glColor3f(0.82f, 0.66f, 0.12f);
         glLineWidth(2.5f);
         glBegin(GL_LINE_LOOP);
-            glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+        glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
         glEnd();
         glColor3f(0.45f, 0.36f, 0.06f);
         glLineWidth(1.0f);
         glBegin(GL_LINE_LOOP);
-            glVertex2f(x0 + 6, y0 + 6); glVertex2f(x1 - 6, y0 + 6);
-            glVertex2f(x1 - 6, y1 - 14); glVertex2f(x0 + 6, y1 - 14);
+        glVertex2f(x0 + 6, y0 + 6); glVertex2f(x1 - 6, y0 + 6);
+        glVertex2f(x1 - 6, y1 - 14); glVertex2f(x0 + 6, y1 - 14);
         glEnd();
         glDisable(GL_BLEND);
 
@@ -285,29 +308,27 @@ void Mundo::dibuja() const
         glBegin(GL_LINES); glVertex2f(265, 462); glVertex2f(540, 462); glEnd();
 
         struct { const char* etiqueta; const char* desc; } h[7] = {
-            { "[1] Teleport",     "mueve una pieza tuya a cualquier casilla libre que elijas." },
-            { "[2] Curar",        "devuelve toda la vida a tu pieza mas debilitada." },
-            { "[3] Ciclo",        "invierte la luz del tablero (las casillas cambian de color)." },
-            { "[4] Intercambiar", "cambia de posicion dos piezas tuyas que elijas." },
-            { "[5] Elemental",    "invoca una pieza aliada temporal junto al entrenador." },
-            { "[6] Revivir",      "recupera tu ultima pieza eliminada, junto al entrenador." },
-            { "[7] Encarcelar",   "inmoviliza 3 turnos a una pieza enemiga rival." }
+            { "[1] Teleport","mueve una pieza tuya a cualquier casilla libre que elijas." },
+            { "[2] Curar","devuelve toda la vida a tu pieza mas debilitada." },
+            { "[3] Ciclo","invierte la luz del tablero (las casillas cambian de color)." },
+            { "[4] Intercambiar","cambia de posicion dos piezas tuyas que elijas." },
+            { "[5] Elemental","invoca una pieza aliada temporal junto al entrenador." },
+            { "[6] Revivir","recupera tu ultima pieza eliminada, junto al entrenador." },
+            { "[7] Encarcelar","inmoviliza 3 turnos a una pieza enemiga rival." }
         };
 
         float y = 425;
         for (int i = 0; i < 7; i++) {
-            textoPanel(115, y, h[i].etiqueta, GLUT_BITMAP_HELVETICA_12, 0.95f, 0.80f, 0.30f);
-            textoPanel(250, y, h[i].desc,     GLUT_BITMAP_HELVETICA_12, 0.85f, 0.87f, 0.92f);
+            textoPanel(115, y, h[i].etiqueta,GLUT_BITMAP_HELVETICA_12, 0.95f, 0.80f, 0.30f);
+            textoPanel(250, y, h[i].desc, GLUT_BITMAP_HELVETICA_12, 0.85f, 0.87f, 0.92f);
             y -= 45;
         }
 
-        textoPanel(205, 122, "Cada hechizo solo se usa UNA vez por partida.",
-                   GLUT_BITMAP_HELVETICA_12, 0.60f, 0.60f, 0.62f);
-        textoPanel(312, 104, "Pulsa 8 para cerrar",
-                   GLUT_BITMAP_HELVETICA_12, 0.55f, 0.55f, 0.57f);
+        textoPanel(205, 122, "Cada hechizo solo se usa UNA vez por partida.", GLUT_BITMAP_HELVETICA_12, 0.60f, 0.60f, 0.62f);
+        textoPanel(312, 104, "Pulsa 8 para cerrar",GLUT_BITMAP_HELVETICA_12, 0.55f, 0.55f, 0.57f);
 
         glMatrixMode(GL_PROJECTION); glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);  glPopMatrix();
+        glMatrixMode(GL_MODELVIEW); glPopMatrix();
     }
 }
 
@@ -321,17 +342,22 @@ int Mundo::equipoEn(int x, int y) const
 void Mundo::calcularCasillasValidas()
 {
     for (int i = 0; i < 9; i++)
+    {
         for (int j = 0; j < 9; j++)
+        {
             casillasValidas.at(i, j) = false;
-
+        }
+    }
     if (jugadorSeleccionado == nullptr) return;
 
-    int gx       = (int)jugadorSeleccionado->getPosX();
-    int gy       = (int)jugadorSeleccionado->getPosY();
+    int gx = (int)jugadorSeleccionado->getPosX();
+    int gy = (int)jugadorSeleccionado->getPosY();
     int miEquipo = jugadorSeleccionado->getEquipo();
 
-	for (int i = 0; i < 9; i++) {  //Utilizamos un bucle doble para recorrer todas las casillas del tablero y comprobar si el jugador seleccionado puede moverse a cada una de ellas, teniendo en cuenta su rango, tipo de movimiento y obstáculos en el camino.
-        for (int j = 0; j < 9; j++) {
+	for (int i = 0; i < 9; i++) 
+    {  //Utilizamos un bucle doble para recorrer todas las casillas del tablero y comprobar si el jugador seleccionado puede moverse a cada una de ellas, teniendo en cuenta su rango, tipo de movimiento y obstáculos en el camino.
+        for (int j = 0; j < 9; j++) 
+        {
             if (i == gx && j == gy) continue;
             if (equipoEn(i, j) == miEquipo) continue;
             if (!jugadorSeleccionado->esMovimientoValido(gx, gy, i, j)) continue;
@@ -339,19 +365,20 @@ void Mundo::calcularCasillasValidas()
             if (jugadorSeleccionado->esTeleport() || jugadorSeleccionado->esVolador()) {
                 // Piezas voladoras y teletransportadoras no se bloquean por piezas intermedias
                 casillasValidas.at(i, j) = true;
-            } else {
+            } else 
+            {
                 // Terrestre: verificar que el camino este libre de obstaculos
-                int difX    = i - gx;
-                int difY    = j - gy;
+                int difX = i - gx;
+                int difY = j - gy;
                 int absDifX = std::abs(difX);
                 int absDifY = std::abs(difY);
 
                 // Movimiento en L (Caballero/Goblin): salta sobre piezas intermedias
-                if ((absDifX == 2 && absDifY == 1) || (absDifX == 1 && absDifY == 2)) {
+                if ((absDifX == 2 && absDifY == 1) || (absDifX == 1 && absDifY == 2)) 
+                {
                     casillasValidas.at(i, j) = true;
                     continue;
                 }
-
                 // Movimiento en linea recta (ortogonal o diagonal): camino debe estar libre
                 int stepX = (difX == 0) ? 0 : (difX > 0 ? 1 : -1);
                 int stepY = (difY == 0) ? 0 : (difY > 0 ? 1 : -1);
@@ -386,16 +413,16 @@ void Mundo::tecla(unsigned char key)
         if (ent->conjuroUsado(idx)) return;
 
         if (idx == 0) {
-            faseConjuro   = FaseConjuro::TELEPORT_PIEZA;
+            faseConjuro = FaseConjuro::TELEPORT_PIEZA;
             equipoConjuro = ent->getEquipo();
             jugadorSeleccionado = nullptr;
             calcularCasillasValidas();
             return;
         }
         if (idx == 3) {
-            faseConjuro   = FaseConjuro::EXCHANGE_PRIMERA;
+            faseConjuro = FaseConjuro::EXCHANGE_PRIMERA;
             equipoConjuro = ent->getEquipo();
-            piezaConjuro  = nullptr;
+            piezaConjuro = nullptr;
             jugadorSeleccionado = nullptr;
             calcularCasillasValidas();
             return;
@@ -421,7 +448,7 @@ void Mundo::raton(int boton, int estado, float x, float y)
     // Click fuera del tablero → deseleccionar
     if (gx < 0 || gx >= 9 || gy < 0 || gy >= 9) {
         jugadorSeleccionado = nullptr;
-        faseConjuro  = FaseConjuro::NINGUNO;
+        faseConjuro = FaseConjuro::NINGUNO;
         piezaConjuro = nullptr;
         calcularCasillasValidas();
         return;
@@ -659,6 +686,7 @@ bool Mundo::invocarElemental(int equipo)
         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
             Jugador* elemental = new Delantero((float)nx, (float)ny, equipo);
             elemental->haceTemporal(4);   // elemental temporal: dura unos turnos y desaparece
+            vistas[elemental] = new VistaJugador(elemental->getRutaTextura(),elemental->getPosX(), elemental->getPosY(), 0.4f);
             miEquip.anade(elemental);
             return true;
         }
@@ -710,10 +738,10 @@ bool Mundo::revivirPieza(int equipo)
 bool Mundo::esPuntoDePoder(int x, int y) const
 {
     return (x == 4 && y == 4) ||   // centro
-           (x == 0 && y == 4) ||   // borde izquierdo
-           (x == 8 && y == 4) ||   // borde derecho
-           (x == 4 && y == 0) ||   // borde inferior
-           (x == 4 && y == 8);     // borde superior
+    (x == 0 && y == 4) ||   // borde izquierdo
+    (x == 8 && y == 4) ||   // borde derecho
+    (x == 4 && y == 0) ||   // borde inferior
+    (x == 4 && y == 8);     // borde superior
 }
 
 // Cada turno, las piezas situadas en un punto de poder regeneran vida
@@ -722,11 +750,9 @@ void Mundo::curarEnPuntosDePoder()
 {
     const int REGEN = 10;   // vida que recupera por turno una pieza sobre un punto de poder
     for (Jugador* pj : madrid.getPiezas())
-        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY()))
-            pj->cura(REGEN);
+        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY())) pj->cura(REGEN);
     for (Jugador* pj : atleti.getPiezas())
-        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY()))
-            pj->cura(REGEN);
+        if (pj != nullptr && esPuntoDePoder((int)pj->getPosX(), (int)pj->getPosY())) pj->cura(REGEN);
 }
 
 int Mundo::comprobarVictoria() const
@@ -759,6 +785,5 @@ int Mundo::comprobarVictoria() const
     if (vivasMadrid == 1)
         for (const Jugador* pj : madrid.getPiezas())
             if (pj != nullptr && pj->estaEncarcelado()) return 2;
-
     return 0;
 }
