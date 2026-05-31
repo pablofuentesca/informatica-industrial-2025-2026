@@ -38,9 +38,9 @@ public:
     }
 
     // Fenix (equipo 1): renace una vez con 50% HP
-    bool puedeRevivir() const { return equipo == 1 && !revivioUsado; }
+    bool puedeRevivir() const override{ return equipo == 1 && !revivioUsado; }
 
-    void revive() {
+    void revive() override{
         hp           = hpMax / 2;
         revivioUsado = true;
     }
