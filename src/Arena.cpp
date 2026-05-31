@@ -313,14 +313,14 @@ void Arena::lanzaAtaque(int equipo)
 
     int    danio   = pj ? pj->getDanio()     : 10;
     bool   ranged  = pj ? pj->esRanged()     : true;
-    double alcance = pj ? pj->alcanceAtaque(): 30.0;
+    double alcance = pj ? pj->alcanceAtaque() : 30.0;
 
     // sonido de disparo para ataques a distancia
     if (ranged) ETSIDI::play("sonidos/tiro.wav");
 
     if (equipo == equipoVentaja) danio = (int)(danio * 1.30);
 
-    // --- habilidades especiales (tienen prioridad sobre el ataque base) ---
+    // habilidades especiales (tienen prioridad sobre el ataque base) ---
 
     // Mago/Hechicera: rayo arcano — rapido y paraliza
     if (pj && pj->getDisparaRayoArcano()) {
