@@ -30,7 +30,7 @@ public:
     // Valkiria (eq1): mele — espada que alcanza un poco mas alla del cuerpo
     // Banshee  (eq2): ranged — alarido que atraviesa obstaculos del campo
     bool   esRanged()      const override { return equipo == 2; }
-    double alcanceAtaque() const override { return (equipo == 1) ? 30.0 : 0.0; }
+    double alcanceAtaque() const override { return (equipo == 1) ? 40.0 : 0.0; }
 
     // Ambas son voladoras: en el tablero vuelan sobre otras piezas
     void mover(float dirX, float dirY) override {
