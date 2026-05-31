@@ -1,6 +1,5 @@
 #include "Arena.h"
 #include "jugador.h"
-#include "interaccionArena.h"
 #include "ETSIDI.h"
 #include "freeglut.h"
 #include <cmath>
@@ -62,14 +61,14 @@ static void dibujaIris(double prog)
 static const char* nombreJugador(const char* ruta)
 {
     if (!ruta || !ruta[0]) return "?";
-    if (strstr(ruta, "portero"))        return strstr(ruta, "madrid") ? "Courtois"   : "Morata";
-    if (strstr(ruta, "delantero"))      return strstr(ruta, "madrid") ? "Mbappe"     : "Delantero";
-    if (strstr(ruta, "defensa"))        return strstr(ruta, "madrid") ? "Militao"    : "Savic";
-    if (strstr(ruta, "lateral"))        return strstr(ruta, "madrid") ? "Bellingham" : "Koke";
+    if (strstr(ruta, "portero")) return strstr(ruta, "madrid") ? "Courtois"   : "Morata";
+    if (strstr(ruta, "delantero")) return strstr(ruta, "madrid") ? "Mbappe"     : "Delantero";
+    if (strstr(ruta, "defensa")) return strstr(ruta, "madrid") ? "Militao"    : "Savic";
+    if (strstr(ruta, "lateral")) return strstr(ruta, "madrid") ? "Bellingham" : "Koke";
     if (strstr(ruta, "centrocampista")) return strstr(ruta, "madrid") ? "Vinicius"   : "De Paul";
-    if (strstr(ruta, "mediapunta"))     return strstr(ruta, "madrid") ? "Valverde"   : "Correa";
-    if (strstr(ruta, "extremo"))        return strstr(ruta, "madrid") ? "Carvajal"   : "Griezmann";
-    if (strstr(ruta, "entrenador"))     return strstr(ruta, "madrid") ? "Ancelotti"  : "Simeone";
+    if (strstr(ruta, "mediapunta")) return strstr(ruta, "madrid") ? "Valverde"   : "Correa";
+    if (strstr(ruta, "extremo")) return strstr(ruta, "madrid") ? "Carvajal"   : "Griezmann";
+    if (strstr(ruta, "entrenador")) return strstr(ruta, "madrid") ? "Ancelotti"  : "Simeone";
     return "?";
 }
 
@@ -77,14 +76,14 @@ static const char* nombreJugador(const char* ruta)
 static const char* posicionFutbol(const char* ruta)
 {
     if (!ruta || !ruta[0]) return "";
-    if (strstr(ruta, "portero"))        return "Portero";
-    if (strstr(ruta, "delantero"))      return "Delantero";
-    if (strstr(ruta, "defensa"))        return "Defensa";
-    if (strstr(ruta, "lateral"))        return "Lateral";
+    if (strstr(ruta, "portero")) return "Portero";
+    if (strstr(ruta, "delantero")) return "Delantero";
+    if (strstr(ruta, "defensa")) return "Defensa";
+    if (strstr(ruta, "lateral")) return "Lateral";
     if (strstr(ruta, "centrocampista")) return "Centrocampista";
-    if (strstr(ruta, "mediapunta"))     return "Mediapunta";
-    if (strstr(ruta, "extremo"))        return "Extremo";
-    if (strstr(ruta, "entrenador"))     return "Entrenador";
+    if (strstr(ruta, "mediapunta")) return "Mediapunta";
+    if (strstr(ruta, "extremo")) return "Extremo";
+    if (strstr(ruta, "entrenador")) return "Entrenador";
     return "";
 }
 
@@ -102,10 +101,10 @@ static void dibujaBalon(double px, double py)
             if (col[r][c]) glColor3d(0.05, 0.05, 0.05);
             else           glColor3d(0.95, 0.95, 0.95);
             glBegin(GL_QUADS);
-                glVertex2d(ox,     oy);
-                glVertex2d(ox + s, oy);
-                glVertex2d(ox + s, oy + s);
-                glVertex2d(ox,     oy + s);
+                glVertex2d(ox,oy);
+                glVertex2d(ox + s,oy);
+                glVertex2d(ox + s,oy + s);
+                glVertex2d(ox,oy + s);
             glEnd();
         }
     }
@@ -138,9 +137,9 @@ static void dibujaJugadorArena(double cx, double cy, double tam,
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     } else {
         // cubo de color como fallback cuando no hay pieza asignada
-        if (paralizado)       glColor3d(0.6, 0.2, 0.8);
+        if (paralizado) glColor3d(0.6, 0.2, 0.8);
         else if (equipo == 1) glColor3d(1.0, 1.0, 1.0);
-        else                  glColor3d(0.9, 0.1, 0.1);
+        else glColor3d(0.9, 0.1, 0.1);
         glBegin(GL_QUADS);
             glVertex2d(cx - tam, cy - tam); glVertex2d(cx + tam, cy - tam);
             glVertex2d(cx + tam, cy + tam); glVertex2d(cx - tam, cy + tam);
@@ -171,9 +170,9 @@ static void dibujaArbitro(double arbY)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
-// ------------------------------------------------------------
+
 //  Inicializacion
-// ------------------------------------------------------------
+
 
 void Arena::inicializa()
 {
@@ -222,17 +221,17 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
         obstaculos[i].tAparecer = i * 0.2;
 
         if (i < 6) {
-            obstaculos[i].charcobool  = false;
-            obstaculos[i].ancho       = 26;
-            obstaculos[i].alto        = 34;
+            obstaculos[i].charcobool = false;
+            obstaculos[i].ancho = 26;
+            obstaculos[i].alto = 34;
             obstaculos[i].anchoVisual = 52;
-            obstaculos[i].altoVisual  = 44;
+            obstaculos[i].altoVisual = 44;
         } else {
-            obstaculos[i].charcobool  = true;
-            obstaculos[i].ancho       = 38;
-            obstaculos[i].alto        = 30;
+            obstaculos[i].charcobool = true;
+            obstaculos[i].ancho = 38;
+            obstaculos[i].alto = 30;
             obstaculos[i].anchoVisual = 38;
-            obstaculos[i].altoVisual  = 30;
+            obstaculos[i].altoVisual = 30;
         }
 
         bool valida = false;
@@ -240,17 +239,17 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
             double px = ETSIDI::lanzaDado(670.0, 130.0);
             double py = ETSIDI::lanzaDado(470.0, 130.0);
 
-            double dj1x = px - 200.0;  if (dj1x < 0) dj1x = -dj1x;
-            double dj1y = py - 300.0;  if (dj1y < 0) dj1y = -dj1y;
-            double dj2x = px - 600.0;  if (dj2x < 0) dj2x = -dj2x;
-            double dj2y = py - 300.0;  if (dj2y < 0) dj2y = -dj2y;
+            double dj1x = px - 200.0; if (dj1x < 0) dj1x = -dj1x;
+            double dj1y = py - 300.0; if (dj1y < 0) dj1y = -dj1y;
+            double dj2x = px - 600.0; if (dj2x < 0) dj2x = -dj2x;
+            double dj2y = py - 300.0; if (dj2y < 0) dj2y = -dj2y;
             if (dj1x < 80 && dj1y < 80) continue;
             if (dj2x < 80 && dj2y < 80) continue;
 
             bool solapado = false;
             for (int j = 0; j < i; j++) {
-                double ddx = px - obstaculos[j].x;  if (ddx < 0) ddx = -ddx;
-                double ddy = py - obstaculos[j].y;  if (ddy < 0) ddy = -ddy;
+                double ddx = px - obstaculos[j].x; if (ddx < 0) ddx = -ddx;
+                double ddy = py - obstaculos[j].y; if (ddy < 0) ddy = -ddy;
                 if (ddx < 80 && ddy < 80) { solapado = true; break; }
             }
             if (!solapado) {
@@ -268,9 +267,9 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     ETSIDI::playMusica("sonidos/aficion.wav", true);
 }
 
-// ------------------------------------------------------------
+
 //  Sistema de ataque y proyectiles
-// ------------------------------------------------------------
+
 
 void Arena::agregaProyectil(double ox, double oy, double dx, double dy,
                              int danio, int equipo, bool atraviesa, bool paraliza,
@@ -278,18 +277,18 @@ void Arena::agregaProyectil(double ox, double oy, double dx, double dy,
 {
     for (int i = 0; i < MAX_PROYECTILES; i++) {
         if (!proyectiles[i].activo) {
-            proyectiles[i].x                   = ox;
-            proyectiles[i].y                   = oy;
-            proyectiles[i].dx                  = dx;
-            proyectiles[i].dy                  = dy;
-            proyectiles[i].vel                 = vel;
-            proyectiles[i].danio               = danio;
-            proyectiles[i].equipo              = equipo;
-            proyectiles[i].activo              = true;
+            proyectiles[i].x = ox;
+            proyectiles[i].y = oy;
+            proyectiles[i].dx = dx;
+            proyectiles[i].dy = dy;
+            proyectiles[i].vel = vel;
+            proyectiles[i].danio = danio;
+            proyectiles[i].equipo = equipo;
+            proyectiles[i].activo = true;
             proyectiles[i].atraviesaObstaculos = atraviesa;
-            proyectiles[i].paraliza            = paraliza;
-            proyectiles[i].distanciaMax        = distMax;
-            proyectiles[i].distRecorrida       = 0.0;
+            proyectiles[i].paraliza = paraliza;
+            proyectiles[i].distanciaMax = distMax;
+            proyectiles[i].distRecorrida = 0.0;
             return;
         }
     }
@@ -302,7 +301,7 @@ void Arena::lanzaAtaque(int equipo)
     double oy = (equipo == 1) ? j1y : j2y;
     double tx = (equipo == 1) ? j2x : j1x;
     double ty = (equipo == 1) ? j2y : j1y;
-    Jugador* pj       = (equipo == 1) ? pj1 : pj2;
+    Jugador* pj  = (equipo == 1) ? pj1 : pj2;
     Jugador* objetivo = (equipo == 1) ? pj2 : pj1;
 
     // direccion hacia el oponente
@@ -311,8 +310,8 @@ void Arena::lanzaAtaque(int equipo)
     if (dist < 1.0) return;
     ddx /= dist;  ddy /= dist;
 
-    int    danio   = pj ? pj->getDanio()     : 10;
-    bool   ranged  = pj ? pj->esRanged()     : true;
+    int danio = pj ? pj->getDanio() : 10;
+    bool ranged = pj ? pj->esRanged() : true;
     double alcance = pj ? pj->alcanceAtaque() : 30.0;
 
     // sonido de disparo para ataques a distancia
@@ -320,7 +319,7 @@ void Arena::lanzaAtaque(int equipo)
 
     if (equipo == equipoVentaja) danio = (int)(danio * 1.30);
 
-    // habilidades especiales (tienen prioridad sobre el ataque base) ---
+    // habilidades especiales (tienen prioridad sobre el ataque base) 
 
     // Mago/Hechicera: rayo arcano — rapido y paraliza
     if (pj && pj->getDisparaRayoArcano()) {
@@ -343,7 +342,7 @@ void Arena::lanzaAtaque(int equipo)
     if (!ranged) {
         // destello visual del swing y sonido de golpe
         if (equipo == 1) timerMeleeJ1 = 0.18;
-        else             timerMeleeJ2 = 0.18;
+        else timerMeleeJ2 = 0.18;
         ETSIDI::play("sonidos/golpe.wav");
         // dano directo si el rival esta dentro del alcance del arma
         if (dist <= tam + alcance) {
@@ -355,8 +354,8 @@ void Arena::lanzaAtaque(int equipo)
 
         if (pj && pj->getDisparaTriple()) {
             // Manticora: tres proyectiles en abanico de +-15 grados
-            double ang0    = atan2(ddy, ddx);
-            double offset  = PI / 12.0;
+            double ang0 = atan2(ddy, ddx);
+            double offset = PI / 12.0;
             for (int a = -1; a <= 1; a++) {
                 double ang = ang0 + a * offset;
                 agregaProyectil(ox, oy, cos(ang), sin(ang),
@@ -395,8 +394,8 @@ void Arena::actualizaProyectiles(double dt)
         if (!p.atraviesaObstaculos) {
             for (int j = 0; j < 8; j++) {
                 if (!obstaculos[j].activo || obstaculos[j].charcobool) continue;
-                double ex = p.x - obstaculos[j].x;  if (ex < 0) ex = -ex;
-                double ey = p.y - obstaculos[j].y;  if (ey < 0) ey = -ey;
+                double ex = p.x - obstaculos[j].x; if (ex < 0) ex = -ex;
+                double ey = p.y - obstaculos[j].y; if (ey < 0) ey = -ey;
                 if (ex < obstaculos[j].ancho / 2.0 && ey < obstaculos[j].alto / 2.0) {
                     p.activo = false;
                     break;
@@ -416,16 +415,16 @@ void Arena::actualizaProyectiles(double dt)
             if (objetivo) objetivo->recibeGolpe(p.danio);
             if (p.paraliza) {
                 if (p.equipo == 1) timerParalizadoJ2 = 1.0;
-                else               timerParalizadoJ1 = 1.0;
+                else timerParalizadoJ1 = 1.0;
             }
             p.activo = false;
         }
     }
 }
 
-// ------------------------------------------------------------
+
 //  Logica principal
-// ------------------------------------------------------------
+
 
 void Arena::mueve(double dt)
 {
@@ -566,7 +565,7 @@ void Arena::mueve(double dt)
         }
 
         actualizaProyectiles(dt);
-        interaccionArena::separa(*this);
+        separa();
 
         // comprobar muertes
         if (pj1 && !pj1->estaVivo()) {
@@ -598,10 +597,7 @@ void Arena::mueve(double dt)
     }
 }
 
-// ------------------------------------------------------------
 //  Dibujado
-// ------------------------------------------------------------
-
 void Arena::dibujaBarrasVida() const
 {
     if (!pj1 || !pj2) return;
@@ -698,34 +694,34 @@ void Arena::dibuja() const
 
     // area de penalti izquierda
     glBegin(GL_LINE_LOOP);
-        glVertex2d(xMin,       yMin + 110);
+        glVertex2d(xMin, yMin + 110);
         glVertex2d(xMin + 160, yMin + 110);
         glVertex2d(xMin + 160, yMax - 110);
-        glVertex2d(xMin,       yMax - 110);
+        glVertex2d(xMin, yMax - 110);
     glEnd();
 
     // area pequena izquierda
     glBegin(GL_LINE_LOOP);
-        glVertex2d(xMin,      yMin + 185);
+        glVertex2d(xMin, yMin + 185);
         glVertex2d(xMin + 70, yMin + 185);
         glVertex2d(xMin + 70, yMax - 185);
-        glVertex2d(xMin,      yMax - 185);
+        glVertex2d(xMin, yMax - 185);
     glEnd();
 
     // area de penalti derecha
     glBegin(GL_LINE_LOOP);
-        glVertex2d(xMax,       yMin + 110);
+        glVertex2d(xMax, yMin + 110);
         glVertex2d(xMax - 160, yMin + 110);
         glVertex2d(xMax - 160, yMax - 110);
-        glVertex2d(xMax,       yMax - 110);
+        glVertex2d(xMax, yMax - 110);
     glEnd();
 
     // area pequena derecha
     glBegin(GL_LINE_LOOP);
-        glVertex2d(xMax,      yMin + 185);
+        glVertex2d(xMax, yMin + 185);
         glVertex2d(xMax - 70, yMin + 185);
         glVertex2d(xMax - 70, yMax - 185);
-        glVertex2d(xMax,      yMax - 185);
+        glVertex2d(xMax, yMax - 185);
     glEnd();
 
     glPointSize(5.0f);
@@ -804,7 +800,7 @@ void Arena::dibuja() const
         glDisable(GL_BLEND);
 
         if (ganador == 1) glColor3d(1.0, 1.0, 1.0);
-        else              glColor3d(0.9, 0.1, 0.1);
+        else glColor3d(0.9, 0.1, 0.1);
         const char* msg = (ganador == 1) ? "VICTORIA REAL MADRID" : "VICTORIA ATLETICO";
         glRasterPos2d(270, 310);
         for (const char* c = msg; *c; c++)
@@ -843,9 +839,7 @@ void Arena::dibuja() const
     glPointSize(1.0f);
 }
 
-// ------------------------------------------------------------
 //  Entrada de teclado
-// ------------------------------------------------------------
 
 void Arena::tecla(unsigned char key)
 {
@@ -887,22 +881,56 @@ void Arena::teclaJ1(unsigned char key)
     if (key == 's' || key == 'S') j1Aba = false;
     if (key == 'a' || key == 'A') j1Izq = false;
     if (key == 'd' || key == 'D') j1Der = false;
-    if (key == ' ')               j1Ataca = false;
-    if (key == 13)                j2Ataca = false;
+    if (key == ' ') j1Ataca = false;
+    if (key == 13) j2Ataca = false;
 }
 
 void Arena::teclaEspecial(int key)
 {
-    if (key == GLUT_KEY_UP)    j2Arr = true;
-    if (key == GLUT_KEY_DOWN)  j2Aba = true;
-    if (key == GLUT_KEY_LEFT)  j2Izq = true;
+    if (key == GLUT_KEY_UP) j2Arr = true;
+    if (key == GLUT_KEY_DOWN) j2Aba = true;
+    if (key == GLUT_KEY_LEFT) j2Izq = true;
     if (key == GLUT_KEY_RIGHT) j2Der = true;
 }
 
 void Arena::teclaEspecialArriba(int key)
 {
-    if (key == GLUT_KEY_UP)    j2Arr = false;
-    if (key == GLUT_KEY_DOWN)  j2Aba = false;
-    if (key == GLUT_KEY_LEFT)  j2Izq = false;
+    if (key == GLUT_KEY_UP) j2Arr = false;
+    if (key == GLUT_KEY_DOWN) j2Aba = false;
+    if (key == GLUT_KEY_LEFT) j2Izq = false;
     if (key == GLUT_KEY_RIGHT) j2Der = false;
+}
+
+void Arena::separa()
+{
+    double dx = j1x - j2x;
+    double dy = j1y - j2y;
+    double minDist = 2.0 * tam;
+
+    if (std::abs(dx) < minDist && std::abs(dy) < minDist) {
+        double overlapX = minDist - std::abs(dx);
+        double overlapY = minDist - std::abs(dy);
+        double empuje = 0.0;
+
+        if (overlapX < overlapY) {
+            empuje = overlapX / 2.0;
+            if (dx >= 0) { j1x += empuje; j2x -= empuje; }
+            else { j1x -= empuje; j2x += empuje; }
+        } else {
+            empuje = overlapY / 2.0;
+            if (dy >= 0) { j1y += empuje; j2y -= empuje; }
+            else { j1y -= empuje; j2y += empuje; }
+        }
+
+        // Reaplica límites tras la separación
+        if (j1x - tam < xMin) j1x = xMin + tam;
+        if (j1x + tam > xMax) j1x = xMax - tam;
+        if (j1y - tam < yMin) j1y = yMin + tam;
+        if (j1y + tam > yMax) j1y = yMax - tam;
+
+        if (j2x - tam < xMin) j2x = xMin + tam;
+        if (j2x + tam > xMax) j2x = xMax - tam;
+        if (j2y - tam < yMin) j2y = yMin + tam;
+        if (j2y + tam > yMax) j2y = yMax - tam;
+    }
 }

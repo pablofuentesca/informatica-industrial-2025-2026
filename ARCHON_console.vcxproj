@@ -31,7 +31,6 @@
     <ClCompile Include="src\extremo.cpp" />
     <ClCompile Include="src\hechicero.cpp" />
     <ClCompile Include="src\ia.cpp" />
-    <ClCompile Include="src\interaccionArena.cpp" />
     <ClCompile Include="src\jugador.cpp" />
     <ClCompile Include="src\lateral.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -61,7 +60,6 @@
     <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\hechicero.h" />
     <ClInclude Include="src\ia.h" />
-    <ClInclude Include="src\interaccionArena.h" />
     <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\lateral.h" />
     <ClInclude Include="src\mediapunta.h" />

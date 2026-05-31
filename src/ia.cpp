@@ -2,7 +2,6 @@
 #include "mundo.h"
 #include "jugador.h"
 #include "entrenador.h"
-#include <iostream>
 #include <climits>
 #include <cmath>
 #include <algorithm>
@@ -100,10 +99,8 @@ std::vector<MovimientoIA> IA::movimientosLegales() const {
 MovimientoIA IA::mejorMovimiento() const {
     std::vector<MovimientoIA> opciones = movimientosLegales();
 
-    if (opciones.empty()) {
-        std::cout << "[IA] Sin movimientos disponibles.\n";
+    if (opciones.empty())
         return MovimientoIA();
-    }
 
     MovimientoIA mejor = opciones[0];
     int mejorScore = -100000000;

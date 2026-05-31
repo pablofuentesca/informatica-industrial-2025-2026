@@ -57,9 +57,8 @@ class Arena {
         FIN
     } estado;
 
-    friend class interaccionArena;
-
     // metodos privados de combate
+    void separa();
     void lanzaAtaque(int equipo);
     void agregaProyectil(double ox, double oy, double dx, double dy,
                          int danio, int equipo, bool atraviesa, bool paraliza,

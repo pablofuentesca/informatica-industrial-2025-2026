@@ -18,14 +18,8 @@ void Jugador::moverA(float x, float y)
 
 void Jugador::mover(float dirX, float dirY)
 {
-    float nuevaX = pos.x + dirX;
-    float nuevaY = pos.y + dirY;
-
-    if (nuevaX > 0.0f && nuevaX < 9.0f && nuevaY > 0.0f && nuevaY < 9.0f) 
-    {
-        pos.x = nuevaX;
-        pos.y = nuevaY;
-    }
+    pos.x += dirX;
+    pos.y += dirY;
 }
 
 float Jugador::getPosX() const
