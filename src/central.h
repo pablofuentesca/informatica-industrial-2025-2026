@@ -31,7 +31,7 @@ public:
     bool   esRanged()      const override { return false; }
 
     // Hitbox de maza: mayor que la espada del Goblin, similar al Caballero
-    double alcanceAtaque() const override { return 35.0; }
+    double alcanceAtaque() const override { return 45.0; }
 
     // Movimiento lento y pesado sobre el terreno
     void mover(float dirX, float dirY) override {

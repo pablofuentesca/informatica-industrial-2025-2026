@@ -32,7 +32,7 @@ public:
     bool   esRanged()      const override { return equipo == 2; }
 
     // Solo el Caballero tiene hitbox de contacto; el Goblin dispara proyectiles
-    double alcanceAtaque() const override { return (equipo == 1) ? 40.0 : 0.0; }
+    double alcanceAtaque() const override { return (equipo == 1) ? 50.0 : 0.0; }
 
     // Movimiento terrestre directo; el Caballero embiste al contactar
     void mover(float dirX, float dirY) override {
