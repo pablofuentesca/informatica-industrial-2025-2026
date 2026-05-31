@@ -204,11 +204,14 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
     timerParalizadoJ2 = 0.0;
     timerMeleeJ1 = 0.0;
     timerMeleeJ2 = 0.0;
+    j1Arr = j1Aba = j1Izq = j1Der = false;
+    j2Arr = j2Aba = j2Izq = j2Der = false;
     j1Ataca = false;
     j2Ataca = false;
     j1FacingIzq = false;
     j2FacingIzq = true;
     iaActiva = false;
+    pausado = false;
 
     for (int i = 0; i < MAX_PROYECTILES; i++)
         proyectiles[i] = Proyectil();
@@ -271,20 +274,22 @@ void Arena::inicializa(Jugador* combatiente1, Jugador* combatiente2)
 
 void Arena::agregaProyectil(double ox, double oy, double dx, double dy,
                              int danio, int equipo, bool atraviesa, bool paraliza,
-                             double vel)
+                             double vel, double distMax)
 {
     for (int i = 0; i < MAX_PROYECTILES; i++) {
         if (!proyectiles[i].activo) {
-            proyectiles[i].x                  = ox;
-            proyectiles[i].y                  = oy;
-            proyectiles[i].dx                 = dx;
-            proyectiles[i].dy                 = dy;
-            proyectiles[i].vel                = vel;
-            proyectiles[i].danio              = danio;
-            proyectiles[i].equipo             = equipo;
-            proyectiles[i].activo             = true;
+            proyectiles[i].x                   = ox;
+            proyectiles[i].y                   = oy;
+            proyectiles[i].dx                  = dx;
+            proyectiles[i].dy                  = dy;
+            proyectiles[i].vel                 = vel;
+            proyectiles[i].danio               = danio;
+            proyectiles[i].equipo              = equipo;
+            proyectiles[i].activo              = true;
             proyectiles[i].atraviesaObstaculos = atraviesa;
-            proyectiles[i].paraliza           = paraliza;
+            proyectiles[i].paraliza            = paraliza;
+            proyectiles[i].distanciaMax        = distMax;
+            proyectiles[i].distRecorrida       = 0.0;
             return;
         }
     }
@@ -323,12 +328,13 @@ void Arena::lanzaAtaque(int equipo)
         return;
     }
 
-    // Goblin: enjambre — 3 proyectiles debiles en abanico de 30 grados
+    // Goblin: enjambre — 3 proyectiles debiles en abanico, se desvanecen a mitad del campo
     if (pj && pj->getDisparaEnjambre()) {
-        double ang0 = atan2(ddy, ddx);
+        double ang0       = atan2(ddy, ddx);
+        double mitadCampo = (xMax - xMin) / 2.0;
         for (int a = -1; a <= 1; a++) {
             double ang = ang0 + a * (PI / 12.0);   // +-15 grados
-            agregaProyectil(ox, oy, cos(ang), sin(ang), danio, equipo, false, false);
+            agregaProyectil(ox, oy, cos(ang), sin(ang), danio, equipo, false, false, 350.0, mitadCampo);
         }
         return;
     }
@@ -368,8 +374,16 @@ void Arena::actualizaProyectiles(double dt)
         if (!proyectiles[i].activo) continue;
         Proyectil& p = proyectiles[i];
 
-        p.x += p.dx * p.vel * dt;
-        p.y += p.dy * p.vel * dt;
+        double paso = p.vel * dt;
+        p.x += p.dx * paso;
+        p.y += p.dy * paso;
+        p.distRecorrida += paso;
+
+        // distancia maxima superada (Goblin: mitad del campo)
+        if (p.distanciaMax > 0.0 && p.distRecorrida >= p.distanciaMax) {
+            p.activo = false;
+            continue;
+        }
 
         // sale del campo
         if (p.x < xMin || p.x > xMax || p.y < yMin || p.y > yMax) {
@@ -459,6 +473,7 @@ void Arena::mueve(double dt)
     }
 
     case BATALLA: {
+        if (pausado) break;
         tBatalla += dt;
 
         // timers de paralisis y destellos mele
@@ -492,9 +507,12 @@ void Arena::mueve(double dt)
         if (j1x + tam > xMax) j1x = xMax - tam;
         if (j1y - tam < yMin) j1y = yMin + tam;
         if (j1y + tam > yMax) j1y = yMax - tam;
-        for (int i = 0; i < 10; i++) {
-            if (!obstaculos[i].activo) continue;
-            obstaculos[i].separaJugador(j1x, j1y, tam);
+        // los voladores pasan por encima de obstaculos
+        if (!pj1 || !pj1->esVolador()) {
+            for (int i = 0; i < 10; i++) {
+                if (!obstaculos[i].activo) continue;
+                obstaculos[i].separaJugador(j1x, j1y, tam);
+            }
         }
 
         // IA controla j2 si esta activa
@@ -529,9 +547,12 @@ void Arena::mueve(double dt)
         if (j2x + tam > xMax) j2x = xMax - tam;
         if (j2y - tam < yMin) j2y = yMin + tam;
         if (j2y + tam > yMax) j2y = yMax - tam;
-        for (int i = 0; i < 10; i++) {
-            if (!obstaculos[i].activo) continue;
-            obstaculos[i].separaJugador(j2x, j2y, tam);
+        // los voladores pasan por encima de obstaculos
+        if (!pj2 || !pj2->esVolador()) {
+            for (int i = 0; i < 10; i++) {
+                if (!obstaculos[i].activo) continue;
+                obstaculos[i].separaJugador(j2x, j2y, tam);
+            }
         }
 
         // ataques: se disparan mientras se mantiene la tecla y hay cooldown disponible
@@ -796,6 +817,28 @@ void Arena::dibuja() const
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
+    // overlay de pausa
+    if (pausado) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4d(0.0, 0.0, 0.0, 0.45);
+        glBegin(GL_QUADS);
+            glVertex2d(0, 0); glVertex2d(800, 0);
+            glVertex2d(800, 600); glVertex2d(0, 600);
+        glEnd();
+        glDisable(GL_BLEND);
+        glColor3d(1.0, 0.9, 0.2);
+        glRasterPos2d(340, 315);
+        const char* pMsg = "PAUSA";
+        for (const char* c = pMsg; *c; c++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        glColor3d(0.65, 0.65, 0.65);
+        glRasterPos2d(305, 290);
+        const char* pSub = "Pulsa P para continuar";
+        for (const char* c = pSub; *c; c++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+    }
+
     glLineWidth(1.0f);
     glPointSize(1.0f);
 }
@@ -806,27 +849,31 @@ void Arena::dibuja() const
 
 void Arena::tecla(unsigned char key)
 {
-    // registrar teclas de ataque siempre para que mueve() las detecte
-    // en el primer frame de BATALLA aunque el jugador las tuviera ya pulsadas
+    // siempre registrar el estado de las teclas
     if (key == ' ') j1Ataca = true;
     if (key == 13)  j2Ataca = true;
-
-    if (estado == FIN) return;
-    if (estado != BATALLA) return;
-
     if (key == 'w' || key == 'W') j1Arr = true;
     if (key == 's' || key == 'S') j1Aba = true;
     if (key == 'a' || key == 'A') j1Izq = true;
     if (key == 'd' || key == 'D') j1Der = true;
 
-    // dispara inmediatamente al pulsar
-    if (key == ' ') {
+    if (estado == FIN) return;
+    if (estado != BATALLA) return;
+
+    // pausa / despausa
+    if (key == 'p' || key == 'P') { pausado = !pausado; return; }
+
+    if (pausado) return;
+
+    // disparo inmediato al pulsar (solo si el campo esta listo)
+    bool campoListo = obstaculos[9].activo;
+    if (key == ' ' && campoListo) {
         if (pj1 == nullptr || pj1->puedeAtacar()) {
             lanzaAtaque(1);
             if (pj1) pj1->reiniciaCooldown();
         }
     }
-    if (key == 13) {
+    if (key == 13 && campoListo) {
         if (pj2 == nullptr || pj2->puedeAtacar()) {
             lanzaAtaque(2);
             if (pj2) pj2->reiniciaCooldown();
@@ -846,8 +893,6 @@ void Arena::teclaJ1(unsigned char key)
 
 void Arena::teclaEspecial(int key)
 {
-    if (estado != BATALLA) return;
-
     if (key == GLUT_KEY_UP)    j2Arr = true;
     if (key == GLUT_KEY_DOWN)  j2Aba = true;
     if (key == GLUT_KEY_LEFT)  j2Izq = true;

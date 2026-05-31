@@ -22,6 +22,14 @@ static void dibujaTexto(float x, float y, const char* texto, float r, float g, f
     while (*texto) { glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *texto); texto++; }
 }
 
+// fuente pequeña para tablas y contenido denso
+static void dibujaTextoS(float x, float y, const char* texto, float r, float g, float b)
+{
+    glColor3f(r, g, b);
+    glRasterPos2f(x, y);
+    while (*texto) { glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *texto); texto++; }
+}
+
 static void dibujaBoton(float x1, float y1, float x2, float y2,
                          const char* texto, bool activo)
 {
@@ -167,54 +175,76 @@ void Coordinador::dibuja() const
         glLineWidth(1.0f);
 
         // titulo
-        dibujaTexto(190, 540, "== REGLAS DEL COMBATE EN LA ARENA ==", 0.9f, 0.75f, 0.1f);
+        dibujaTexto(113, 551, "REGLAS DEL JUEGO — ARCHON: REAL MADRID vs ATLETICO", 0.9f, 0.75f, 0.1f);
 
-        // seccion controles
-        dibujaTexto(60, 508, "CONTROLES", 1.0f, 1.0f, 1.0f);
-        dibujaTexto(80, 487, "Jugador 1 (Madrid):  W A S D para moverse   ESPACIO para atacar", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 466, "Jugador 2 (Atleti):  Flechas para moverse   INTRO para atacar", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 445, "ESC = volver al tablero    0 = combate de prueba (piezas aleatorias)", 0.75f, 0.75f, 0.75f);
+        {
+            // separador horizontal dorado
+            auto sep = [](float sy) {
+                glColor3f(0.45f, 0.35f, 0.05f);
+                glBegin(GL_LINES);
+                    glVertex2f(30, sy); glVertex2f(770, sy);
+                glEnd();
+            };
 
-        // seccion campo
-        dibujaTexto(60, 413, "CAMPO DE BATALLA", 1.0f, 1.0f, 1.0f);
-        dibujaTexto(80, 392, "Al inicio aparecen 6 barreras y 4 charcos de barro.", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 371, "Los jugadores no pueden moverse hasta que esten los 10 obstaculos.", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 350, "Barreras: bloquean movimiento y proyectiles.", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(80, 329, "Charcos de barro: frenan el movimiento, no bloquean proyectiles.", 0.75f, 0.75f, 0.75f);
+            // ── CONTROLES ──────────────────────────────────────────────────
+            dibujaTextoS( 35, 534, "CONTROLES", 1.0f, 1.0f, 0.5f);
+            dibujaTextoS( 35, 519, "  J1 (Madrid):  W A S D para moverse            ESPACIO para atacar", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 504, "  J2 (Atleti):  Flechas cursor para moverse      INTRO para atacar", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 489, "  Tablero: clic izquierdo selecciona pieza / mueve / lanza combate", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 474, "  ESC=volver  P=pausa arena  R=reglas  C=ranking  0=combate prueba  1-7=conjuro", 0.8f, 0.8f, 0.8f);
+            sep(463.0f);
 
-        // tabla de equivalencias y habilidades especiales
-        dibujaTexto(60, 300, "EQUIVALENCIAS  (jugador = archon : habilidad especial)", 1.0f, 1.0f, 1.0f);
+            // ── VICTORIA ───────────────────────────────────────────────────
+            dibujaTextoS( 35, 450, "VICTORIA", 1.0f, 1.0f, 0.5f);
+            dibujaTextoS( 35, 435, "  Controla los 5 puntos de poder (casilla central + 4 esquinas)  O  elimina al Entrenador rival", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 420, "  Ciclo de luz (0-6): casillas claras favorecen a Madrid; casillas oscuras favorecen a Atletico", 0.8f, 0.8f, 0.8f);
+            sep(409.0f);
 
-        // cabeceras de columna
-        dibujaTexto(65,  280, "REAL MADRID",  0.85f, 0.85f, 1.0f);
-        dibujaTexto(430, 280, "ATLETICO",     1.0f,  0.75f, 0.75f);
+            // ── CONJUROS ───────────────────────────────────────────────────
+            dibujaTextoS( 35, 396, "CONJUROS — seleccionar Entrenador + pulsar 1-7  (7 cargas/partida, 1 uso cada una)", 1.0f, 1.0f, 0.5f);
+            dibujaTextoS( 35, 381, "  [1] Teleport:     mueve pieza aliada a casilla libre aleatoria", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 366, "  [2] Curar:        cura completamente a la primera pieza aliada herida", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 351, "  [3] Cambio ciclo: invierte la direccion del ciclo de luz del tablero", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, 336, "  [4] Intercambiar: cambia la posicion de dos piezas aliadas", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS(415, 381, "  [5] Elemental:    invoca elemental temporal junto al Entrenador", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS(415, 366, "  [6] Revivir:      resucita la ultima pieza eliminada del equipo", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS(415, 351, "  [7] Encarcelar:   inmoviliza una pieza enemiga durante 3 turnos", 0.8f, 0.8f, 0.8f);
+            sep(325.0f);
 
-        // filas Madrid (izquierda) | Atleti (derecha)
-        dibujaTexto(65,  262, "Courtois = Arquero : cadencia alta",    0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 262, "Morata = Manticora : triple disparo",   0.75f, 0.75f, 0.75f);
+            // ── PIEZAS ─────────────────────────────────────────────────────
+            dibujaTextoS( 35, 313, "PIEZAS DE COMBATE  (HP / vel px/s / dmg / cd s / notas)", 1.0f, 1.0f, 0.5f);
+            dibujaTextoS( 35, 298, "REAL MADRID", 0.85f, 0.85f, 1.0f);
+            dibujaTextoS(415, 298, "ATLETICO",    1.0f,  0.65f, 0.65f);
 
-        dibujaTexto(65,  244, "Mbappe = Caballero : mele potente",     0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 244, "Delantero = Goblin : enjambre x3",      0.75f, 0.75f, 0.75f);
+            struct Fila { const char* mad; const char* atl; };
+            static const Fila filas[] = {
+                { "Courtois  (Arq.)  30  200  12  0.25",  "Morata    (Man.)  70  180  18  0.80  triple x3"   },
+                { "Mbappe    (Cab.) 100  180  25  0.35  mele",  "Goblin    (Inf.)  25  210   8  0.50  enjambre x3" },
+                { "Militao   (Gol.)  75  130  20  0.80  mele",  "Savic     (Trol)  90  130  22  0.90  mele +5HP/s" },
+                { "Bellingham(Uni.)  60  220  15  0.60",         "Koke      (Bas.)  55  150  12  0.70  paraliza 1s" },
+                { "Vinicius  (Val.)  70  240  18  0.60  mele vuela", "DePaul   (Ban.)  65  240  16  0.70  vuela trv."  },
+                { "Valverde  (Gen.)  70  200  15  0.80  vuela", "Correa    (Cam.)  70  200  15  0.80  vuela"       },
+                { "Carvajal  (Fen.)  55  220  17  0.40  vuela revive", "Griezmann(Dra.) 100  124   2  0.21  vuela chorro"},
+                { "Ancelotti(Mag.*)  40  130  12  1.00  rayo vuela",  "Simeone  (Hec.*)  40  130  12  1.00  rayo vuela"  },
+            };
+            float yf = 283.0f;
+            for (const auto& f : filas) {
+                dibujaTextoS( 35, yf, f.mad, 0.75f, 0.75f, 0.75f);
+                dibujaTextoS(415, yf, f.atl, 0.75f, 0.75f, 0.75f);
+                yf -= 15.0f;
+            }
+            dibujaTextoS(35, yf,        "(*) PIEZA REY: si muere en arena, ese equipo pierde la partida", 0.65f, 0.60f, 0.2f);
+            dibujaTextoS(35, yf - 14.0f,"mele=cuerpo a cuerpo  vuela=vuela sobre piezas y obstaculos  trv=atraviesa barreras", 0.55f, 0.55f, 0.55f);
+            sep(yf - 25.0f);
 
-        dibujaTexto(65,  226, "Militao = Golem : mele lento y duro",   0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 226, "Savic = Trol : regenera 5 HP/s",        0.75f, 0.75f, 0.75f);
+            // ── ARENA ──────────────────────────────────────────────────────
+            dibujaTextoS( 35, yf - 38.0f, "ARENA DE COMBATE", 1.0f, 1.0f, 0.5f);
+            dibujaTextoS( 35, yf - 53.0f, "  6 barreras + 4 charcos al inicio. Nadie puede moverse hasta que esten todos.", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, yf - 68.0f, "  Barreras: bloquean movimiento y disparos (Banshee los atraviesa). Charcos: frenan el movimiento.", 0.8f, 0.8f, 0.8f);
+            dibujaTextoS( 35, yf - 83.0f, "  Los voladores (vuela) pasan por encima de todos los obstaculos sin ser frenados.", 0.8f, 0.8f, 0.8f);
+        }
 
-        dibujaTexto(65,  208, "Bellingham = Unicornio : ranged agil",  0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 208, "Koke = Basilisco : paraliza 1 s",       0.75f, 0.75f, 0.75f);
-
-        dibujaTexto(65,  190, "Vinicius = Valkiria : mele aereo",      0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 190, "De Paul = Banshee : atraviesa barreras",0.75f, 0.75f, 0.75f);
-
-        dibujaTexto(65,  172, "Valverde = Genio : ranged volador",     0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 172, "Correa = Cambiaformas : ranged",        0.75f, 0.75f, 0.75f);
-
-        dibujaTexto(65,  154, "Carvajal = Fenix : resucita al 50% HP", 0.75f, 0.75f, 0.75f);
-        dibujaTexto(415, 154, "Griezmann = Dragon : fuego continuo",   0.75f, 0.75f, 0.75f);
-
-        dibujaTexto(65,  136, "Ancelotti = Mago : RAYO ARCANO",        0.9f, 0.85f, 0.3f);
-        dibujaTexto(415, 136, "Simeone = Hechicera : RAYO ARCANO",     0.9f, 0.85f, 0.3f);
-
-        dibujaTexto(295, 52, "Pulsa ESC para volver", 0.55f, 0.55f, 0.55f);
+        dibujaTextoS(280, 35, "Pulsa ESC para volver al menu", 0.55f, 0.55f, 0.55f);
         break;
     }
 
