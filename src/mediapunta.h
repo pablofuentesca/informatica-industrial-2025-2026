@@ -1,35 +1,38 @@
 #pragma once
 #include "volador.h"
 
-// Equipo 1 (Madrid):  Genio        (Valverde) — ranged, dispara desde cualquier zona
-// Equipo 2 (Atleti):  Cambiaformas (Correa)   — ranged, copia ataque y habilidad del rival
+// Base de movimiento compartida — no instanciar directamente
+// Ambos se mueven como alfil de ajedrez hasta 4 casillas
 class Mediapunta : public Volador {
+protected:
+    Mediapunta(float x, float y, int eq, const char* ruta) : Volador(x, y, eq, ruta) {}
 public:
-    Mediapunta(float x, float y, int equipo)
-        : Volador(x, y, equipo, equipo == 1
-            ? "../bin/imagenes/fotosjugadores/madridmediapunta.png"
-            : "../bin/imagenes/fotosjugadores/atletimediapunta.png")
+    int getRango() const override { return 4; }
+    bool esRanged() const override { return true; }
+    double alcanceAtaque() const override { return 0.0; }
+    void mover(float dirX, float dirY) override { Jugador::mover(dirX, dirY); }
+    void habilidadEspecial() override {}
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
+};
+
+// Genio — Madrid (equipo 1)
+// Mago errante que controla el campo desde cualquier zona en diagonal
+class Genio : public Mediapunta {
+public:
+    Genio(float x, float y) : Mediapunta(x, y, 1, "../bin/imagenes/fotosjugadores/madridmediapunta.png")
     {
-        hpMax       = 70;
-        velArena    = 200.0;
-        danio       = 15;
-        cooldownMax = 0.80;
+        hpMax = 70; velArena = 200.0; danio = 15; cooldownMax = 0.80;
         hp = hpMax;
     }
+};
 
-    // Genio (Madrid):    rango 4 — alfil diagonal hasta 4 casillas
-    // Cambiaformas (At): rango 4 — alfil diagonal hasta 4 casillas
-    int getRango() const override { return 4; }
-
-    bool   esRanged()      const override { return true; }
-    double alcanceAtaque() const override { return 0.0; }
-
-    void mover(float dirX, float dirY) override {
-        Jugador::mover(dirX, dirY);
+// Cambiaformas — Atleti (equipo 2)
+// Al inicio del combate en arena copia la habilidad especial del rival
+class Cambiaformas : public Mediapunta {
+public:
+    Cambiaformas(float x, float y) : Mediapunta(x, y, 2, "../bin/imagenes/fotosjugadores/atletimediapunta.png")
+    {
+        hpMax = 70; velArena = 200.0; danio = 15; cooldownMax = 0.80;
+        hp = hpMax;
     }
-
-    // Cambiaformas (equipo 2): al inicio del combate copia el ataque del rival
-    void habilidadEspecial() override {}
-
-    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
 };

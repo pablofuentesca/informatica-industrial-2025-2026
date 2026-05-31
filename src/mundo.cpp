@@ -41,43 +41,43 @@ Mundo::~Mundo()
 
 void Mundo::inicializa()
 {
-    // REAL MADRID (Izquierda) 
+    // REAL MADRID (Izquierda)
 
     // Línea frontal (Columna 1)
-    madrid.coloca(0, new Portero(1, 0, 1)); // Arquera abajo
-    for (int i = 1; i < 8; i++) 
-        madrid.coloca(i, new Delantero(1,(float)i, 1)); // Caballeros
-    madrid.coloca(8, new Portero(1, 8, 1)); // Arquera arriba
+    madrid.coloca(0, new Arquero(1, 0));
+    for (int i = 1; i < 8; i++)
+        madrid.coloca(i, new Caballero(1, (float)i));
+    madrid.coloca(8, new Arquero (1, 8));
 
     // Línea trasera (Columna 0)
-    madrid.coloca(9,  new Centrocampista(0, 0, 1)); // Valkiria
-    madrid.coloca(10, new Central(0, 1, 1)); // Golem
-    madrid.coloca(11, new Lateral(0, 2, 1)); // Unicornio
-    madrid.coloca(12, new Mediapunta(0, 3, 1)); // Genio
-    madrid.coloca(13, new Entrenador(0, 4, 1)); // Mago
-    madrid.coloca(14, new Extremo(0, 5, 1)); // Fénix
-    madrid.coloca(15, new Lateral(0, 6, 1)); // Unicornio
-    madrid.coloca(16, new Central(0, 7, 1)); // Golem
-    madrid.coloca(17, new Centrocampista(0, 8, 1)); // Valkiria
+    madrid.coloca(9, new Valkiria (0, 0));
+    madrid.coloca(10, new Golem (0, 1));
+    madrid.coloca(11, new Unicornio(0, 2));
+    madrid.coloca(12, new Genio (0, 3));
+    madrid.coloca(13, new Mago (0, 4));
+    madrid.coloca(14, new Fenix (0, 5));
+    madrid.coloca(15, new Unicornio(0, 6));
+    madrid.coloca(16, new Golem (0, 7));
+    madrid.coloca(17, new Valkiria (0, 8));
 
-    //ATLETI (Derecha)
+    // ATLETI (Derecha)
 
     // Línea frontal (Columna 7)
-    atleti.coloca(0, new Portero(7, 0, 2)); // Mantícora abajo
+    atleti.coloca(0, new Manticora  (7, 0));
     for (int i = 1; i < 8; i++)
-        atleti.coloca(i, new Delantero(7, (float)i, 2)); // Goblins
-    atleti.coloca(8, new Portero(7, 8, 2)); // Mantícora arriba
+        atleti.coloca(i, new Goblin (7, (float)i));
+    atleti.coloca(8, new Manticora  (7, 8));
 
     // Línea trasera (Columna 8)
-    atleti.coloca(9,  new Centrocampista(8, 0, 2)); // Banshee
-    atleti.coloca(10, new Central(8, 1, 2)); // Troll
-    atleti.coloca(11, new Lateral(8, 2, 2)); // Basilisco
-    atleti.coloca(12, new Mediapunta(8, 3, 2)); // Cambiaformas
-    atleti.coloca(13, new Entrenador(8, 4, 2)); // Hechicera
-    atleti.coloca(14, new Extremo(8, 5, 2)); // Dragón
-    atleti.coloca(15, new Lateral(8, 6, 2)); // Basilisco
-    atleti.coloca(16, new Central(8, 7, 2)); // Troll
-    atleti.coloca(17, new Centrocampista(8, 8, 2)); // Banshee
+    atleti.coloca(9, new Banshee (8, 0));
+    atleti.coloca(10, new Trol (8, 1));
+    atleti.coloca(11, new Basilisco(8, 2));
+    atleti.coloca(12, new Cambiaformas(8, 3));
+    atleti.coloca(13, new Hechicera (8, 4));
+    atleti.coloca(14, new Dragon (8, 5));
+    atleti.coloca(15, new Basilisco(8, 6));
+    atleti.coloca(16, new Trol(8, 7));
+    atleti.coloca(17, new Banshee (8, 8));
 
     // Tirada de moneda: decide qué equipo saca primero
     turno.sortea();
@@ -684,9 +684,11 @@ bool Mundo::invocarElemental(int equipo)
         int nx = ex + d[0];
         int ny = ey + d[1];
         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && equipoEn(nx, ny) == 0) {
-            Jugador* elemental = new Delantero((float)nx, (float)ny, equipo);
+            Jugador* elemental = (equipo == 1)
+                ? static_cast<Jugador*>(new Caballero((float)nx, (float)ny))
+                : static_cast<Jugador*>(new Goblin   ((float)nx, (float)ny));
             elemental->haceTemporal(4);   // elemental temporal: dura unos turnos y desaparece
-            vistas[elemental] = new VistaJugador(elemental->getRutaTextura(),elemental->getPosX(), elemental->getPosY(), 0.4f);
+            vistas[elemental] = new VistaJugador(elemental->getRutaTextura(), elemental->getPosX(), elemental->getPosY(), 0.4f);
             miEquip.anade(elemental);
             return true;
         }

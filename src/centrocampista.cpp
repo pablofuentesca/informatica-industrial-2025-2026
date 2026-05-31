@@ -1,18 +1,18 @@
-#include"centrocampista.h"
-#include<algorithm>
-#include<cmath>
+#include "centrocampista.h"
+#include <algorithm>
+#include <cmath>
 
-bool Centrocampista::esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const {
-    if (origenX == destinoX && origenY == destinoY) return false;
-    int difX = std::abs(destinoX - origenX);
-    int difY = std::abs(destinoY - origenY);
-    int distancia = (std::max)(difX, difY);
+// Valkiria: movimiento en L (como caballo de ajedrez)
+bool Valkiria::esMovimientoValido(int ox, int oy, int dx, int dy) const {
+    if (ox == dx && oy == dy) return false;
+    int difX = std::abs(dx - ox), difY = std::abs(dy - oy);
+    return (difX == 2 && difY == 1) || (difX == 1 && difY == 2);
+}
 
-    if (getEquipo() == 1) {
-        // MADRID (Valkiria): movimiento en L (caballo de ajedrez), vuela sobre piezas
-        return (difX == 2 && difY == 1) || (difX == 1 && difY == 2);
-    } else {
-        // ATLETI (Banshee): cualquier direccion hasta 3 casillas, vuela sobre piezas
-        return (difX == 0 || difY == 0 || difX == difY) && distancia <= getRango();
-    }
+// Banshee: cualquier direccion hasta 3 casillas, volando sobre piezas
+bool Banshee::esMovimientoValido(int ox, int oy, int dx, int dy) const {
+    if (ox == dx && oy == dy) return false;
+    int difX = std::abs(dx - ox), difY = std::abs(dy - oy);
+    int dist = (std::max)(difX, difY);
+    return (difX == 0 || difY == 0 || difX == difY) && dist <= getRango();
 }

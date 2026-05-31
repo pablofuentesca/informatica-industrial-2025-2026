@@ -1,44 +1,44 @@
 #pragma once
 #include "volador.h"
 
-// Equipo 1 (Madrid):  Valkiria (Vinicius) — mele aereo rapido, supera obstaculos volando
-// Equipo 2 (Atleti):  Banshee  (De Paul)  — ranged aereo, su proyectil atraviesa obstaculos
+// Base de movimiento compartida — no instanciar directamente
 class Centrocampista : public Volador {
+protected:
+    Centrocampista(float x, float y, int eq, const char* ruta) : Volador(x, y, eq, ruta) {}
 public:
-    Centrocampista(float x, float y, int equipo)
-        : Volador(x, y, equipo, equipo == 1
-            ? "../bin/imagenes/fotosjugadores/madridcentro.png"
-            : "../bin/imagenes/fotosjugadores/atleticentro.png")
+    int getRango() const override { return 3; }
+    void mover(float dirX, float dirY) override { Jugador::mover(dirX, dirY); }
+    void habilidadEspecial() override {}
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override = 0;
+};
+
+// Valkiria — Madrid (equipo 1)
+// Voladora que ataca cuerpo a cuerpo con espada
+// Se mueve en L (como caballo de ajedrez), saltando sobre otras piezas
+class Valkiria : public Centrocampista {
+public:
+    Valkiria(float x, float y) : Centrocampista(x, y, 1, "../bin/imagenes/fotosjugadores/madridcentro.png")
     {
-        if (equipo == 1) {
-            hpMax       = 70;
-            velArena    = 240.0;
-            danio       = 18;
-            cooldownMax = 0.60;
-        } else {
-            hpMax                = 65;
-            velArena             = 240.0;
-            danio                = 16;
-            cooldownMax          = 0.70;
-            proyectilAtraviesa   = true;  // Banshee: el alarido atraviesa obstaculos
-        }
+        hpMax = 70; velArena = 240.0; danio = 18; cooldownMax = 0.60;
         hp = hpMax;
     }
+    bool esRanged() const override { return false; }
+    double alcanceAtaque() const override { return 40.0; }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
+};
 
-    int  getRango() const override { return 3; }
-
-    // Valkiria (eq1): mele — espada que alcanza un poco mas alla del cuerpo
-    // Banshee  (eq2): ranged — alarido que atraviesa obstaculos del campo
-    bool   esRanged()      const override { return equipo == 2; }
-    double alcanceAtaque() const override { return (equipo == 1) ? 40.0 : 0.0; }
-
-    // Ambas son voladoras: en el tablero vuelan sobre otras piezas
-    void mover(float dirX, float dirY) override {
-        Jugador::mover(dirX, dirY);
+// Banshee — Atleti (equipo 2)
+// Voladora cuyo alarido atraviesa todos los obstaculos del campo
+// Se mueve en cualquier direccion hasta 3 casillas, volando sobre piezas
+class Banshee : public Centrocampista {
+public:
+    Banshee(float x, float y): Centrocampista(x, y, 2, "../bin/imagenes/fotosjugadores/atleticentro.png")
+    {
+        hpMax = 65; velArena = 240.0; danio = 16; cooldownMax = 0.70;
+        proyectilAtraviesa = true;
+        hp = hpMax;
     }
-
-    // Banshee (equipo 2): su proyectil tiene la marca "atraviesaObstaculos"
-    void habilidadEspecial() override {}
-
-    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
+    bool esRanged()const override { return true; }
+    double alcanceAtaque() const override { return 0.0; }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
 };

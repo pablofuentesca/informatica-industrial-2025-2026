@@ -3,35 +3,36 @@
 #include "hechicero.h"
 class Mundo;
 
-// Equipo 1 (Madrid):  Mago      (Ancelotti) — PIEZA REY, ranged, 7 conjuros por partida
-// Equipo 2 (Atleti):  Hechicera (Simeone)   — PIEZA REY, ranged, 7 conjuros por partida
-// Si el Entrenador es eliminado en arena, el partido termina para ese bando
+// Base para las piezas Rey — no instanciar directamente
+// Se mueven como reina hasta 3 casillas; disparan rayo arcano que atraviesa y paraliza
 class Entrenador : public Volador, public Hechicero {
-public:
-    Entrenador(float x, float y, int equipo)
-        : Volador(x, y, equipo, equipo == 1
-            ? "../bin/imagenes/fotosjugadores/madridentrenador.png"
-            : "../bin/imagenes/fotosjugadores/atletientrenador.png"),
-          Hechicero()
+protected:
+    Entrenador(float x, float y, int eq, const char* ruta): Volador(x, y, eq, ruta), Hechicero()
     {
-        hpMax             = 40;
-        velArena          = 130.0;
-        danio             = 12;
-        cooldownMax       = 1.00;
+        hpMax = 40; velArena = 130.0; danio = 12; cooldownMax = 1.00;
         disparaRayoArcano = true;
         hp = hpMax;
     }
-
-    // En el tablero se mueve como una reina hasta 3 casillas, volando sobre piezas
+public:
     int getRango() const override { return 3; }
-
-    bool   esRanged()      const override { return true; }
+    bool esRanged()  const override { return true; }
     double alcanceAtaque() const override { return 0.0; }
-
-    bool lanzarConjuro(int i, Mundo& m) { return Hechicero::lanzarConjuro(i, m, getEquipo()); }
-
-    bool esEntrenador() const override { return true; }
+    bool esEntrenador()const override { return true; }
     void habilidadEspecial() override {}
+    bool lanzarConjuro(int i, Mundo& m) { return Hechicero::lanzarConjuro(i, m, getEquipo()); }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
+};
 
-    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
+// Mago — Madrid (equipo 1)
+// Hechicero de la luz; comanda las 7 fuerzas del tablero
+class Mago : public Entrenador {
+public:
+    Mago(float x, float y) : Entrenador(x, y, 1, "../bin/imagenes/fotosjugadores/madridentrenador.png") {}
+};
+
+// Hechicera — Atleti (equipo 2)
+// Bruja de las sombras; domina las mismas 7 fuerzas desde la oscuridad
+class Hechicera : public Entrenador {
+public:
+    Hechicera(float x, float y) : Entrenador(x, y, 2, "../bin/imagenes/fotosjugadores/atletientrenador.png") {}
 };

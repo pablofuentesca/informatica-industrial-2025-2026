@@ -1,43 +1,44 @@
 #pragma once
 #include "terrestre.h"
 
-// Equipo 1 (Madrid):  Caballero (Mbappe)     — mele, el combatiente mas letal, vida maxima
-// Equipo 2 (Atleti):  Goblin    (infanteria) — mele, debil individualmente, abundante
+// Base de movimiento compartida — no instanciar directamente
 class Delantero : public Terrestre {
+protected:
+    Delantero(float x, float y, int eq, const char* ruta) : Terrestre(x, y, eq, ruta) {}
 public:
-    Delantero(float x, float y, int equipo)
-        : Terrestre(x, y, equipo, equipo == 1
-            ? "../bin/imagenes/fotosjugadores/madriddelantero.png"
-            : "../bin/imagenes/fotosjugadores/atletidelantero.png")
+    int getRango() const override { return 3; }
+    void mover(float dirX, float dirY) override { Jugador::mover(dirX, dirY); }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override = 0;
+};
+
+// Caballero — Madrid (equipo 1)
+// El combatiente mas letal cuerpo a cuerpo; maximo HP del bando
+// Se mueve en L (como caballo de ajedrez)
+class Caballero : public Delantero {
+public:
+    Caballero(float x, float y) : Delantero(x, y, 1, "../bin/imagenes/fotosjugadores/madriddelantero.png")
     {
-        if (equipo == 1) {
-            // Caballero: el mas resistente y poderoso en combate cuerpo a cuerpo
-            hpMax       = 100;
-            velArena    = 180.0;
-            danio       = 25;
-            cooldownMax = 0.70;
-        } else {
-            // Goblin: rapido y agresivo, lanza un enjambre de proyectiles
-            hpMax           = 25;
-            velArena        = 210.0;
-            danio           = 8;
-            cooldownMax     = 0.50;
-            disparaEnjambre = true;   // Goblin: 3 proyectiles en abanico de 30 grados
-        }
+        hpMax = 100; velArena = 180.0; danio = 25; cooldownMax = 0.70;
         hp = hpMax;
     }
+    bool esRanged()      const override { return false; }
+    double alcanceAtaque() const override { return 50.0; }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
+};
 
-    int    getRango()      const override { return 3; }
-    // Caballero (Madrid): mele — Goblin (Atleti): ranged (enjambre)
-    bool   esRanged()      const override { return equipo == 2; }
-
-    // Solo el Caballero tiene hitbox de contacto; el Goblin dispara proyectiles
-    double alcanceAtaque() const override { return (equipo == 1) ? 50.0 : 0.0; }
-
-    // Movimiento terrestre directo; el Caballero embiste al contactar
-    void mover(float dirX, float dirY) override {
-        Jugador::mover(dirX, dirY);
+// Goblin — Atleti (equipo 2)
+// Rapido y numeroso; lanza un enjambre de 3 proyectiles en abanico de 30 grados
+// Se mueve 1 paso en diagonal
+class Goblin : public Delantero {
+public:
+    Goblin(float x, float y)
+        : Delantero(x, y, 2, "../bin/imagenes/fotosjugadores/atletidelantero.png")
+    {
+        hpMax = 25; velArena = 210.0; danio = 8; cooldownMax = 0.50;
+        disparaEnjambre = true;
+        hp = hpMax;
     }
-
-    bool esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
+    bool esRanged() const override { return true; }
+    double alcanceAtaque() const override { return 0.0; }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
 };

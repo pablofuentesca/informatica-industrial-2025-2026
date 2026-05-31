@@ -1,47 +1,45 @@
 #pragma once
 #include "terrestre.h"
 
-// Equipo 1 (Madrid):  Golem (Militao/Alaba)  — mele lento, muy resistente
-// Equipo 2 (Atleti):  Trol  (Savic)         — mele lento, regenera vida pasivamente
+// Base de movimiento compartida — no instanciar directamente
+// Ambos se mueven ortogonalmente (Torre)
 class Central : public Terrestre {
+protected:
+    Central(float x, float y, int eq, const char* ruta) : Terrestre(x, y, eq, ruta) {}
 public:
-    Central(float x, float y, int equipo)
-        : Terrestre(x, y, equipo, equipo == 1
-            ? "../bin/imagenes/fotosjugadores/madriddefensa.png"
-            : "../bin/imagenes/fotosjugadores/atletidefensa.png")
+    bool esRanged()      const override { return false; }
+    double alcanceAtaque() const override { return 45.0; }
+    void mover(float dirX, float dirY) override { Jugador::mover(dirX, dirY); }
+    bool esMovimientoValido(int ox, int oy, int dx, int dy) const override;
+};
+
+// Golem — Madrid (equipo 1)
+// Gran resistencia y golpe pesado; se mueve ortogonalmente hasta 3 casillas
+class Golem : public Central {
+public:
+    Golem(float x, float y) : Central(x, y, 1, "../bin/imagenes/fotosjugadores/madriddefensa.png")
     {
-        if (equipo == 1) {
-            // Golem: gran resistencia, golpe pesado, muy lento
-            hpMax       = 75;
-            velArena    = 130.0;
-            danio       = 20;
-            cooldownMax = 0.80;
-        } else {
-            // Trol: aun mas resistente, regenera 5 HP/s, golpe devastador
-            hpMax       = 90;
-            velArena    = 130.0;
-            danio       = 22;
-            cooldownMax = 0.90;
-        }
+        hpMax = 75; velArena = 130.0; danio = 20; cooldownMax = 0.80;
         hp = hpMax;
     }
+    int getRango() const override { return 3; }
+};
 
-    int    getRango()      const override { return equipo == 1 ? 3 : 2; }
-    bool   esMovimientoValido(int origenX, int origenY, int destinoX, int destinoY) const override;
-    bool   esRanged()      const override { return false; }
-
-    // Hitbox de maza: mayor que la espada del Goblin, similar al Caballero
-    double alcanceAtaque() const override { return 45.0; }
-
-    // Movimiento lento y pesado sobre el terreno
-    void mover(float dirX, float dirY) override {
-        Jugador::mover(dirX, dirY);
+// Trol — Atleti (equipo 2)
+// Aun mas resistente que el Golem; regenera 5 HP por segundo en arena
+// Se mueve ortogonalmente hasta 2 casillas
+class Trol : public Central {
+public:
+    Trol(float x, float y)
+        : Central(x, y, 2, "../bin/imagenes/fotosjugadores/atletidefensa.png")
+    {
+        hpMax = 90; velArena = 130.0; danio = 22; cooldownMax = 0.90;
+        hp = hpMax;
     }
-
-    // Trol (equipo 2): regenera vida en cada frame de la arena
+    int getRango() const override { return 2; }
     void actualiza(double dt) override {
         Jugador::actualiza(dt);
-        if (equipo == 2 && hp < hpMax) {
+        if (hp < hpMax) {
             hp += static_cast<int>(5.0 * dt);
             if (hp > hpMax) hp = hpMax;
         }
