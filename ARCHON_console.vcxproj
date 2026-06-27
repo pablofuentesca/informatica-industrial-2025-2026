@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arena.cpp" />
+    <ClCompile Include="src\boton.cpp" />
     <ClCompile Include="src\casilla.cpp" />
     <ClCompile Include="src\central.cpp" />
     <ClCompile Include="src\centrocampista.cpp" />
@@ -48,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Arena.h" />
+    <ClInclude Include="src\boton.h" />
     <ClInclude Include="src\casilla.h" />
     <ClInclude Include="src\central.h" />
     <ClInclude Include="src\centrocampista.h" />

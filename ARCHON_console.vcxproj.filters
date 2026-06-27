@@ -1,150 +1,87 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Archivos de origen">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Jugadores">
+      <UniqueIdentifier>{A1B2C3D4-0001-0001-0001-000000000001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Tipos">
+      <UniqueIdentifier>{A1B2C3D4-0002-0002-0002-000000000002}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de recursos">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Mundo">
+      <UniqueIdentifier>{A1B2C3D4-0003-0003-0003-000000000003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arena">
+      <UniqueIdentifier>{A1B2C3D4-0004-0004-0004-000000000004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sistema">
+      <UniqueIdentifier>{A1B2C3D4-0005-0005-0005-000000000005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaz">
+      <UniqueIdentifier>{A1B2C3D4-0006-0006-0006-000000000006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Conjuros">
+      <UniqueIdentifier>{A1B2C3D4-0007-0007-0007-000000000007}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\posicion.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\casilla.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tablero.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pelota.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\jugador.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mundo.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\coordinador.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Arena.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\interaccionArena.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lateral.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\delantero.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\extremo.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entrenador.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mediapunta.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\centrocampista.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\portero.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\central.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\equipo.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\turno.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
+    <ClCompile Include="src\jugador.cpp">      <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\central.cpp">      <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\centrocampista.cpp"><Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\delantero.cpp">    <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\extremo.cpp">      <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\lateral.cpp">      <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\mediapunta.cpp">   <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\portero.cpp">      <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\entrenador.cpp">   <Filter>Jugadores</Filter> </ClCompile>
+    <ClCompile Include="src\hechicero.cpp">    <Filter>Tipos</Filter>     </ClCompile>
+    <ClCompile Include="src\mundo.cpp">        <Filter>Mundo</Filter>     </ClCompile>
+    <ClCompile Include="src\tablero.cpp">      <Filter>Mundo</Filter>     </ClCompile>
+    <ClCompile Include="src\casilla.cpp">      <Filter>Mundo</Filter>     </ClCompile>
+    <ClCompile Include="src\posicion.cpp">     <Filter>Mundo</Filter>     </ClCompile>
+    <ClCompile Include="src\turno.cpp">        <Filter>Mundo</Filter>     </ClCompile>
+    <ClCompile Include="src\Arena.cpp">        <Filter>Arena</Filter>     </ClCompile>
+    <ClCompile Include="src\Obstaculo.cpp">    <Filter>Arena</Filter>     </ClCompile>
+    <ClCompile Include="src\Proyectil.cpp">    <Filter>Arena</Filter>     </ClCompile>
+    <ClCompile Include="src\pelota.cpp">       <Filter>Arena</Filter>     </ClCompile>
+    <ClCompile Include="src\coordinador.cpp">  <Filter>Sistema</Filter>   </ClCompile>
+    <ClCompile Include="src\main.cpp">         <Filter>Sistema</Filter>   </ClCompile>
+    <ClCompile Include="src\ranking.cpp">      <Filter>Sistema</Filter>   </ClCompile>
+    <ClCompile Include="src\ia.cpp">           <Filter>Sistema</Filter>   </ClCompile>
+    <ClCompile Include="src\equipo.cpp">       <Filter>Sistema</Filter>   </ClCompile>
+    <ClCompile Include="src\boton.cpp">        <Filter>Interfaz</Filter>  </ClCompile>
+    <ClCompile Include="src\vistaJugador.cpp"> <Filter>Interfaz</Filter>  </ClCompile>
+    <ClCompile Include="src\conjuros.cpp">     <Filter>Conjuros</Filter>  </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\posicion.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\casilla.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tablero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\pelota.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\jugador.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mundo.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\coordinador.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arena.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\central.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\centrocampista.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\delantero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entrenador.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\extremo.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\interaccionArena.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lateral.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mediapunta.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\portero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\teletransportador.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\terrestre.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\volador.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\grid.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\equipo.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\turno.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
+    <ClInclude Include="src\jugador.h">        <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\central.h">        <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\centrocampista.h"> <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\delantero.h">      <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\extremo.h">        <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\lateral.h">        <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\mediapunta.h">     <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\portero.h">        <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\entrenador.h">     <Filter>Jugadores</Filter> </ClInclude>
+    <ClInclude Include="src\terrestre.h">      <Filter>Tipos</Filter>     </ClInclude>
+    <ClInclude Include="src\volador.h">        <Filter>Tipos</Filter>     </ClInclude>
+    <ClInclude Include="src\hechicero.h">      <Filter>Tipos</Filter>     </ClInclude>
+    <ClInclude Include="src\mundo.h">          <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\tablero.h">        <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\casilla.h">        <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\posicion.h">       <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\turno.h">          <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\grid.h">           <Filter>Mundo</Filter>     </ClInclude>
+    <ClInclude Include="src\Arena.h">          <Filter>Arena</Filter>     </ClInclude>
+    <ClInclude Include="src\Obstaculo.h">      <Filter>Arena</Filter>     </ClInclude>
+    <ClInclude Include="src\Proyectil.h">      <Filter>Arena</Filter>     </ClInclude>
+    <ClInclude Include="src\pelota.h">         <Filter>Arena</Filter>     </ClInclude>
+    <ClInclude Include="src\coordinador.h">    <Filter>Sistema</Filter>   </ClInclude>
+    <ClInclude Include="src\ranking.h">        <Filter>Sistema</Filter>   </ClInclude>
+    <ClInclude Include="src\ia.h">             <Filter>Sistema</Filter>   </ClInclude>
+    <ClInclude Include="src\equipo.h">         <Filter>Sistema</Filter>   </ClInclude>
+    <ClInclude Include="src\boton.h">          <Filter>Interfaz</Filter>  </ClInclude>
+    <ClInclude Include="src\vistaJugador.h">   <Filter>Interfaz</Filter>  </ClInclude>
+    <ClInclude Include="src\conjuro.h">        <Filter>Conjuros</Filter>  </ClInclude>
+    <ClInclude Include="src\teletransportador.h"><Filter>Conjuros</Filter></ClInclude>
   </ItemGroup>
 </Project>

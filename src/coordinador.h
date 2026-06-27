@@ -3,6 +3,7 @@
 #include "Arena.h"
 #include "ia.h"
 #include "ranking.h"
+#include "boton.h"
 #include <string>
 
 namespace ETSIDI { class Sprite; }
@@ -23,7 +24,7 @@ class Coordinador {
     std::string entradaActual;    // texto que se esta tecleando ahora
     int         campoNombre{ 0 }; // 0 = nombre de Madrid, 1 = nombre de Atleti
 
-    void iniciaEntradaNombres(bool conIA);   // prepara la pantalla de nombres
+    Boton botones[2];
 
 public:
     Coordinador() = default;
