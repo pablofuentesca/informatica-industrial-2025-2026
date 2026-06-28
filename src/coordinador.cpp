@@ -290,19 +290,7 @@ void Coordinador::dibuja() const
         dibujaTexto(160.0f, 390.0f, titulo, 0.95f, 0.88f, 0.35f);
 
         // caja de texto donde aparece lo que se escribe
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glBegin(GL_QUADS);
-            glVertex2f(250, 285); glVertex2f(550, 285);
-            glVertex2f(550, 330); glVertex2f(250, 330);
-        glEnd();
-        glColor3f(0.50f, 0.50f, 0.55f);
-        glBegin(GL_LINE_LOOP);
-            glVertex2f(250, 285); glVertex2f(550, 285);
-            glVertex2f(550, 330); glVertex2f(250, 330);
-        glEnd();
-
-        std::string linea = entradaActual + "_";   // el subrayado hace de cursor
-        dibujaTexto(265.0f, 300.0f, linea.c_str(), 1.0f, 1.0f, 1.0f);
+        campo.dibuja(250, 285);
 
         dibujaTexto(245.0f, 220.0f, "ENTER para confirmar    ESC para volver", 0.6f, 0.6f, 0.6f);
         break;
@@ -317,7 +305,7 @@ void Coordinador::tecla(unsigned char key)
 {
     switch (estado) {
     case INICIO:
-        if (key == 'e' || key == 'E')   { modoIA = false; nombreMadrid = ""; entradaActual = ""; campoNombre = 0; estado = NOMBRES; }
+        if (key == 'e' || key == 'E')   { modoIA = false; nombreMadrid = ""; campo.limpia(); campoNombre = 0; estado = NOMBRES; }
         if (key == 'r' || key == 'R')   { estado = REGLAS; }
         if (key == 'c' || key == 'C')   { estado = RANKING; }
         break;
@@ -330,24 +318,23 @@ void Coordinador::tecla(unsigned char key)
     case NOMBRES:
         if (key == 27) { estado = INICIO; break; }          // ESC cancela
         if (key == 8 || key == 127) {                       // borrar un caracter
-            if (!entradaActual.empty()) entradaActual.pop_back();
+            campo.borra();
             break;
         }
         if (key == 13) {                                    // ENTER confirma el nombre
             if (campoNombre == 0) {
-                nombreMadrid = entradaActual.empty() ? "Jugador 1" : entradaActual;
+                nombreMadrid = campo.vacio() ? "Jugador 1" : campo.valor();
                 if (modoIA) { nombreAtleti = "IA"; estado = JUEGO; ETSIDI::playMusica("sonidos/partido.wav", true); }
-                else { campoNombre = 1; entradaActual = ""; }   // pedir el de Atleti
+                else { campoNombre = 1; campo.limpia(); }   // pedir el de Atleti
             }
             else {
-                nombreAtleti = entradaActual.empty() ? "Jugador 2" : entradaActual;
+                nombreAtleti = campo.vacio() ? "Jugador 2" : campo.valor();
                 estado = JUEGO;
                 ETSIDI::playMusica("sonidos/partido.wav", true);
             }
             break;
         }
-        if (key >= 32 && key < 127 && entradaActual.size() < 12)   // caracter normal
-            entradaActual += (char)key;
+        campo.anadeCaracter((char)key);                     // caracter normal
         break;
     case JUEGO:
         mundo.tecla(key);
@@ -410,12 +397,12 @@ void Coordinador::raton(int boton, int estadoRat, int x, int y)
 
             if (botones[0].contiene(mx, glY)) {
                 modoIA = false;
-                nombreMadrid = ""; entradaActual = ""; campoNombre = 0;
+                nombreMadrid = ""; campo.limpia(); campoNombre = 0;
                 estado = NOMBRES;
             }
             if (botones[1].contiene(mx, glY)) {
                 modoIA = true;
-                nombreMadrid = ""; entradaActual = ""; campoNombre = 0;
+                nombreMadrid = ""; campo.limpia(); campoNombre = 0;
                 estado = NOMBRES;
             }
         }

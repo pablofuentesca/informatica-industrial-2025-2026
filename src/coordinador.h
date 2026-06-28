@@ -4,6 +4,7 @@
 #include "ia.h"
 #include "ranking.h"
 #include "boton.h"
+#include "campotexto.h"
 #include <string>
 
 namespace ETSIDI { class Sprite; }
@@ -21,7 +22,7 @@ class Coordinador {
     // nombres que los jugadores introducen al empezar (para el ranking)
     std::string nombreMadrid;
     std::string nombreAtleti;
-    std::string entradaActual;    // texto que se esta tecleando ahora
+    CampoTexto  campo;            // campo de texto donde se teclea el nombre
     int         campoNombre{ 0 }; // 0 = nombre de Madrid, 1 = nombre de Atleti
 
     Boton botones[2];

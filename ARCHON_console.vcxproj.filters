@@ -49,6 +49,7 @@
     <ClCompile Include="src\ia.cpp">           <Filter>Sistema</Filter>   </ClCompile>
     <ClCompile Include="src\equipo.cpp">       <Filter>Sistema</Filter>   </ClCompile>
     <ClCompile Include="src\boton.cpp">        <Filter>Interfaz</Filter>  </ClCompile>
+    <ClCompile Include="src\campotexto.cpp"> <Filter>Interfaz</Filter>  </ClCompile>
     <ClCompile Include="src\vistaJugador.cpp"> <Filter>Interfaz</Filter>  </ClCompile>
     <ClCompile Include="src\conjuros.cpp">     <Filter>Conjuros</Filter>  </ClCompile>
   </ItemGroup>
@@ -80,6 +81,7 @@
     <ClInclude Include="src\ia.h">             <Filter>Sistema</Filter>   </ClInclude>
     <ClInclude Include="src\equipo.h">         <Filter>Sistema</Filter>   </ClInclude>
     <ClInclude Include="src\boton.h">          <Filter>Interfaz</Filter>  </ClInclude>
+    <ClInclude Include="src\campotexto.h">     <Filter>Interfaz</Filter>  </ClInclude>
     <ClInclude Include="src\vistaJugador.h">   <Filter>Interfaz</Filter>  </ClInclude>
     <ClInclude Include="src\conjuro.h">        <Filter>Conjuros</Filter>  </ClInclude>
     <ClInclude Include="src\teletransportador.h"><Filter>Conjuros</Filter></ClInclude>
