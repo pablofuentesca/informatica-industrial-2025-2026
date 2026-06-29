@@ -22,6 +22,9 @@
     <Filter Include="Conjuros">
       <UniqueIdentifier>{A1B2C3D4-0007-0007-0007-000000000007}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pantallas">
+      <UniqueIdentifier>{A1B2C3D4-0008-0008-0008-000000000008}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\jugador.cpp">      <Filter>Jugadores</Filter> </ClCompile>
@@ -85,5 +88,14 @@
     <ClInclude Include="src\vistaJugador.h">   <Filter>Interfaz</Filter>  </ClInclude>
     <ClInclude Include="src\conjuro.h">        <Filter>Conjuros</Filter>  </ClInclude>
     <ClInclude Include="src\teletransportador.h"><Filter>Conjuros</Filter></ClInclude>
+    <ClInclude Include="src\contexto.h">        <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantalla.h">        <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallainicio.h">  <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallareglas.h">  <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallanombres.h"> <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallajuego.h">   <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallacombate.h"> <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallafin.h">     <Filter>Pantallas</Filter> </ClInclude>
+    <ClInclude Include="src\pantallaranking.h"> <Filter>Pantallas</Filter> </ClInclude>
   </ItemGroup>
 </Project>

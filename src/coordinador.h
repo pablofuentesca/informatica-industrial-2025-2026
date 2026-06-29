@@ -1,37 +1,23 @@
 #pragma once
-#include "mundo.h"
-#include "Arena.h"
-#include "ia.h"
-#include "ranking.h"
-#include "boton.h"
-#include "campotexto.h"
-#include <string>
+#include "contexto.h"
 
-namespace ETSIDI { class Sprite; }
+class Pantalla;
 
+// El coordinador ya no sabe de logica de juego, solo guarda el contexto
+// y delega todo en la pantalla que este activa en cada momento.
 class Coordinador {
-    enum Estado { INICIO, REGLAS, NOMBRES, JUEGO, COMBATE, PAUSA, FIN, RANKING } estado{};
-    Mundo mundo;
-    Arena arena;
-    IA ia;
-    Ranking ranking{ "../bin/ranking.txt" };
-    bool modoIA{ false };
-    ETSIDI::Sprite* portada{ nullptr };
-    int equipoVencedor{ 0 };
+    Contexto ctx;
+    Pantalla* actual{ nullptr };
 
-    // nombres que los jugadores introducen al empezar (para el ranking)
-    std::string nombreMadrid;
-    std::string nombreAtleti;
-    CampoTexto  campo;            // campo de texto donde se teclea el nombre
-    int         campoNombre{ 0 }; // 0 = nombre de Madrid, 1 = nombre de Atleti
-
-    Boton botones[2];
+    void cambiaPantalla(Contexto::Id id);
+    void procesaCambio();
 
 public:
     Coordinador() = default;
     ~Coordinador();
     Coordinador(const Coordinador&) = delete;
     Coordinador& operator=(const Coordinador&) = delete;
+
     void inicializa();
     void dibuja() const;
     void mueve(double dt);

@@ -69,6 +69,13 @@
     <ClInclude Include="src\lateral.h" />
     <ClInclude Include="src\mediapunta.h" />
     <ClInclude Include="src\pantalla.h" />
+    <ClInclude Include="src\pantallainicio.h" />
+    <ClInclude Include="src\pantallareglas.h" />
+    <ClInclude Include="src\pantallanombres.h" />
+    <ClInclude Include="src\pantallajuego.h" />
+    <ClInclude Include="src\pantallacombate.h" />
+    <ClInclude Include="src\pantallafin.h" />
+    <ClInclude Include="src\pantallaranking.h" />
     <ClInclude Include="src\mundo.h" />
     <ClInclude Include="src\Obstaculo.h" />
     <ClInclude Include="src\pelota.h" />
