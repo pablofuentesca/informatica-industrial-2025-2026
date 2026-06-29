@@ -55,7 +55,9 @@
     <ClCompile Include="src\campotexto.cpp"> <Filter>Interfaz</Filter>  </ClCompile>
     <ClCompile Include="src\vistaJugador.cpp"> <Filter>Interfaz</Filter>  </ClCompile>
     <ClCompile Include="src\conjuros.cpp">     <Filter>Conjuros</Filter>  </ClCompile>
-    <ClCompile Include="src\pantallainicio.cpp"> <Filter>Pantallas</Filter> </ClCompile>
+    <ClCompile Include="src\pantallainicio.cpp">  <Filter>Pantallas</Filter> </ClCompile>
+    <ClCompile Include="src\pantallanombres.cpp"> <Filter>Pantallas</Filter> </ClCompile>
+    <ClCompile Include="src\pantallajuego.cpp">  <Filter>Pantallas</Filter> </ClCompile>
     <ClCompile Include="src\pantallareglas.cpp"> <Filter>Pantallas</Filter> </ClCompile>
     <ClCompile Include="src\pantallacombate.cpp"><Filter>Pantallas</Filter> </ClCompile>
   </ItemGroup>

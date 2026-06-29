@@ -28,7 +28,7 @@ void Coordinador::cambiaPantalla(Contexto::Id id)
     switch (id) {
     case Contexto::INICIO:siguiente = new PantallaInicio(); break;
     case Contexto::REGLAS:siguiente = new PantallaReglas(); break;
-    case Contexto::NOMBRES:siguiente = new PantallaNombres(ctx.modoIA); break;
+    case Contexto::NOMBRES:siguiente = new PantallaNombres(); break;
     case Contexto::JUEGO:siguiente = new PantallaJuego(); break;
     case Contexto::COMBATE:siguiente = new PantallaCombate(); break;
     case Contexto::FIN:siguiente = new PantallaFin(); break;
