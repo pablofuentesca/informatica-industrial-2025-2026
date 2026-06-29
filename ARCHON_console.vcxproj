@@ -56,6 +56,7 @@
     <ClInclude Include="src\central.h" />
     <ClInclude Include="src\centrocampista.h" />
     <ClInclude Include="src\conjuro.h" />
+    <ClInclude Include="src\contexto.h" />
     <ClInclude Include="src\coordinador.h" />
     <ClInclude Include="src\delantero.h" />
     <ClInclude Include="src\entrenador.h" />
