@@ -67,6 +67,7 @@
     <ClInclude Include="src\jugador.h" />
     <ClInclude Include="src\lateral.h" />
     <ClInclude Include="src\mediapunta.h" />
+    <ClInclude Include="src\pantalla.h" />
     <ClInclude Include="src\mundo.h" />
     <ClInclude Include="src\Obstaculo.h" />
     <ClInclude Include="src\pelota.h" />
