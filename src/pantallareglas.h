@@ -1,8 +1,7 @@
 #pragma once
 #include "pantalla.h"
-
-// Pantalla con las reglas del juego. De momento vacia para que compile.
 class PantallaReglas : public Pantalla {
 public:
-    void dibuja() const override {}
+    void dibuja() const override;
+    void tecla(unsigned char key) override;
 };

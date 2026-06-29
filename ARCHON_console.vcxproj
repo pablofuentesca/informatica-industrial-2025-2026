@@ -38,6 +38,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mediapunta.cpp" />
     <ClCompile Include="src\mundo.cpp" />
+    <ClCompile Include="src\pantallareglas.cpp" />
+    <ClCompile Include="src\pantallacombate.cpp" />
     <ClCompile Include="src\Obstaculo.cpp" />
     <ClCompile Include="src\Proyectil.cpp" />
     <ClCompile Include="src\pelota.cpp" />
