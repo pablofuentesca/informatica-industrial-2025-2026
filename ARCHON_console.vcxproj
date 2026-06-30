@@ -43,6 +43,8 @@
     <ClCompile Include="src\pantallajuego.cpp" />
     <ClCompile Include="src\pantallareglas.cpp" />
     <ClCompile Include="src\pantallacombate.cpp" />
+    <ClCompile Include="src\pantallafin.cpp" />
+    <ClCompile Include="src\pantallaranking.cpp" />
     <ClCompile Include="src\Obstaculo.cpp" />
     <ClCompile Include="src\Proyectil.cpp" />
     <ClCompile Include="src\pelota.cpp" />

@@ -60,6 +60,8 @@
     <ClCompile Include="src\pantallajuego.cpp">  <Filter>Pantallas</Filter> </ClCompile>
     <ClCompile Include="src\pantallareglas.cpp"> <Filter>Pantallas</Filter> </ClCompile>
     <ClCompile Include="src\pantallacombate.cpp"><Filter>Pantallas</Filter> </ClCompile>
+    <ClCompile Include="src\pantallafin.cpp">    <Filter>Pantallas</Filter> </ClCompile>
+    <ClCompile Include="src\pantallaranking.cpp"><Filter>Pantallas</Filter> </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\jugador.h">        <Filter>Jugadores</Filter> </ClInclude>
