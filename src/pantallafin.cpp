@@ -27,6 +27,6 @@ void PantallaFin::dibuja() const
 
 void PantallaFin::tecla(unsigned char key)
 {
-    if (key == 27) ctx->pide(Contexto::INICIO);
+    if (key == 27) { ctx->equipoVencedor = 0; ctx->pide(Contexto::INICIO); }
     if (key == 'c' || key == 'C') ctx->pide(Contexto::RANKING);
 }
